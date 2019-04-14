@@ -67,7 +67,7 @@ var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0
 
 There possible additional functions in first 2 types like **IF** condition. I will describe it later.
 
-# Basic request example - index.php
+# Basic request example
 We use JQuery for requests. Here is some example code for inserting data from server.
 ```javascript
 JSONTemplate.getJSON("api/get_users.php",function (json){ //send request to API
