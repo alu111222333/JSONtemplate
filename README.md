@@ -144,15 +144,15 @@ This very usefull if you have same data on different levels.
 
 # Using variables [\*variable\*]
 ```javascript
-[*variable,if=`value||value2`then`show_true_string`else`show_false_string`*] //- show string depends of value
+[*variable,if=`value||value2`then`TrueString`else`FalseString`*] //- show string depends of value
 
-[*variable,ift=`value||value2||value3`then`template_true`else`template_false`*] //- show template depends of value
+[*variable,ift=`value||value2||value3`then`TemplateTrue`else`TemplateFalse`*] //- show template depends of value
 
-[*variable,ifb=`1**0*1`then`show_true_string`else`show_false_string`*] //- show string depends of bit mask
+[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`*] //- show string depends of bit mask. Check each bit to 0 and 1 
 
 [*variable,crop=`10`*] //- truncate variable to 10 chars
 
-[*variable,replace=`abc`with`cde`*] //- replace all "abc" to "cde" in variable
+[*variable,replace=`abc`with`def`*] //- replace all "abc" to "def" in variable
 
 [*variable,hash32*] //- show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
 ```
