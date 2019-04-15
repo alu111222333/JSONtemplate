@@ -144,11 +144,11 @@ This very usefull if you have same data on different levels.
 
 # Using variables [\*variable\*]
 
-[\*variable,if=`value||value2`then`show_true_string`else`show_false_string`\*] - show string depends of value
+[\*variable,if=\`value||value2\`then\`show_true_string\`else\`show_false_string\`\*] - show string depends of value
 
-[\*variable,ift=`value||value2||value3`then`template_true`else`template_false`\*] - show template depends of value
+[\*variable,ift=\`value||value2||value3\`then\`template_true\`else\`template_false\`\*] - show template depends of value
 
-[\*variable,ifb=`**1**0*1`then`show_true_string`else`show_false_string`\*] - show string depends of bit mask
+[\*variable,ifb=\`1**0*1\`then\`show_true_string\`else\`show_false_string\`\*] - show string depends of bit mask
 
 [\*variable,crop=`10`\*] - truncate variable to 10 chars
 
