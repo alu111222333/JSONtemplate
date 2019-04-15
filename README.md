@@ -143,35 +143,35 @@ Second is to use parameters for template inside HTML code
 This very usefull if you have same data on different levels.
 
 # Using variables [\*variable\*]
-```html
-[\*variable,if=\`value||value2\`then\`show_true_string\`else\`show_false_string\`\*] - show string depends of value
+```javascript
+[*variable,if=`value||value2`then`show_true_string`else`show_false_string`*] //- show string depends of value
 
-[\*variable,ift=\`value||value2||value3\`then\`template_true\`else\`template_false\`\*] - show template depends of value
+[*variable,ift=`value||value2||value3`then`template_true`else`template_false`*] //- show template depends of value
 
-[\*variable,ifb=\`1**0*1\`then\`show_true_string\`else\`show_false_string\`\*] - show string depends of bit mask
+[*variable,ifb=`1**0*1`then`show_true_string`else`show_false_string`*] //- show string depends of bit mask
 
-[\*variable,crop=`10`\*] - truncate variable to 10 chars
+[*variable,crop=`10`*] //- truncate variable to 10 chars
 
-[\*variable,replace=`abc`with`cde`\*] - replace all "abc" to "cde" in variable
+[*variable,replace=`abc`with`cde`*] //- replace all "abc" to "cde" in variable
 
-[\*variable,hash32\*] - show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
+[*variable,hash32*] //- show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
 ```
 others i will describe it later
 
 # Using arrays [!template,array!]
 
 Here you can use also if condition. And pagination for list.
+```javascript
+[!template,array,if=`condition`] //- show items if condition is TRUE
 
-[!template,array,if=`condition`] - show items if condition is TRUE
+[!template,array,paginator=`settings`] //- split items to pages by settings and show pagination UI element in exact place
 
-[!template,array,paginator=`settings`] - split items to pages by settings and show pagination UI element in exact place
+[!template,array,limit=`100`] //- show first 100 items
 
-[!template,array,limit=`100`] - show first 100 items
-
-[!template,array,default=`string`] - show string if there is no data in array
-
+[!template,array,default=`string`] //- show string if there is no data in array
+```
 
 You can combine all conditions into one
-
+```javascript
 [!template,array,if=`condition`,limit=`100`,default=`string`,paginator=`settings`]
-[!template,array,if=`condition`]
+```
