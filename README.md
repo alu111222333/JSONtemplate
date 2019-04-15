@@ -143,7 +143,7 @@ Second is to use parameters for template inside HTML code
 This very usefull if you have same data on different levels.
 
 # Using variables [\*variable\*]
-
+```html
 [\*variable,if=\`value||value2\`then\`show_true_string\`else\`show_false_string\`\*] - show string depends of value
 
 [\*variable,ift=\`value||value2||value3\`then\`template_true\`else\`template_false\`\*] - show template depends of value
@@ -155,7 +155,7 @@ This very usefull if you have same data on different levels.
 [\*variable,replace=`abc`with`cde`\*] - replace all "abc" to "cde" in variable
 
 [\*variable,hash32\*] - show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
-
+```
 others i will describe it later
 
 # Using arrays [!template,array!]
