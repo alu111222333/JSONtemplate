@@ -175,3 +175,54 @@ You can combine all conditions into one
 ```javascript
 [!template,array,if=`condition`,limit=`100`,default=`string`,paginator=`settings`]
 ```
+
+# Loading templates
+Easiest way to create a templates is just create a variable in script that use this library
+```javascript
+var templateForCurrentPage={
+    table: '<table>{{row}}</table>',
+    row: '<tr><td>[*value*]</td></tr>'
+};
+```
+You can also create a HTML file on server with template. 
+For example files **example_template.html** and **example_text.html**
+```javascript
+var template={};
+
+function init(){
+            JSONTemplate.lockTemplateCallback();
+            JSONTemplate.load_template(template,"../_common/html/example_template.html",TemplatesLoadingCallback);
+            JSONTemplate.load_template(template,"html/example_text.html",TemplatesLoadingCallback);
+            JSONTemplate.unlockTemplateCallback();
+            TemplatesLoadingCallback();
+}
+
+function TemplatesLoadingCallback(){
+    // this function will be called after all templates are loaded
+    // template variable will contains 2 fields
+    // template={
+    //    example_template:'content of example_template',
+    //    example_text:'content of example_text',
+    //    }
+}
+```
+
+Also you can put several templates into one file with special keyword. 
+Example **few_templates.html**
+```html
+NextTemplateName: users_table
+<table class="table table-striped table-bordered">[!users_table_items,users!]</table>
+
+
+NextTemplateName: users_table_items
+<tr>
+    <td nowrap width=8%>
+        <a href=# style="color:black;" onClick="return users_edit([*id*]);">[*uname,crop=`30`*] [*usinfo*]</a>
+    </td>
+    <td align="center" style="vertical-align:middle;cursor:pointer;" width=4% onClick="return users_remove([*id*]);">
+        <img src="../img/remove_icon.png" />
+    </td>
+</tr>
+```
+So you put all templates that used together in one place. **users_table** template use **users_table_items** for each element in array.
+After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
