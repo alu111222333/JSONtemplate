@@ -190,14 +190,16 @@ For example files **example_template.html** and **example_text.html**
 var template={};
 
 function init(){
-            JSONTemplate.lockTemplateCallback();
-            JSONTemplate.load_template(template,"../_common/html/example_template.html",TemplatesLoadingCallback);
-            JSONTemplate.load_template(template,"html/example_text.html",TemplatesLoadingCallback);
-            JSONTemplate.unlockTemplateCallback();
-            TemplatesLoadingCallback();
+            JSONTemplate.lockTemplateCallback();//lock callback in case of cached response
+            JSONTemplate.load_template(template,"../_common/html/example_template.html",TemplatesLoadingCallback); //load first file
+            JSONTemplate.load_template(template,"html/example_text.html",TemplatesLoadingCallback); //load next file
+            JSONTemplate.unlockTemplateCallback(); //unlock callbacks
+            TemplatesLoadingCallback(); //if templates give us a cached response
 }
 
 function TemplatesLoadingCallback(){
+    if(!JSONTemplate.isAllTemplatesLoaded())return; //-----> check that all templates are loaded <------- !!!!!
+    
     // this function will be called after all templates are loaded
     // template variable will contains 2 fields
     // template={
