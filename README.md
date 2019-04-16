@@ -209,7 +209,7 @@ function TemplatesLoadingCallback(){
 }
 ```
 
-Also you can put several templates into one file with special keyword. 
+Also you can put few templates into one file splited by special keyword. 
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table
