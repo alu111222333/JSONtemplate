@@ -64,6 +64,10 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     break;
                 }
             }
+            if (temp_data === undefined || temp_data === null) {
+                temp_data='';
+            }
+
             return temp_data;
         }
 
