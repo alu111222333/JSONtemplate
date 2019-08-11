@@ -851,7 +851,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     mycallback(data);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    olert('Network: ' + textStatus + "\n" + print_r(errorThrown));
+                    if (DEBUG) {
+                        olert('Network: ' + textStatus + "\n" + print_r(errorThrown));
+                    }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Netzwerkfehler","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
             });
@@ -874,7 +876,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     mycallback(data);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    olert(textStatus + "\n" + print_r(errorThrown));
+                    if (DEBUG) {
+                        olert(textStatus + "\n" + print_r(errorThrown));
+                    }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Netzwerkfehler","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
             });
@@ -934,7 +938,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     if (all_templates_loaded == 0) common_func(); //sending inital requests
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    olert(textStatus + "\n" + print_r(errorThrown));
+                    if (DEBUG) {
+                        olert(textStatus + "\n" + print_r(errorThrown));
+                    }
                 }
             });
         }
