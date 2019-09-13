@@ -52,6 +52,13 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 if (name_vars[i] == 'this') {
                     continue;
                 };
+                if (name_vars[i] == 'vardump') {
+                    return print_r(temp_data);
+                };
+                if((name_vars[i] == 'length')&&(Array.isArray(temp_data))){
+                    return temp_data.length;
+                }
+
                 if (temp_data !== undefined && temp_data !== null && temp_data[name_vars[i]] !== undefined) {
                     temp_data = temp_data[name_vars[i]];
                 } else {
