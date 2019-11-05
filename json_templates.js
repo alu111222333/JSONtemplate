@@ -11,7 +11,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
     var JSONTemplate = (function($) {
 
         window.JSONTemplateParserLoaded = true; //exclude duble inject script to one page.
-        var DEBUG = false;
+        var DEBUG = true;
         /**
          * {{template}} - another template from array
          * [! filter !] - repeated blocks to process arrays
@@ -905,7 +905,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         function load_template(to_template, url, common_func) {
             all_templates_loaded++; //increace template requests counter
             var myParam = url.substring(url.lastIndexOf('/') + 1);
-            myParam = myParam.substring(0, myParam.lastIndexOf('.'));
+            myParam = my_trim(myParam.substring(0, myParam.lastIndexOf('.')));
             $.get({
                 processData: false,
                 url: url,
@@ -916,15 +916,26 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         var i = 0;
                         for (i = 0; i < temlArr.length; i++) {
                             var nIndex = temlArr[i].indexOf('\n');
-                            if (nIndex < 0 || nIndex > 100) {
-                                if (i > 0) {
+                            var tParam='';
+                            var tData='';
+                            if (i > 0) {
+                                if (nIndex < 0 || nIndex > 100) {
                                     olert('Strange template loaded from file ' + myParam + '. All templates should be starter with line "NextTemplateName: name_of_template"');
                                     olert(temlArr[i]);
+                                    continue;
                                 }
-                                continue;
+                                tParam = my_trim(temlArr[i].substring(0, nIndex));
+                                tData = my_trim(temlArr[i].substring(nIndex + 1));
+                            }else{
+                                tData = my_trim(temlArr[i]);
+                                if (tData.length == 0) {
+                                    olert('thete is nothing in first "'+myParam+'" of the content ' + i);
+                                    continue;
+                                }
+                                tParam=myParam;
                             }
-                            var tParam = my_trim(temlArr[i].substring(0, nIndex));
-                            var tData = my_trim(temlArr[i].substring(nIndex + 1));
+                            /*var tParam = my_trim(temlArr[i].substring(0, nIndex));
+                            var tData = my_trim(temlArr[i].substring(nIndex + 1));*/
                             if (tData.length == 0) {
                                 olert('thete is nothing in one of the content ' + i);
                                 continue;
