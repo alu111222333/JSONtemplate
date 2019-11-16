@@ -11,7 +11,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
     var JSONTemplate = (function($) {
 
         window.JSONTemplateParserLoaded = true; //exclude duble inject script to one page.
-        var DEBUG = true;
+        var DEBUG = false;
         /**
          * {{template}} - another template from array
          * [! filter !] - repeated blocks to process arrays
@@ -57,6 +57,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 };
                 if((name_vars[i] == 'length')&&(Array.isArray(temp_data))){
                     return temp_data.length;
+                }
+                if(name_vars[i] == 'random'){
+                    return Math.floor((Math.random() * 100000) + 1);
                 }
 
                 if (temp_data !== undefined && temp_data !== null && temp_data[name_vars[i]] !== undefined) {
@@ -748,6 +751,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         //usefull for templates
         function str_replace(search, replace, osubject) {
             if (osubject === undefined) return osubject;
+            //return osubject.replace(search,replace);//replaced only first simbol - can not be user here
             return osubject.split(search).join(replace);
         }
 
@@ -903,6 +907,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         }
 
         function load_template(to_template, url, common_func) {
+            if(url===undefined)return;
             all_templates_loaded++; //increace template requests counter
             var myParam = url.substring(url.lastIndexOf('/') + 1);
             myParam = my_trim(myParam.substring(0, myParam.lastIndexOf('.')));
