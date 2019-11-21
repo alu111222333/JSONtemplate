@@ -865,7 +865,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     if (DEBUG) {
                         olert('Network: ' + textStatus + "\n" + print_r(errorThrown));
                     }
-                    mycallback(JSON.parse('{"error":{"state":true,"title":"Netzwerkfehler","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
+                    mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
             });
 
@@ -890,7 +890,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     if (DEBUG) {
                         olert(textStatus + "\n" + print_r(errorThrown));
                     }
-                    mycallback(JSON.parse('{"error":{"state":true,"title":"Netzwerkfehler","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
+                    mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
             });
 
