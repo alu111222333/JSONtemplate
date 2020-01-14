@@ -1,4 +1,4 @@
-# JSONtemplate
+# JSONtemplate + Multilanguage support
 JS library for single-page web applications
 
 # Parsing JSON into HTML
@@ -56,7 +56,7 @@ Result in html variable:
     <tr><td>11</td><td>22</td></tr>
 </table>
 ```
-This will put in html variable text, that can be inserted in any place of current HTML document. 
+This will put in html variable text, that can be inserted in any place of current HTML document.
 OR you can generate not all page, but create only one row with template **table_row** and replace/add it to existing table
 ```javascript
 var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0]);
@@ -70,12 +70,12 @@ There possible additional functions in first 2 types like **IF** condition. I wi
 # Basic request example
 We use JQuery for requests. Here is some example code for inserting data from server.
 ```javascript
-JSONTemplate.getJSON("api/get_users.php",function (json){ //send request to API
-    if(!showErrorIfExists(json)){ //check if this is a error response
-        var html=JSONTemplate.parse_template(template,"users_structure",json); //insert data to template
+JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
+    if(!checkError(json)){ //check if this is a error response
+        var html=JSONTemplate.parse_template(template,"info_structure",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }else{
-        $('#content').html('error already visible');
+        $('#content').html('show error info if needed');
     }
 });
 ```
@@ -100,7 +100,7 @@ On first step [\*some_value\*] will be replaced. For example some_value=100. The
 This sometimes may be usefull.
 Same situation with templates:
 ```html
- {{template[*some_value*]}} --> {{template100}} 
+ {{template[*some_value*]}} --> {{template100}}
 ```
 
 # Using templates {{template}}
@@ -148,7 +148,7 @@ This very usefull if you have same data on different levels.
 
 [*variable,ift=`value||value2||value3`then`TemplateTrue`else`TemplateFalse`*] //- show template depends of value
 
-[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`*] //- show string depends of bit mask. Check each bit to 0 and 1 
+[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`*] //- show string depends of bit mask. Check each bit to 0 and 1
 
 [*variable,crop=`10`*] //- truncate variable to 10 chars
 
@@ -160,11 +160,10 @@ others i will describe it later
 
 # Using arrays [!template,array!]
 
-Here you can use also if condition. And pagination for list.
+Here you can use also if condition.
 ```javascript
 [!template,array,if=`condition`] //- show items if condition is TRUE
 
-[!template,array,paginator=`settings`] //- split items to pages by settings and show pagination UI element in exact place
 
 [!template,array,limit=`100`] //- show first 100 items
 
@@ -173,7 +172,7 @@ Here you can use also if condition. And pagination for list.
 
 You can combine all conditions into one
 ```javascript
-[!template,array,if=`condition`,limit=`100`,default=`string`,paginator=`settings`]
+[!template,array,if=`condition`,limit=`100`,default=`string`]
 ```
 
 # Loading templates
@@ -184,7 +183,7 @@ var templateForCurrentPage={
     row: '<tr><td>[*value*]</td></tr>'
 };
 ```
-You can also create a HTML file on server with template. 
+You can also create a HTML file on server with template.
 For example files **example_template.html** and **example_text.html**
 ```javascript
 var template={};
@@ -199,7 +198,7 @@ function init(){
 
 function TemplatesLoadingCallback(){
     if(!JSONTemplate.isAllTemplatesLoaded())return; //-----> check that all templates are loaded <------- !!!!!
-    
+
     // this function will be called after all templates are loaded
     // template variable will contains 2 fields
     // template={
@@ -209,7 +208,7 @@ function TemplatesLoadingCallback(){
 }
 ```
 
-Also you can put few templates into one file splited by special keyword. 
+Also you can put few templates into one file splited by special keyword.
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table

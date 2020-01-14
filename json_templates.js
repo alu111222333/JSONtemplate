@@ -1,5 +1,5 @@
 /**
- * The simplest "JSON->JS->HTML" templater
+ * The simplest "JSON->HTML" templater with multilanguage support
  * Author: Leonid Arefev
  * Created: 11-05-2013
  */
@@ -12,6 +12,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
 
         window.JSONTemplateParserLoaded = true; //exclude duble inject script to one page.
         var DEBUG = false;
+        var translate_prefix = '@str.';
         /**
          * {{template}} - another template from array
          * [! filter !] - repeated blocks to process arrays
@@ -21,7 +22,6 @@ if (window.JSONTemplateParserLoaded === undefined) {
 
         /**
         //if=`` - content filter
-        //paginator=`5` - divide array into divs in 5 elements
         //example like JavaScript boolen expression.
         //Can add to [!...!] -> if=`...`
         //[!template_name,"jsonData",if=`((in_array(test.arr;;"777"))&&(test.data=="555")||(test.data>>"444"))&&(test.subj!="fff")`!]
@@ -30,8 +30,13 @@ if (window.JSONTemplateParserLoaded === undefined) {
         //can use: == , != ,() , >> eq > , << eq < , || , &&, in_array
         */
 
+        /**
+         * recommended server error response format
+         * {"error":{"state":true,"title":"ErrorTitle","message":"ErrorMessage","code":intErrorCode}}
+         */
 
         function in_array(arr, value) {
+            //return arr.includes(value)
             for (var key in arr) {
                 if (arr[key] == value) {
                     return true;
@@ -55,10 +60,10 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 if (name_vars[i] == 'vardump') {
                     return print_r(temp_data);
                 };
-                if((name_vars[i] == 'length')&&(Array.isArray(temp_data))){
+                if ((name_vars[i] == 'length') && (Array.isArray(temp_data))) {
                     return temp_data.length;
                 }
-                if(name_vars[i] == 'random'){
+                if (name_vars[i] == 'random') {
                     return Math.floor((Math.random() * 100000) + 1);
                 }
 
@@ -75,7 +80,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 }
             }
             if (temp_data === undefined || temp_data === null) {
-                temp_data='';
+                temp_data = '';
             }
 
             return temp_data;
@@ -102,134 +107,11 @@ if (window.JSONTemplateParserLoaded === undefined) {
             return ((num >> bit) % 2 != 0)
         }
 
-        function pagination_helper(paginatorid, page, myself) {
-            var invisible_before_count = 0;
-            var invisible_after_count = 0;
-            if (page.startsWith('minus')) {
-                $('nav.paginator_for' + paginatorid + '>ul').each(function() {
-                    var li = $(this).find('li.pag_class_' + paginatorid + '');
-                    var i = 0;
-                    for (i = 0; i < li.length; i++) { //get count that can be scrolled back
-                        li[i] = $(li[i]);
-                    }
-                    for (i = 0; i < li.length; i++) { //get count that can be scrolled back
-                        if (li[i].is(':visible')) {
-                            break;
-                        }
-                        invisible_before_count++;
-                    }
-                    if (invisible_before_count == 0) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_minus').addClass('disabled');
-                        return false;
-                    }
-                    var need_to_scroll = pages12 - 2;
-                    if (invisible_before_count <= need_to_scroll) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_minus').addClass('disabled');
-                        need_to_scroll = invisible_before_count;
-                    }
-                    if (need_to_scroll > 0) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_plus').removeClass('disabled');
-                        var count_disable = 0;
-                        var disabledIndex = 0;
-                        i = 0;
-                        for (i = li.length - 1; i >= 0; i--) { //get count that can be scrolled back
-                            if (li[i].is(':visible')) {
-                                li[i].hide();
-                                count_disable++;
-                                disabledIndex = i;
-                                if (count_disable >= need_to_scroll) break;
-                            }
-                        }
-                        var count_enable = 0;
-                        disabledIndex--;
-                        i = 0;
-                        for (i = disabledIndex; i >= 0; i--) { //get count that can be scrolled forward
-                            if (!li[i].is(':visible')) {
-                                li[i].show();
-                                count_enable++;
-                                if (count_enable >= need_to_scroll) break;
-                            }
-                        }
-                    }
-                });
-                return false;
-            } else if (page.startsWith('plus')) {
-                $('nav.paginator_for' + paginatorid + '>ul').each(function() {
-                    var li = $(this).find('li.pag_class_' + paginatorid + '');
-                    var i = 0;
-                    for (i = 0; i < li.length; i++) { //get count that can be scrolled forward
-                        li[i] = $(li[i]);
-                        invisible_after_count++;
-                        if (li[i].is(':visible')) {
-                            invisible_after_count = 0;
-                        }
-                    }
-                    if (invisible_after_count == 0) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_plus').addClass('disabled');
-                        return false;
-                    }
-                    var need_to_scroll = pages12 - 2;
-                    if (invisible_after_count <= need_to_scroll) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_plus').addClass('disabled');
-                        need_to_scroll = invisible_after_count;
-                    }
-                    if (need_to_scroll > 0) {
-                        $(this).find('.pv_pag_class_' + paginatorid + '.pag_item_minus').removeClass('disabled');
-                        var count_disable = 0;
-                        var disabledIndex = 0;
-                        i = 0;
-                        for (i = 0; i < li.length; i++) { //get count that can be scrolled forward
-                            if (li[i].is(':visible')) {
-                                li[i].hide();
-                                count_disable++;
-                                disabledIndex = i;
-                                if (count_disable >= need_to_scroll) break;
-                            }
-                        }
-                        var count_enable = 0;
-                        disabledIndex++;
-                        i = 0;
-                        for (i = disabledIndex; i < li.length; i++) { //get count that can be scrolled forward
-                            if (!li[i].is(':visible')) {
-                                li[i].show();
-                                count_enable++;
-                                if (count_enable >= need_to_scroll) break;
-                            }
-                        }
-                    }
-                });
-                return false;
-            }
-            $('.paginator' + paginatorid).hide();
-            $('.paginator' + paginatorid + '.page' + page).show();
-            $('.pag_class_' + paginatorid).removeClass('active');
-            $('.pag_class_' + paginatorid + '.pag_item_' + page).addClass('active');
-            return false;
-        }
-
-        var pages12 = 10;
-
-        function generate_paginator_click_item(paginatorid, page, subclass) {
-            var pagindex = parseInt(page) + 1;
-            var hide = '';
-            if (pagindex > pages12) hide = ' style="display:none;"';
-            return '<li pagetag="' + page + '"' + hide + ' class="pag_class_' + paginatorid + ' pag_item_' + page + ' page-item ' + subclass + '"' +
-                ' onclick="return JSONTemplate.pagination_helper(\'' + paginatorid + '\',\'' + page + '\',$(this));"' +
-                '><a class="page-link" href="#">' + pagindex + '</a></li>';
-        }
-
-        function generate_paginator_next_prev(paginatorid, page, subclass, simbol) {
-            return '<li pagetag="' + page + '" class="pv_pag_class_' + paginatorid + ' pag_item_' + page + ' page-item ' + subclass + '"' +
-                ' onclick="return JSONTemplate.pagination_helper(\'' + paginatorid + '\',\'' + page + '\',$(this));"' +
-                '><a class="page-link" href="#">' + simbol + '</a></li>';
-        }
-
-
         var level_parce = 0; //stack overflow protection
         //function change HTML code with templates to HTML code with data.
-        function parse_template(templates, name, data) {
+        function parseTemplate(templates, name, data) {
             //check stack overflow
-            ///********************** circle part ***************************
+            ///********************** loop part ***************************
             var global_filter = '';
 
             function set_filter(f) {
@@ -286,33 +168,31 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 try {
                     ret = eval('(' + global_filter + ')');
                 } catch (e) {
-                    olert('debug error in filter!' + "\n" + global_filter + "\n" + e.name);
+                    debug_log('debug error in filter!' + "\n" + global_filter + "\n" + e.name);
                     ret = false;
                 };
 
                 return ret;
             }
-            //*********************** circle end ****************************
+            //*********************** loop end ****************************
 
 
 
 
             name = removeSq(name)
-            var paginator = 0;
             var limits = -1;
             var defaults = '';
-            var temp_paginator = 0;
             var page = 0;
             var variable = '';
             if (DEBUG && (level_parce == 0)) {
                 error_parcer = '';
             }
             if (level_parce > 15) {
-                olert('stack overflow in parser detect');
+                debug_log('stack overflow in parser detect');
                 return '';
             }
             if (templates[name] === undefined) {
-                olert('template ' + name + ' is UNDEFINED');
+                debug_log('template ' + name + ' is UNDEFINED');
                 return '';
             };
             level_parce++;
@@ -324,7 +204,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
             var replace = -1;
             var replaceFrom = '';
             var replaceTo = '';
-            var hash=-1;
+            var hash = -1;
             var if_type = -1;
 
             ///parse JSON data variables
@@ -338,7 +218,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 ind_e = str.indexOf('*]', ind_s + 2);
                 crop = -1;
                 replace = -1;
-                hash=-1;
+                hash = -1;
                 replaceFrom = '';
                 replaceTo = '';
                 if_type = -1;
@@ -353,9 +233,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         variable = name_var.split(',');
                         name_var2 = variable[0];
                         if ((variable[1] !== undefined) && (variable[1].indexOf('hash32') == 0)) {
-                            hash=1;
+                            hash = 1;
                             variable = '';
-                        }else if ((variable[1] !== undefined) && (variable[1].indexOf('replace=') != -1)) {
+                        } else if ((variable[1] !== undefined) && (variable[1].indexOf('replace=') != -1)) {
                             if (variable[1].indexOf('`with`') != -1) {
                                 variable[1] = variable[1].split('`with`');
                                 replaceFrom = variable[1][0];
@@ -455,11 +335,11 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         }
                     }
                     temp = get_from_data(data, name_var2);
-                    if(hash>0){
+                    if (hash > 0) {
                         temp = murmurhash3_32_gc(temp);
-                    }else if(replace>0){
-                        temp = str_replace(replaceFrom,replaceTo,temp);
-                    }else if (crop > 0) {
+                    } else if (replace > 0) {
+                        temp = str_replace(replaceFrom, replaceTo, temp);
+                    } else if (crop > 0) {
                         if (temp.length > crop) temp = temp.substr(0, crop) + "...";
                     } else if ((if_type == 1 || if_type == 2) && variable[1] !== undefined) {
                         var checkWithThis = variable[1].toString().toUpperCase();
@@ -481,7 +361,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = parse_template(templates, then_v, data);
+                                    temp = parseTemplate(templates, then_v, data);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -491,7 +371,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = parse_template(templates, else_v, data);
+                                    temp = parseTemplate(templates, else_v, data);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -527,7 +407,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = parse_template(templates, then_v, data);
+                                    temp = parseTemplate(templates, then_v, data);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -537,7 +417,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = parse_template(templates, else_v, data);
+                                    temp = parseTemplate(templates, else_v, data);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -548,7 +428,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     }
                     str = str_replace('[*' + name_var + '*]', temp + '', str);
                 } else {
-                    olert('too long or short Value[*..*] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short Value[*..*] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -560,7 +440,6 @@ if (window.JSONTemplateParserLoaded === undefined) {
             ind_s = 0;
             ind_e = 0;
             var filter = '';
-            var pagination_switcher = '';
             while (str.indexOf('[!', ind_s) != -1) {
                 crop = -1;
                 limits = -1;
@@ -568,9 +447,6 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 ind_s = str.indexOf('[!', ind_s);
                 ind_e = str.indexOf('!]', ind_s + 2);
                 filter = '';
-                paginator = 0;
-                paginatorid = '';
-                pagination_switcher = '';
                 set_filter(filter);
                 temp_str = '';
                 if ((ind_e != -1) && ((ind_e - ind_s) < 195) && ((ind_e - ind_s) > 0)) {
@@ -585,20 +461,6 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         if (pars_new.indexOf('if=`') != -1) {
                             filter = pars_new;
                             set_filter(filter);
-                        } else if (pars_new.indexOf('paginator=`') != -1) {
-                            var pagintemp = str_replace('paginator=', '', str_replace('`', '', pars_new));
-                            paginatorid = '';
-
-                            if (pagintemp.indexOf(';;') != -1) {
-                                var paginarr = pagintemp.split(';;');
-                                paginator = parseInt(paginarr[0]);
-                                paginatorid = str_replace(' ', '', paginarr[1]);
-                            } else {
-                                paginator = parseInt(pagintemp);
-                            }
-                            if (paginator < 1) {
-                                paginator = 0;
-                            };
                         } else if (pars_new.indexOf('limit=`') != -1) {
                             limits = parseInt(str_replace('limit=', '', str_replace('`', '', pars_new)));
                             if (limits < 1) {
@@ -616,14 +478,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     var k = 0;
                     var ccc = temp_data.length - 1;
                     var pagindex = 0;
-                    page = 0;
-                    if (paginator > 0) {
-                        temp_str = temp_str + '<div class="paginator' + paginatorid + ' page0" style="display:block;">';
-                        pagination_switcher = pagination_switcher + generate_paginator_click_item(paginatorid, page, 'active');
-                    };
                     if (ccc < 0) {
                         temp_str = temp_str + defaults + '';
-                        olert('No data in this array! ' + name_var);
+                        debug_log('No data in this array! ' + name_var);
                     };
 
 
@@ -641,18 +498,6 @@ if (window.JSONTemplateParserLoaded === undefined) {
                             continue;
                         };
                         //filter_end
-
-                        if (paginator > 0 && elements_arr_length > 0) {
-                            temp_paginator = k % paginator;
-                            if (temp_paginator == 0 && k > 0) {
-                                page++;
-                                if (page > 0) {
-                                    temp_str = temp_str + '</div><div class="paginator' + paginatorid + ' page' + page + '" style="display:none;">';
-                                    pagination_switcher += generate_paginator_click_item(paginatorid, page, '');
-                                };
-
-                            };
-                        };
 
                         temp_data[key]['index_counter'] = k + '';
                         temp_data[key]['index_key'] = key + '';
@@ -675,32 +520,15 @@ if (window.JSONTemplateParserLoaded === undefined) {
                             temp_data[key]['index_2'] = 'f_second';
                         };
 
-                        temp_str = temp_str + parse_template(templates, temp_template[0], temp_data[key]);
+                        temp_str = temp_str + parseTemplate(templates, temp_template[0], temp_data[key]);
 
                         k++;
                     }
 
-                    if (paginator > 0) {
-                        pagindex = page + 1;
-                        if (page == 0) {
-                            //alert(page);
-                            pagination_switcher = '';
-                        } else {
-                            var pagination_switcher_t = '<nav class="paginator_for' + paginatorid + ' m-0"><ul class="pagination m-0 pagination-sm">';
-                            var pagination_switcher_b = '</ul></nav>';
-                            if (pagination_switcher.includes('display:none')) {
-                                pagination_switcher = generate_paginator_next_prev(paginatorid, 'minus', 'disabled', '&laquo;') + pagination_switcher + generate_paginator_next_prev(paginatorid, 'plus', '', '&raquo;');
-                            }
-                            pagination_switcher = pagination_switcher_t + pagination_switcher + pagination_switcher_b;
-                        }
-                        temp_str = temp_str + '</div>';
-                        str = str_replace('{{pagination_template' + paginatorid + '}}', pagination_switcher, str);
-                    };
-
                     str = str_replace('[!' + name_template + '!]', temp_str, str);
 
                 } else {
-                    olert('too long or short Foreach[!..!] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short Foreach[!..!] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -725,9 +553,9 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         name_template = name_template[0];
                         curData = get_from_data(curData, dataindex);
                     }
-                    str = str_replace('{{' + name_template_all + '}}', parse_template(templates, name_template, curData), str);
+                    str = str_replace('{{' + name_template_all + '}}', parseTemplate(templates, name_template, curData), str);
                 } else {
-                    olert('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -741,7 +569,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
             str = str_replace('~*', '*', str);
             str = str_replace('~!', '!', str);
             if (DEBUG && (error_parcer != '') && (level_parce == 0)) {
-                //olert('some data is left from datasource \n'+error_parcer);
+                //debug_log('some data is left from datasource \n'+error_parcer);
                 error_parcer = '';
             };
             return str;
@@ -826,7 +654,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
             return str;
         }
 
-        function olert(s) {
+        function debug_log(s) {
             if (DEBUG) {
                 console.log('JSTemplater: ' + s);
             };
@@ -863,7 +691,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        olert('Network: ' + textStatus + "\n" + print_r(errorThrown));
+                        debug_log('Network: ' + textStatus + "\n" + print_r(errorThrown));
                     }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
@@ -888,7 +716,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        olert(textStatus + "\n" + print_r(errorThrown));
+                        debug_log(textStatus + "\n" + print_r(errorThrown));
                     }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
@@ -907,7 +735,10 @@ if (window.JSONTemplateParserLoaded === undefined) {
         }
 
         function load_template(to_template, url, common_func) {
-            if(url===undefined)return;
+            if (url === undefined) {
+                debug_log('Undefined URL in templates array');
+                return;
+            }
             all_templates_loaded++; //increace template requests counter
             var myParam = url.substring(url.lastIndexOf('/') + 1);
             myParam = my_trim(myParam.substring(0, myParam.lastIndexOf('.')));
@@ -916,45 +747,45 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 url: url,
                 success: function(data) {
                     if (data.match(/^ *?NextTemplateName: *?\S{1,100} *?$/m)) {
-                        olert('File with templates detected: ' + myParam)
+                        debug_log('File with templates detected: ' + myParam)
                         var temlArr = data.split('NextTemplateName:');
                         var i = 0;
                         for (i = 0; i < temlArr.length; i++) {
                             var nIndex = temlArr[i].indexOf('\n');
-                            var tParam='';
-                            var tData='';
+                            var tParam = '';
+                            var tData = '';
                             if (i > 0) {
                                 if (nIndex < 0 || nIndex > 100) {
-                                    olert('Strange template loaded from file ' + myParam + '. All templates should be starter with line "NextTemplateName: name_of_template"');
-                                    olert(temlArr[i]);
+                                    debug_log('Strange template loaded from file ' + myParam + '. All templates should be starter with line "NextTemplateName: name_of_template"');
+                                    debug_log(temlArr[i]);
                                     continue;
                                 }
                                 tParam = my_trim(temlArr[i].substring(0, nIndex));
                                 tData = my_trim(temlArr[i].substring(nIndex + 1));
-                            }else{
+                            } else {
                                 tData = my_trim(temlArr[i]);
                                 if (tData.length == 0) {
-                                    olert('thete is nothing in first "'+myParam+'" of the content ' + i);
+                                    debug_log('thete is nothing in first "' + myParam + '" of the content ' + i);
                                     continue;
                                 }
-                                tParam=myParam;
+                                tParam = myParam;
                             }
                             /*var tParam = my_trim(temlArr[i].substring(0, nIndex));
                             var tData = my_trim(temlArr[i].substring(nIndex + 1));*/
                             if (tData.length == 0) {
-                                olert('thete is nothing in one of the content ' + i);
+                                debug_log('thete is nothing in one of the content ' + i);
                                 continue;
                             }
                             if (tParam.length == 0) {
-                                olert('thete is no title in one of the templates ' + i);
+                                debug_log('thete is no title in one of the templates ' + i);
                                 tParam = myParam;
                             }
                             to_template[tParam] = tData;
-                            olert('Loaded template ' + tParam + ' from file ' + myParam);
+                            debug_log('Loaded template ' + tParam + ' from file ' + myParam);
                         }
                     } else {
                         to_template[myParam] = data;
-                        olert('Loaded file ' + myParam);
+                        debug_log('Loaded file ' + myParam);
                     }
 
                     all_templates_loaded--; //decrease template requests counter
@@ -962,7 +793,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        olert(textStatus + "\n" + print_r(errorThrown));
+                        debug_log(textStatus + "\n" + print_r(errorThrown));
                     }
                 }
             });
@@ -1060,6 +891,29 @@ if (window.JSONTemplateParserLoaded === undefined) {
         function isAllTemplatesLoaded() {
             return all_templates_loaded < 1;
         }
+
+
+        var templates_callback_function = 0;
+        var shadow_templates_object = {};
+
+        function shadow_templates_callback() {
+            if (!JSONTemplate.isAllTemplatesLoaded()) return false;
+            translateObject(shadow_templates_object);
+            templates_callback_function();
+        }
+
+        function loadTemplateUrlsArray(template, arr, func) {
+            var i = 0;
+            shadow_templates_object = template;
+            templates_callback_function = func;
+            JSONTemplate.lockTemplateCallback();
+            for (i = 0; i < arr.length; i++) {
+                JSONTemplate.load_template(template, arr[i], shadow_templates_callback);
+            }
+            JSONTemplate.unlockTemplateCallback();
+            shadow_templates_callback();
+        }
+
         //public functions
 
 
@@ -1076,74 +930,175 @@ if (window.JSONTemplateParserLoaded === undefined) {
          * @return {number} 32-bit positive integer hash
          */
 
-         var murmurSeed=Math.round(((Math.random()*10000)+10000));
+        var murmurSeed = Math.round(((Math.random() * 10000) + 10000));
+
         function murmurhash3_32_gc(key) {
-            var seed=murmurSeed;
-        	var remainder, bytes, h1, h1b, c1, c1b, c2, c2b, k1, i;
+            var seed = murmurSeed;
+            var remainder, bytes, h1, h1b, c1, c1b, c2, c2b, k1, i;
 
-        	remainder = key.length & 3; // key.length % 4
-        	bytes = key.length - remainder;
-        	h1 = seed;
-        	c1 = 0xcc9e2d51;
-        	c2 = 0x1b873593;
-        	i = 0;
+            remainder = key.length & 3; // key.length % 4
+            bytes = key.length - remainder;
+            h1 = seed;
+            c1 = 0xcc9e2d51;
+            c2 = 0x1b873593;
+            i = 0;
 
-        	while (i < bytes) {
-        	  	k1 =
-        	  	  ((key.charCodeAt(i) & 0xff)) |
-        	  	  ((key.charCodeAt(++i) & 0xff) << 8) |
-        	  	  ((key.charCodeAt(++i) & 0xff) << 16) |
-        	  	  ((key.charCodeAt(++i) & 0xff) << 24);
-        		++i;
+            while (i < bytes) {
+                k1 =
+                    ((key.charCodeAt(i) & 0xff)) |
+                    ((key.charCodeAt(++i) & 0xff) << 8) |
+                    ((key.charCodeAt(++i) & 0xff) << 16) |
+                    ((key.charCodeAt(++i) & 0xff) << 24);
+                ++i;
 
-        		k1 = ((((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16))) & 0xffffffff;
-        		k1 = (k1 << 15) | (k1 >>> 17);
-        		k1 = ((((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16))) & 0xffffffff;
+                k1 = ((((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16))) & 0xffffffff;
+                k1 = (k1 << 15) | (k1 >>> 17);
+                k1 = ((((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16))) & 0xffffffff;
 
-        		h1 ^= k1;
+                h1 ^= k1;
                 h1 = (h1 << 13) | (h1 >>> 19);
-        		h1b = ((((h1 & 0xffff) * 5) + ((((h1 >>> 16) * 5) & 0xffff) << 16))) & 0xffffffff;
-        		h1 = (((h1b & 0xffff) + 0x6b64) + ((((h1b >>> 16) + 0xe654) & 0xffff) << 16));
-        	}
+                h1b = ((((h1 & 0xffff) * 5) + ((((h1 >>> 16) * 5) & 0xffff) << 16))) & 0xffffffff;
+                h1 = (((h1b & 0xffff) + 0x6b64) + ((((h1b >>> 16) + 0xe654) & 0xffff) << 16));
+            }
 
-        	k1 = 0;
+            k1 = 0;
 
-        	switch (remainder) {
-        		case 3: k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
-        		case 2: k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
-        		case 1: k1 ^= (key.charCodeAt(i) & 0xff);
+            switch (remainder) {
+                case 3:
+                    k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
+                case 2:
+                    k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
+                case 1:
+                    k1 ^= (key.charCodeAt(i) & 0xff);
 
-        		k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
-        		k1 = (k1 << 15) | (k1 >>> 17);
-        		k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
-        		h1 ^= k1;
-        	}
+                    k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
+                    k1 = (k1 << 15) | (k1 >>> 17);
+                    k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
+                    h1 ^= k1;
+            }
 
-        	h1 ^= key.length;
+            h1 ^= key.length;
 
-        	h1 ^= h1 >>> 16;
-        	h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16)) & 0xffffffff;
-        	h1 ^= h1 >>> 13;
-        	h1 = ((((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16))) & 0xffffffff;
-        	h1 ^= h1 >>> 16;
+            h1 ^= h1 >>> 16;
+            h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16)) & 0xffffffff;
+            h1 ^= h1 >>> 13;
+            h1 = ((((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16))) & 0xffffffff;
+            h1 ^= h1 >>> 16;
 
-        	return h1 >>> 0;
+            return h1 >>> 0;
+        }
+
+
+
+        var level = 10;
+
+        function translateObject(obj, keys = []) {
+            if (obj === undefined) return '';
+            if (obj === null || Number.isInteger(obj)) return obj;
+            level--;
+            if (level < 0) {
+                level++;
+                alert('Stackoverflow protection triggered');
+                level = 10;
+                return obj;
+            }
+
+            var customKeys = false;
+            if (Array.isArray(keys) && (keys.length > 0)) {
+                customKeys = true;
+            }
+            for (var key in obj) {
+                if (obj[key] === undefined || obj[key] === null || Number.isInteger(obj[key])) continue;
+                if (Array.isArray(obj[key]) || (typeof obj[key]) == 'object') {
+                    translateObject(obj[key], keys)
+                } else if (typeof obj[key] === 'string' || obj[key] instanceof String) {
+                    if (customKeys) {
+                        if (keys.includes(key)) {
+                            obj[key] = translateString(obj[key]);
+                        }
+                    } else {
+                        obj[key] = translateString(obj[key]);
+                    }
+                }
+            }
+            level++;
+            return obj;
+        }
+
+        function minStopSimbol(arr, index, str) {
+            var i = 0;
+            var ch = '';
+            var temp = -1;
+            var len = str.length;
+            for (i = 0; i < 41; i++) {
+                temp = index + i;
+                if (temp >= len) return len;
+                ch = str.charAt(temp);
+                if (arr.includes(ch)) {
+                    return temp;
+                }
+            }
+            return temp;
+        }
+
+        /* json object direct echo to JavaScript */
+        var translation_strings = {};
+
+        function setTranslationAssociativeArray(jsonObject) {
+            translation_strings = jsonObject;
+        }
+
+
+        var stopSimbols = [' ', '<', '[', '{', '(', "\n", "\t", "\r", '*', ')', '}', ']', '>', '.', ',', '?', ':', ';', '-', '"', '`', "'", '!', '@', '#', '%', '&', '$', '^', '~', '+', '/', '\\', '='];
+
+        function translateString(str) {
+            if (str === undefined) return '';
+            if (Object.keys(translation_strings).length == 0) return str;
+            var indexEnd = -1;
+            var movedIndex = -1;
+            var prefix_length = translate_prefix.length;
+            var checklen = str.length - (prefix_length + 2);
+            if (checklen < 0) return str;
+            var key = '';
+            var keyLen = 0;
+            var index = str.indexOf(translate_prefix);
+            var counter_protector = 300;
+            while (index != -1) {
+                counter_protector--;
+                if (counter_protector < 0) {
+                    alert('Loop protection: JS template library');
+                    return str;
+                }
+                movedIndex = index + prefix_length;
+                indexEnd = minStopSimbol(stopSimbols, movedIndex, str);
+                keyLen = indexEnd - movedIndex;
+                if (keyLen > 2 || keyLen < 40) {
+                    key = str.substr(movedIndex, keyLen);
+                    if (translation_strings[key] !== undefined) {
+                        str = str.replace(translate_prefix + key, translation_strings[key])
+                        index = str.indexOf(translate_prefix, index + 1);
+                    } else {
+                        console.log('No translation for key: "' + key + '"');
+                        index = str.indexOf(translate_prefix, indexEnd);
+                    }
+                } else {
+                    index = str.indexOf(translate_prefix, indexEnd);
+                }
+            }
+            return str
         }
 
 
         return {
-            parse_template: parse_template,
-            parseTemplate: parse_template,
-            print_r: print_r,
-            getJSON: getJSON,
-            postJSON: postJSON,
-            load_template: load_template,
-            loadTemplate: load_template,
-            isAllTemplatesLoaded: isAllTemplatesLoaded,
-            lockTemplateCallback: lockTemplateCallback,
-            unlockTemplateCallback: unlockTemplateCallback,
-            pagination_helper: pagination_helper
+            parseTemplate: parseTemplate, //parse loaded templates with JSON response from server - look documentation
+            getJSON: getJSON, //send GET request with calback
+            postJSON: postJSON, //send POST request  with calback
+            loadTemplateUrlsArray: loadTemplateUrlsArray, //load multi-files templates with callback after all files loaded successfully
+            setTranslationAssociativeArray: setTranslationAssociativeArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
+            translateString: translateString, //if you need to translate String object manually. All templates are translated automatically
+            translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
+            print_r: print_r //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
         }
     }(jQuery));
-    var JST = JSONTemplate;
+    var JST = JSONTemplate; //alternative name
 }
