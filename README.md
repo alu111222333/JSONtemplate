@@ -189,26 +189,23 @@ var templateForCurrentPage={
 You can also create a HTML file on server with template.
 For example files **example_template.html** and **example_text.html**
 ```javascript
-var template={};
+var templates = {};
 
-function init(){
-            JSONTemplate.lockTemplateCallback();//lock callback in case of cached response
-            JSONTemplate.load_template(template,"../_common/html/example_template.html",TemplatesLoadingCallback); //load first file
-            JSONTemplate.load_template(template,"html/example_text.html",TemplatesLoadingCallback); //load next file
-            JSONTemplate.unlockTemplateCallback(); //unlock callbacks
-            TemplatesLoadingCallback(); //if templates give us a cached response
+function init() {
+    //before loading any templates, you need to set translation array, if you want multilanguage support
+    //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
+    //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
+    JST.setTranslationAssociativeArray(<?php echo(json_encode(transtale_array['en'])); ?>)
+    JST.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback)
 }
 
-function TemplatesLoadingCallback(){
-    if(!JSONTemplate.isAllTemplatesLoaded())return; //-----> check that all templates are loaded <------- !!!!!
-
-    // this function will be called after all templates are loaded
-    // template variable will contains 2 fields
-    // template={
-    //    example_template:'content of example_template',
-    //    example_text:'content of example_text',
-    //    }
+function loadingCallback() {
+    //if all templates loaded correctly.
+    //If this function was not called - some of the file is not exists
+    buildWebUI();
 }
+
+init(); //Run it immediately after loading page HTML content
 ```
 
 Also you can put few templates into one file splited by special keyword.
@@ -230,3 +227,8 @@ NextTemplateName: users_table_items
 ```
 So you put all templates that used together in one place. **users_table** template use **users_table_items** for each element in array.
 After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
+
+# Translation
+All templates are translated automatically if there is keywords in format "@str.array_key"
+
+If you nee to translate some response you can use function "JST.translateObject(jsonObject,[keys])". Keys is optional.
