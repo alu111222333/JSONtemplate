@@ -1,0 +1,51 @@
+NextTemplateName: header
+<h3 class="text-center text-white pt-5">@str.header<sup><small>[*jsontext.val1*]</small></sup></h3>
+
+
+
+NextTemplateName: logo
+<br>
+<h3 class="text-center text-info">@str.logo<sup><small>[*jsontext.val2*]</small></sup></h3>
+<br>
+
+
+NextTemplateName: form
+<div class="form-group">
+    <input placeholder="@str.login" type="text" name="username" id="username" class="form-control">
+</div>
+<div class="form-group">
+    <input placeholder="@str.password" type="text" name="password" id="password" class="form-control">
+</div>
+<div class="form-group text-center mt-4">
+    <input type="submit" name="submit" class="btn btn-info btn-md w-50" value="@str.submit">
+</div>
+
+
+NextTemplateName: page
+<div id="headerContainer">
+    {{header}}
+</div>
+<div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+        <div id="login-column" class="col-md-4">
+            <div id="login-box" class="col-md-12">
+                <form id="login-form" class="form" action="" method="post">
+                    <div id="logoContainer">
+                        {{logo}}
+                    </div>
+                    <div id="formContainer">
+                        {{form}}
+                    </div>
+                    <div class="form-group text-center">
+                        <select onchange="setLanguage($(this).val());" name="lang" class="w-50 custom-select custom-select-sm" id="inlineLanguageSelect">
+                            <option value="en" selected="">English</option>
+                            <option value="es">Español</option>
+                            <option value="ru">Русский</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

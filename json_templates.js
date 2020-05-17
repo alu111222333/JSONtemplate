@@ -9,7 +9,7 @@
 
 if (window.JSONTemplateParserLoaded === undefined) {
     var JSONTemplate = (function($) {
-
+        "use strict";
         window.JSONTemplateParserLoaded = true; //exclude duble inject script to one page.
         var DEBUG = false;
         var translate_prefix = '@str.';
@@ -51,6 +51,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         var error_parcer = '';
 
         function get_from_data(temp_data, name_var) {
+            var i = 0;
             var name_vars = name_var.split('.');
             for (i = 0; i < name_vars.length; i++) {
                 name_vars[i] = removeSq(my_trim(name_vars[i]));
@@ -897,20 +898,23 @@ if (window.JSONTemplateParserLoaded === undefined) {
         var shadow_templates_object = {};
 
         function shadow_templates_callback() {
-            if (!JSONTemplate.isAllTemplatesLoaded()) return false;
+            if (!isAllTemplatesLoaded()) return false;
             translateObject(shadow_templates_object);
             templates_callback_function();
         }
 
         function loadTemplateUrlsArray(template, arr, func) {
+            if (!isAllTemplatesLoaded()) {
+                alert('Critical error.\nTrying to load templates before previous templates request is completed');
+            }
             var i = 0;
             shadow_templates_object = template;
             templates_callback_function = func;
-            JSONTemplate.lockTemplateCallback();
+            lockTemplateCallback();
             for (i = 0; i < arr.length; i++) {
-                JSONTemplate.load_template(template, arr[i], shadow_templates_callback);
+                load_template(template, arr[i], shadow_templates_callback);
             }
-            JSONTemplate.unlockTemplateCallback();
+            unlockTemplateCallback();
             shadow_templates_callback();
         }
 

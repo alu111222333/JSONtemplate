@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Example page</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../json_templates.js"></script>
+
+
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <link rel="stylesheet" href="css/custom.css">
+    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript">
+        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
+        var translates = {
+            en: {
+                login: "UserName",
+                password: "Password",
+                submit: "LogIn",
+                header: "Website Title",
+                logo: "Company Name"
+            },
+            ru: {
+                login: "Имя",
+                password: "Пароль",
+                submit: "Вход",
+                header: "Заголовок Сайта",
+                logo: "Имя компании"
+            },
+            es: {
+                login: "Nombre de usuario",
+                password: "Contraseña",
+                submit: "Iniciar sesión",
+                header: "Título del sitio web",
+                logo: "nombre de empresa"
+            },
+            de: {
+                login: "Benutzername",
+                password: "Passwort",
+                submit: "Anmelden",
+                header: "Website-Titel",
+                logo: "Firmenname"
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div id="login">
+
+    </div>
+</body>
+<script type="text/javascript">
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    var templates = {};
+
+    function init() {
+        //before loading any templates, you need to set translation array, if you want multilanguage support
+        //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
+        //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
+        JST.setTranslationAssociativeArray(translates.en)
+        JST.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback)
+    }
+
+    function loadingCallback() {
+        //if all templates loaded correctly.
+        //If this function was not called - some of the file is not exists
+        buildWebUI();
+    }
+
+    init(); //Run it immediately after loading page
+
+
+    //------------- login page special code ---------------
+    //------------- login page special code ---------------
+    //------------- login page special code ---------------
+    //------------- login page special code ---------------
+    function buildWebUI() { //create all elements inside page (Structure of page)
+        JST.getJSON("api/response.json", function(json) {
+            if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+                //display error message from json.error.title and json.error.message
+                alert(json.error.title + "\n" + json.error.message);
+            } else {
+                $('#login').html(JST.parseTemplate(templates, "page", json));
+                $('#login').hide();
+                //language code
+                var lang = getCookie('lang');
+                lang = setLanguage(lang);
+                $("#inlineLanguageSelect").val(lang);
+            }
+        })
+    }
+
+    //Only in setting and login page this code needed. In other places it's not necessary
+
+
+    function setLanguage(selectedLang) {
+        if ((selectedLang != "en") && (selectedLang != "es") && (selectedLang != "ru") && (selectedLang != "de")) {
+            selectedLang = "en";
+        }
+        setCookie('lang', selectedLang, 365, "/example/");
+        JST.setTranslationAssociativeArray(translates[selectedLang])
+        JST.loadTemplateUrlsArray(templates, ["html/templates.html"], function() {
+            JST.getJSON("api/response.json", function(json) { //change only some parts of page
+                if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+                    //display error message from json.error.title and json.error.message
+                    alert(json.error.title + "\n" + json.error.message);
+                } else {
+                    $('#headerContainer').html(JST.parseTemplate(templates, "header", json));
+                    $('#logoContainer').html(JST.parseTemplate(templates, "logo", json));
+                    $('#formContainer').html(JST.parseTemplate(templates, "form", json));
+                    $('#login').fadeIn(250);
+                }
+            })
+
+        })
+        return selectedLang;
+    }
+</script>
+
+</html>

@@ -71,11 +71,14 @@ There possible additional functions in first 2 types like **IF** condition. I wi
 We use JQuery for requests. Here is some example code for inserting data from server.
 ```javascript
 JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
-    if(!checkError(json)){ //check if this is a error response
+    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+        //display error message from json.error.title and json.error.message
+        alert(json.error.title + "\n" + json.error.message);
+        //OR
+        $('#content').html('show error info if needed');
+    } else {
         var html=JSONTemplate.parse_template(template,"info_structure",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
-    }else{
-        $('#content').html('show error info if needed');
     }
 });
 ```
