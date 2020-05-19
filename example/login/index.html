@@ -71,7 +71,9 @@
 
 <body>
     <div id="content">
-
+        ====== This text will be replaced after loading all information from server. ======
+        ====== This text will be replaced after loading all information from server. ======
+        ====== This text will be replaced after loading all information from server. ======
     </div>
 </body>
 <script type="text/javascript">
@@ -87,6 +89,8 @@
         //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
         JST.setTranslationAssociativeArray(translates.en); // optional
         JST.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback);
+
+        $("#content").hide(); // optional
     }
 
     function loadingCallback() {
@@ -115,7 +119,6 @@
                 alert(json.error.title + "\n" + json.error.message);
             } else {
                 $('#content').html(JST.parseTemplate(templates, "page", json));
-                $('#content').hide();
                 //language code
                 //TODO need to check if language already correct.
                 var lang = getCookie('lang');
