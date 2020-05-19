@@ -1,5 +1,5 @@
 # JSONtemplate + Multilanguage support
-JS library for single-page web applications
+JavaScript library for single-page web applications
 
 # Installation
 ```html
@@ -10,11 +10,11 @@ JS library for single-page web applications
 # Basic request example
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
-JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
+JST.getJSON("api/get_info.php",function (json){ //send request to API
     if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
         alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
     } else {
-        var html=JSONTemplate.parse_template(template,"head",json); //insert data to template
+        var html=JST.parse_template(template,"head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
@@ -46,9 +46,9 @@ var templates={
         head:'<h1>[*data.name*]</h1>'
     };
 ```
-And just call **JSONTemplate.parse_template** like here
+And just call **JST.parse_template** like here
 ```javascript
-    var html=JSONTemplate.parse_template(templates,"head",json);
+    var html=JST.parse_template(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
 
@@ -66,7 +66,7 @@ var templates={
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=JSONTemplate.parse_template(template,"all_page",json);
+var html=JST.parse_template(template,"all_page",json);
 ```
 Content of html variable:
 ```html
@@ -79,7 +79,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing table
 ```javascript
-var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0]);
+var html=JST.parse_template(template,"table_row",json.data.parameters[0]);
 
 //---- result ----
 //<tr><td>1</td><td>2</td></tr>    
@@ -132,13 +132,13 @@ var templates={
         table:'<table>[!table_row,data.parameters!]</table>',
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
     };
-var html=JSONTemplate.parse_template(template,"table",json);
+var html=JST.parse_template(template,"table",json);
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0]);
+var html=JST.parse_template(template,"table_row",json.data.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
