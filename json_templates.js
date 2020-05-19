@@ -7,7 +7,7 @@
 // Wrap all widget code into anonymous function expression to avoid conflicts
 // that may occur with another code on the page (module pattern).
 
-if (window.JSONTemplateParserLoaded === undefined) {
+if (window.JSONTemplateParserLoaded_v2 === undefined) {
     var JSONTemplate = (function($) {
         "use strict";
         window.JSONTemplateParserLoaded_v2 = true; //exclude duble inject script to one page.
