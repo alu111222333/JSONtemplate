@@ -2,10 +2,9 @@
 JS library for single-page web applications
 
 # Parsing JSON into HTML
-This library take a lot of work for inserting data from JSON to HTML templates.
-This is short documentation about this library.
+This library make a lot of work for converting data from JSON to HTML.
 <br>
-For example we work with this JSON
+For example JSON
 ```javascript
 {
     "data":{
@@ -22,21 +21,22 @@ For example we work with this JSON
     }
 }
 ```
-if we want to show **name** from this JSON, we need to create HTML template
+we want to show **name** from this JSON inside HTML.
 ```javascript
 var templates={
         head:'<h1>[*data.name*]</h1>'
     };
 ```
-And just call **JSONTemplate.parse_template** like in this example
+And just call **JSONTemplate.parse_template** like here
 ```javascript
     var html=JSONTemplate.parse_template(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
-Also possible to process arrays. There all possible commands for JSON templater
+This is a list of all possible placeholders. Only 3 totally:
 - **[\*json.variable.value\*]** - insert value from JSON
 - **[!template,json.variable.array!]** - process array. Each element inserter in template
 - **{{template}}** - just show template with current data
+
 
 Example2 with the same JSON as before:
 ```javascript
@@ -48,7 +48,7 @@ var templates={
     };
 var html=JSONTemplate.parse_template(template,"all_page",json);
 ```
-Result in html variable:
+Content of html variable:
 ```html
 <h1>Hello</h1>
 <table>
@@ -56,8 +56,8 @@ Result in html variable:
     <tr><td>11</td><td>22</td></tr>
 </table>
 ```
-This will put in html variable text, that can be inserted in any place of current HTML document.
-OR you can generate not all page, but create only one row with template **table_row** and replace/add it to existing table
+
+OR you can generate only one row with template **table_row** and replace/add it to existing table
 ```javascript
 var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0]);
 
@@ -65,10 +65,10 @@ var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0
 //<tr><td>1</td><td>2</td></tr>    
 ```
 
-There possible additional functions in first 2 types like **IF** condition. I will describe it later.
+There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
 
 # Basic request example
-We use JQuery for requests. Here is some example code for inserting data from server.
+Library use JQuery for requests. This is example code for processing data from server.
 ```javascript
 JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
     if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
@@ -82,12 +82,10 @@ JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
     }
 });
 ```
-And this code can be used everywere in project
 
 # Explanation
-First what you need to know, is order how values are replaced in HTML templates.
+First what you need to know, is the order - how values are replaced in static HTML templates.
 
-In current template:
 1) replace all **[\*variables\*]**
 2) replace all arrays **[!array!]**
 3) replace all templates **{{template}}**
@@ -100,7 +98,7 @@ On first step [\*some_value\*] will be replaced. For example some_value=100. The
 ```html
  [!table_row100,data.parameters!]
 ```
-This sometimes may be usefull.
+This is very bad idea, but sometimes may be useful.
 Same situation with templates:
 ```html
  {{template[*some_value*]}} --> {{template100}}
@@ -108,7 +106,7 @@ Same situation with templates:
 
 # Using templates {{template}}
 
-there is some additional feature to use templates. Its more easy then others, that is why i describe it first.
+
 ```javascript
 var json={
         "data":{
@@ -131,7 +129,7 @@ var templates={
     };
 var html=JSONTemplate.parse_template(template,"table",json);
 ```
-There 2 ways how to how show only first row:
+There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
@@ -144,6 +142,7 @@ Second is to use parameters for template inside HTML code
 **,data.parameters.0** will change current parse level data for template to data.parameters[0]
 
 This very usefull if you have same data on different levels.
+
 
 # Using variables [\*variable\*]
 ```javascript
@@ -159,14 +158,13 @@ This very usefull if you have same data on different levels.
 
 [*variable,hash32*] //- show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
 ```
-others i will describe it later
+
 
 # Using arrays [!template,array!]
 
 Here you can use also if condition.
 ```javascript
 [!template,array,if=`condition`] //- show items if condition is TRUE
-
 
 [!template,array,limit=`100`] //- show first 100 items
 
@@ -196,7 +194,7 @@ function init() {
     //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
     //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
     JST.setTranslationAssociativeArray(<?php echo(json_encode(transtale_array['en'])); ?>)
-    JST.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback)
+    JST.loadTemplateUrlsArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
 }
 
 function loadingCallback() {
@@ -208,7 +206,7 @@ function loadingCallback() {
 init(); //Run it immediately after loading page HTML content
 ```
 
-Also you can put few templates into one file splited by special keyword.
+Also you can put few templates into one file separated by special keyword ( **NextTemplateName:** ).
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table
@@ -225,10 +223,40 @@ NextTemplateName: users_table_items
     </td>
 </tr>
 ```
-So you put all templates that used together in one place. **users_table** template use **users_table_items** for each element in array.
+So it's possible to put all templates together in one file. **users_table** template use **users_table_items** for each element in array.
 After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
 
 # Translation
 All templates are translated automatically if there is keywords in format "@str.array_key"
 
 If you nee to translate some response you can use function "JST.translateObject(jsonObject,[keys])". Keys is optional.
+
+Example:
+```javascript
+JST.setTranslationAssociativeArray({
+    login_name:"User",
+    user_description:"Description"
+});
+JST.loadTemplateUrlsArray(["url1_to_templates","url2_to_templates"],drawUI);
+
+function drawUI(){
+    //...
+}
+```
+
+```html
+NextTemplateName: users_table
+<table class="table table-striped table-bordered">[!users_table_items,users!]</table>
+
+
+NextTemplateName: users_table_items
+<tr>
+    <td nowrap width=8%>
+        <a href=# style="color:black;" onClick="return false;">@str.login_name: [*uname*]</a>
+    </td>
+    <td>
+        <a href=# style="color:black;" onClick="return false;">@str.user_description: [*usinfo*]</a>
+    </td>
+
+</tr>
+```
