@@ -10,7 +10,7 @@
                 "Email support",
                 "Help center access"
             ],
-            "button_text": "Start for free",
+            "button_text": "@str.free_start",
             "button_type": 0
 
         },
@@ -24,7 +24,7 @@
                 "Priority email support",
                 "Help center access"
             ],
-            "button_text": "Get started",
+            "button_text": "@str.pro_start",
             "button_type": 1
 
         }
@@ -39,7 +39,7 @@
                 "Priority email support",
                 "Priority phone support"
             ],
-            "button_text": "EEEeee!!!",
+            "button_text": "@str.enterprise_start",
             "button_type": 2
 
         }

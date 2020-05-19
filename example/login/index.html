@@ -33,6 +33,14 @@
                 logo: "Company Name",
                 remember: "Remember me"
             },
+            fr: {
+                login: "Nom d'utilisateur",
+                password: "Mot de passe",
+                submit: "S'identifier",
+                header: "Titre du site Web",
+                logo: "Nom de la compagnie",
+                remember: "Souviens-toi de moi"
+            },
             ru: {
                 login: "Имя",
                 password: "Пароль",
@@ -119,7 +127,7 @@
 
     //Only in language setting and login page this code is needed. In other places it's not necessary
     function setLanguage(selectedLang) {
-        if ((selectedLang != "en") && (selectedLang != "es") && (selectedLang != "ru") && (selectedLang != "de")) {
+        if ((selectedLang != "en") && (selectedLang != "es") && (selectedLang != "ru") && (selectedLang != "fr") && (selectedLang != "de")) {
             selectedLang = "en";
         }
         setCookie('lang', selectedLang, 365, "/example/");

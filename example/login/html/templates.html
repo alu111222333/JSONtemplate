@@ -1,11 +1,11 @@
 NextTemplateName: header
-<h3 class="text-center text-white pt-5">@str.header<sup><small>[*jsontext.val1*]</small></sup></h3>
+<h2 class="text-center pt-5">@str.header<sup><small class="text-muted">[*jsontext.val1*]</small></sup></h2>
 
 
 
 NextTemplateName: logo
 <br>
-<h3 class="text-center text-info">@str.logo<sup><small>[*jsontext.val2*]</small></sup></h3>
+<h5 class="text-center text-primary">@str.logo<sup><small>[*jsontext.val2*]</small></sup></h5>
 <br>
 
 
@@ -17,10 +17,10 @@ NextTemplateName: form
     <input placeholder="@str.password" type="text" name="password" id="password" class="form-control">
 </div>
 <div class="form-group text-left">
-    <label for="remember-me" class="text-info m-0 p-0"><span><input id="remember-me" name="remember-me" type="checkbox" value=1></span> <span>@str.remember</span></label><br>
+    <label for="remember-me" class="text-primary m-0 p-0"><span><input id="remember-me" name="remember-me" type="checkbox" value=1></span> <span>@str.remember</span></label><br>
 </div>
 <div class="form-group text-center mt-2">
-    <input type="submit" class="btn btn-info btn-md w-50" value="@str.submit">
+    <input type="submit" class="btn btn-outline-primary w-50" value="@str.submit">
 </div>
 
 
@@ -31,7 +31,7 @@ NextTemplateName: page
 <div class="container">
     <div id="login-row" class="row justify-content-center align-items-center">
         <div id="login-column" class="col-md-4">
-            <div id="login-box" class="col-md-12">
+            <div id="login-box" class="col-md-12 border border-secondary rounded">
                 <form id="login-form" class="form m-0 p-3" action="#" method="get" onsubmit="return checkLogin();">
                     <div id="logoContainer">
                         {{logo}}
@@ -44,6 +44,7 @@ NextTemplateName: page
                             <option value="en" selected="">English</option>
                             <option value="es">Español</option>
                             <option value="ru">Русский</option>
+                            <option value="fr">Français</option>
                             <option value="de">Deutsch</option>
                         </select>
                     </div>

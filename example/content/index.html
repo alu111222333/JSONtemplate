@@ -23,35 +23,10 @@
         //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
         //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
         //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
-        var translates = {
-            en: {
-                login: "UserName",
-                password: "Password",
-                submit: "LogIn",
-                header: "Website Title",
-                logo: "Company Name"
-            },
-            ru: {
-                login: "Имя",
-                password: "Пароль",
-                submit: "Вход",
-                header: "Заголовок Сайта",
-                logo: "Имя компании"
-            },
-            es: {
-                login: "Nombre de usuario",
-                password: "Contraseña",
-                submit: "Iniciar sesión",
-                header: "Título del sitio web",
-                logo: "nombre de empresa"
-            },
-            de: {
-                login: "Benutzername",
-                password: "Passwort",
-                submit: "Anmelden",
-                header: "Website-Titel",
-                logo: "Firmenname"
-            }
+        var translatesEN = {
+            free_start: "Start for free",
+            pro_start: "Get started",
+            enterprise_start: "EEEeee!!!"
         };
     </script>
 </head>
@@ -72,7 +47,7 @@
         //before loading any templates, you need to set translation array, if you want multilanguage support
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
         //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
-        JST.setTranslationAssociativeArray(translates.en); // optional
+        JST.setTranslationAssociativeArray(translatesEN); // optional
         JST.loadTemplateUrlsArray(templates, [
             "html/structure.html",
             "html/header.html",
@@ -104,6 +79,7 @@
             $("#items_container").hide();
             JST.getJSON("api/get_items.json", function(json) {
                 if (notErrorResponse(json)) {
+                    JST.translateObject(json, ["button_text"]);
                     var html = JST.parseTemplate(templates, "total_items", json);
                     $("#items_container").html(html);
                     $("#items_container").fadeIn(200);

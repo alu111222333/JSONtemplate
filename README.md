@@ -1,6 +1,25 @@
 # JSONtemplate + Multilanguage support
 JS library for single-page web applications
 
+# Installation
+```html
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="path_to/json_templates.js"></script>
+```
+
+# Basic request example
+Library need JQuery for network requests. This is example code for processing data from server.
+```javascript
+JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
+    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+        alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
+    } else {
+        var html=JSONTemplate.parse_template(template,"head",json); //insert data to template
+        $('#content').html(html); //show result inside 'id=content' page item
+    }
+});
+```
+
 # Parsing JSON into HTML
 This library make a lot of work for converting data from JSON to HTML.
 <br>
@@ -32,9 +51,10 @@ And just call **JSONTemplate.parse_template** like here
     var html=JSONTemplate.parse_template(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
+
 This is a list of all possible placeholders. Only 3 totally:
-- **[\*json.variable.value\*]** - insert value from JSON
-- **[!template,json.variable.array!]** - process array. Each element inserter in template
+- **[\*variable\*]** - insert value from JSON
+- **[!template,array!]** - process array. Each element inserter in template
 - **{{template}}** - just show template with current data
 
 
@@ -67,21 +87,6 @@ var html=JSONTemplate.parse_template(template,"table_row",json.data.parameters[0
 
 There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
 
-# Basic request example
-Library use JQuery for requests. This is example code for processing data from server.
-```javascript
-JSONTemplate.getJSON("api/get_info.php",function (json){ //send request to API
-    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-        //display error message from json.error.title and json.error.message
-        alert(json.error.title + "\n" + json.error.message);
-        //OR
-        $('#content').html('show error info if needed');
-    } else {
-        var html=JSONTemplate.parse_template(template,"info_structure",json); //insert data to template
-        $('#content').html(html); //show result inside 'id=content' page item
-    }
-});
-```
 
 # Explanation
 First what you need to know, is the order - how values are replaced in static HTML templates.
@@ -226,8 +231,11 @@ NextTemplateName: users_table_items
 So it's possible to put all templates together in one file. **users_table** template use **users_table_items** for each element in array.
 After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
 
+
 # Translation
 All templates are translated automatically if there is keywords in format "@str.array_key"
+
+Key name not longer than 40 simbols.
 
 If you nee to translate some response you can use function "JST.translateObject(jsonObject,[keys])". Keys is optional.
 
