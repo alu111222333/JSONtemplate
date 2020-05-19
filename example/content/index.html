@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <title>Content page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../json_templates.js"></script>
+
+
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <link rel="stylesheet" href="css/content.css">
+    <script type="text/javascript">
+        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
+        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
+        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
+        var translates = {
+            en: {
+                login: "UserName",
+                password: "Password",
+                submit: "LogIn",
+                header: "Website Title",
+                logo: "Company Name"
+            },
+            ru: {
+                login: "Имя",
+                password: "Пароль",
+                submit: "Вход",
+                header: "Заголовок Сайта",
+                logo: "Имя компании"
+            },
+            es: {
+                login: "Nombre de usuario",
+                password: "Contraseña",
+                submit: "Iniciar sesión",
+                header: "Título del sitio web",
+                logo: "nombre de empresa"
+            },
+            de: {
+                login: "Benutzername",
+                password: "Passwort",
+                submit: "Anmelden",
+                header: "Website-Titel",
+                logo: "Firmenname"
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div id="content">
+
+    </div>
+</body>
+<script type="text/javascript">
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    // ------------- NECESSARY CODE -----------------
+    var templates = {};
+
+    function init() {
+        //before loading any templates, you need to set translation array, if you want multilanguage support
+        //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
+        //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
+        JST.setTranslationAssociativeArray(translates.en); // optional
+        JST.loadTemplateUrlsArray(templates, [
+            "html/structure.html",
+            "html/header.html",
+            "html/footer.html",
+            "html/item.html"
+        ], loadingCallback);
+
+        $("#content").hide(); // optional
+    }
+
+    function loadingCallback() {
+        //if all templates loaded correctly.
+        //If this function was not called - some of the file is not exists
+        buildWebUI();
+    }
+
+    init(); //Run it immediately after loading page
+
+
+    // ----------- Custom JS-code ------------
+    // ----------- Custom JS-code ------------
+    // ----------- Custom JS-code ------------
+    // ----------- Custom JS-code ------------
+
+    function buildWebUI() {
+        $("#content").show();
+        $("#content").html(JST.parseTemplate(templates, "structure", {}));
+        setTimeout(function() {
+            $("#items_container").hide();
+            JST.getJSON("api/get_items.json", function(json) {
+                if (notErrorResponse(json)) {
+                    var html = JST.parseTemplate(templates, "total_items", json);
+                    $("#items_container").html(html);
+                    $("#items_container").fadeIn(200);
+                }
+            });
+        }, 500);
+    }
+
+    function notErrorResponse(json) {
+        if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+            //display error message from json.error.title and json.error.message
+            alert(json.error.title + "\n" + json.error.message); // need replace to something else according to UI
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</html>

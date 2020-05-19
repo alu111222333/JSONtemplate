@@ -10,7 +10,7 @@
 if (window.JSONTemplateParserLoaded === undefined) {
     var JSONTemplate = (function($) {
         "use strict";
-        window.JSONTemplateParserLoaded = true; //exclude duble inject script to one page.
+        window.JSONTemplateParserLoaded_v2 = true; //exclude duble inject script to one page.
         var DEBUG = false;
         var translate_prefix = '@str.';
         /**
@@ -59,7 +59,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     continue;
                 };
                 if (name_vars[i] == 'vardump') {
-                    return print_r(temp_data);
+                    return printObject(temp_data);
                 };
                 if ((name_vars[i] == 'length') && (Array.isArray(temp_data))) {
                     return temp_data.length;
@@ -500,26 +500,28 @@ if (window.JSONTemplateParserLoaded === undefined) {
                         };
                         //filter_end
 
-                        temp_data[key]['index_counter'] = k + '';
-                        temp_data[key]['index_key'] = key + '';
-                        //k=parseInt(k);
-                        if (k == 0) {
-                            temp_data[key]['index_class'] = 'first';
-                        } else {
-                            temp_data[key]['index_class'] = '';
-                        };
-                        if (k == ccc) {
-                            temp_data[key]['index_class'] = 'last';
-                        };
-                        //temp_data[key]['index_0'] = 'unused';
-                        //temp_data[key]['index_1'] = 'unused';
-                        temp_data[key]['index_2'] = ' ';
-                        if (((k + 1) % 2) == 0) {
-                            temp_data[key]['index_2'] = 'second';
-                        };
-                        if (((k + 1) % 2) == 1) {
-                            temp_data[key]['index_2'] = 'f_second';
-                        };
+                        if ((temp_data[key] instanceof Object)) {
+                            temp_data[key]['index_counter'] = k + '';
+                            temp_data[key]['index_key'] = key + '';
+                            //k=parseInt(k);
+                            if (k == 0) {
+                                temp_data[key]['index_class'] = 'first';
+                            } else {
+                                temp_data[key]['index_class'] = '';
+                            };
+                            if (k == ccc) {
+                                temp_data[key]['index_class'] = 'last';
+                            };
+                            //temp_data[key]['index_0'] = 'unused';
+                            //temp_data[key]['index_1'] = 'unused';
+                            temp_data[key]['index_2'] = ' ';
+                            if (((k + 1) % 2) == 0) {
+                                temp_data[key]['index_2'] = 'second';
+                            };
+                            if (((k + 1) % 2) == 1) {
+                                temp_data[key]['index_2'] = 'f_second';
+                            };
+                        }
 
                         temp_str = temp_str + parseTemplate(templates, temp_template[0], temp_data[key]);
 
@@ -662,7 +664,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         }
 
         //for debug
-        function print_r(arr, level) {
+        function printObject(arr, level = 1) {
             var print_red_text = "";
             if (!level) level = 0;
             var level_padding = "";
@@ -672,7 +674,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                     var value = arr[item];
                     if (typeof(value) == 'object') {
                         print_red_text += level_padding + "'" + item + "' :\n";
-                        print_red_text += print_r(value, level + 1);
+                        print_red_text += printObject(value, level + 1);
                     } else
                         print_red_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
                 }
@@ -692,7 +694,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        debug_log('Network: ' + textStatus + "\n" + print_r(errorThrown));
+                        debug_log('Network: ' + textStatus + "\n" + printObject(errorThrown));
                     }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
@@ -703,9 +705,10 @@ if (window.JSONTemplateParserLoaded === undefined) {
 
         function postJSON(url, data, mycallback_func) {
             var mycallback = mycallback_func;
-            var wrapperdata = {
-                'data': data
-            };
+            /*var wrapperdata = {
+                'postedData': data
+            };*/
+            var wrapperdata = data;
             $.post({
                 url: url,
                 data: JSON.stringify(wrapperdata),
@@ -717,7 +720,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        debug_log(textStatus + "\n" + print_r(errorThrown));
+                        debug_log(textStatus + "\n" + printObject(errorThrown));
                     }
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
@@ -794,7 +797,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
-                        debug_log(textStatus + "\n" + print_r(errorThrown));
+                        debug_log(textStatus + "\n" + printObject(errorThrown));
                     }
                 }
             });
@@ -805,7 +808,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
         //add new function to JQuerry object
         //add new function to JQuerry object
         //add new function to JQuerry object
-        $.fn.serializeObject = function(forceCheckbox) {
+        $.fn.serializeHtmlForm = function(forceCheckbox) {
             function updatejsonformat(obj, o) {
                 var n = o.name,
                     v = o.value;
@@ -1101,7 +1104,7 @@ if (window.JSONTemplateParserLoaded === undefined) {
             setTranslationAssociativeArray: setTranslationAssociativeArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translateString: translateString, //if you need to translate String object manually. All templates are translated automatically
             translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
-            print_r: print_r //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
+            printObject: printObject //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
         }
     }(jQuery));
     var JST = JSONTemplate; //alternative name

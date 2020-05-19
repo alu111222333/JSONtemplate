@@ -1,0 +1,47 @@
+{
+    "data":[
+        {
+            "name":"FREE",
+            "price":0,
+            "interval":"mo",
+            "users":10,
+            "storage":2,
+            "list":[
+                "Email support",
+                "Help center access"
+            ],
+            "button_text": "Start for free",
+            "button_type": 0
+
+        },
+        {
+            "name":"Pro",
+            "price":15,
+            "interval":"mo",
+            "users":20,
+            "storage":10,
+            "list":[
+                "Priority email support",
+                "Help center access"
+            ],
+            "button_text": "Get started",
+            "button_type": 1
+
+        }
+        ,
+        {
+            "name":"Enterprise",
+            "price":2000,
+            "interval":"y",
+            "users":200,
+            "storage":100,
+            "list":[
+                "Priority email support",
+                "Priority phone support"
+            ],
+            "button_text": "EEEeee!!!",
+            "button_type": 2
+
+        }
+    ]
+}
