@@ -21,7 +21,7 @@ JST.getJSON("api/get_info.php",function (json){ //send request to API
 ```
 
 # Recommended code structure
-For example on PHP language
+For example server-side APIs on PHP language
 * /common (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
     * /api
     * /html
