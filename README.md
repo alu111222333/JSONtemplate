@@ -20,6 +20,34 @@ JST.getJSON("api/get_info.php",function (json){ //send request to API
 });
 ```
 
+# Recommended code structure
+For example on PHP language
+* /common (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
+    * /api
+    * /html
+    * /js
+    * /css
+    * ...
+* /module1
+    * /api - (all Data models from server database)
+        * api1_result.php
+        * api2_result.php
+        * ...
+    * /html - (all View elements and chunks in current module)
+        * page_structure.html
+        * header.html
+        * footer.html
+        * content.html
+        * ...
+    * index.php - (control all events and process all data from server - Presenter)
+* /module2
+    * /api
+    * /html
+    * index.php
+* .....
+* index.php (main project file for navigation or iframes)
+
+
 # Parsing JSON into HTML
 This library make a lot of work for converting data from JSON to HTML.
 <br>
