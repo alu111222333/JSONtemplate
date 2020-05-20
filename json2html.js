@@ -1105,7 +1105,6 @@ if (window.json2htmlWasLoaded === undefined) {
             postJSON: postJSON, //send POST request  with calback
             loadTemplateUrlsArray: loadTemplateUrlsArray, //load multi-files templates with callback after all files loaded successfully
             setTranslationAssociativeArray: setTranslationAssociativeArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
-            translateString: translateString, //if you need to translate String object manually. All templates are translated automatically
             translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
             printObject: printObject //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
         }
