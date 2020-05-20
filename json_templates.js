@@ -8,7 +8,7 @@
 // that may occur with another code on the page (module pattern).
 
 if (window.JSONTemplateParserLoaded_v2 === undefined) {
-    var JSONTemplate = (function($) {
+    var JST = (function($) {
         "use strict";
         window.JSONTemplateParserLoaded_v2 = true; //exclude duble inject script to one page.
         var DEBUG = false;
@@ -1108,5 +1108,5 @@ if (window.JSONTemplateParserLoaded_v2 === undefined) {
             printObject: printObject //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
         }
     }(jQuery));
-    var JST = JSONTemplate; //alternative name
+    var JSONTemplate = JST; //alternative name
 }
