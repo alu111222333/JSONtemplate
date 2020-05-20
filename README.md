@@ -1,20 +1,20 @@
-# JSONtemplate + Multilanguage support
+# JSON2HTML templates + Multilanguage support
 JavaScript library for single-page web applications
 
 # Installation
 ```html
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="path_to/json_templates.js"></script>
+<script type="text/javascript" src="path_to/json2html.js"></script>
 ```
 
 # Basic request example
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
-JST.getJSON("api/get_info.php",function (json){ //send request to API
+J2H.getJSON("api/get_info.php",function (json){ //send request to API
     if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
         alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
     } else {
-        var html=JST.parse_template(template,"head",json); //insert data to template
+        var html=J2H.parse_template(template,"head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
@@ -74,9 +74,9 @@ var templates={
         head:'<h1>[*data.name*]</h1>'
     };
 ```
-And just call **JST.parse_template** like here
+And just call **J2H.parse_template** like here
 ```javascript
-    var html=JST.parse_template(templates,"head",json);
+    var html=J2H.parse_template(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
 
@@ -94,7 +94,7 @@ var templates={
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=JST.parse_template(template,"all_page",json);
+var html=J2H.parse_template(template,"all_page",json);
 ```
 Content of html variable:
 ```html
@@ -107,7 +107,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing table
 ```javascript
-var html=JST.parse_template(template,"table_row",json.data.parameters[0]);
+var html=J2H.parse_template(template,"table_row",json.data.parameters[0]);
 
 //---- result ----
 //<tr><td>1</td><td>2</td></tr>    
@@ -160,13 +160,13 @@ var templates={
         table:'<table>[!table_row,data.parameters!]</table>',
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
     };
-var html=JST.parse_template(template,"table",json);
+var html=J2H.parse_template(template,"table",json);
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=JST.parse_template(template,"table_row",json.data.parameters[0]);
+var html=J2H.parse_template(template,"table_row",json.data.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
@@ -225,9 +225,9 @@ var templates = {};
 function init() {
     //before loading any templates, you need to set translation array, if you want multilanguage support
     //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-    //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
-    JST.setTranslationAssociativeArray(<?php echo(json_encode(transtale_array['en'])); ?>)
-    JST.loadTemplateUrlsArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
+    //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplateUrlsArray"
+    J2H.setTranslationAssociativeArray(<?php echo(json_encode(transtale_array['en'])); ?>)
+    J2H.loadTemplateUrlsArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
 }
 
 function loadingCallback() {
@@ -265,15 +265,15 @@ All templates are translated automatically if there is keywords in format "@str.
 
 Key name not longer than 40 simbols.
 
-If you nee to translate some response you can use function "JST.translateObject(jsonObject,[keys])". Keys is optional.
+If you nee to translate some response you can use function "J2H.translateObject(jsonObject,[keys])". Keys is optional.
 
 Example:
 ```javascript
-JST.setTranslationAssociativeArray({
+J2H.setTranslationAssociativeArray({
     login_name:"User",
     user_description:"Description"
 });
-JST.loadTemplateUrlsArray(["url1_to_templates","url2_to_templates"],drawUI);
+J2H.loadTemplateUrlsArray(["url1_to_templates","url2_to_templates"],drawUI);
 
 function drawUI(){
     //...

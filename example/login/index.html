@@ -5,7 +5,7 @@
     <title>Example page</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../../json_templates.js"></script>
+    <script type="text/javascript" src="../../json2html.js"></script>
 
 
     <!--------------------------------------------->
@@ -85,9 +85,9 @@
     function init() {
         //before loading any templates, you need to set translation array, if you want multilanguage support
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-        //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
-        JST.setTranslationAssociativeArray(translates.en); // optional
-        JST.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback);
+        //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplateUrlsArray"
+        J2H.setTranslationAssociativeArray(translates.en); // optional
+        J2H.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback);
 
         $("#content").hide(); // optional
     }
@@ -111,12 +111,12 @@
     //------------- login page special code ---------------
     //-----------------------------------------------------
     function buildWebUI() { //create all elements inside page (Structure of page)
-        JST.getJSON("api/response.json", function(json) {
+        J2H.getJSON("api/response.json", function(json) {
             if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
                 //display error message from json.error.title and json.error.message
                 alert(json.error.title + "\n" + json.error.message);
             } else {
-                $('#content').html(JST.parseTemplate(templates, "page", json));
+                $('#content').html(J2H.parseTemplate(templates, "page", json));
                 //language code
                 //TODO need to check if language already correct.
                 var lang = getCookie('lang');
@@ -132,16 +132,16 @@
             selectedLang = "en";
         }
         setCookie('lang', selectedLang, 365, "/example/");
-        JST.setTranslationAssociativeArray(translates[selectedLang])
-        JST.loadTemplateUrlsArray(templates, ["html/templates.html"], function() {
-            JST.getJSON("api/response.json", function(json) { //change only some parts of page
+        J2H.setTranslationAssociativeArray(translates[selectedLang])
+        J2H.loadTemplateUrlsArray(templates, ["html/templates.html"], function() {
+            J2H.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
                     //display error message from json.error.title and json.error.message
                     alert(json.error.title + "\n" + json.error.message); // need replace to something else according to UI
                 } else {
-                    $('#headerContainer').html(JST.parseTemplate(templates, "header", json));
-                    $('#logoContainer').html(JST.parseTemplate(templates, "logo", json));
-                    $('#formContainer').html(JST.parseTemplate(templates, "form", json));
+                    $('#headerContainer').html(J2H.parseTemplate(templates, "header", json));
+                    $('#logoContainer').html(J2H.parseTemplate(templates, "logo", json));
+                    $('#formContainer').html(J2H.parseTemplate(templates, "form", json));
                     $('#content').fadeIn(50);
                 }
             })
@@ -154,8 +154,8 @@
     // onsubmit="return checkLogin();"
     function checkLogin() {
         var formData = $("#login-form").serializeHtmlForm(); // from JST library - force add unchecked checkboxes with postfix "__false" to it values.
-        alert("Posted object:\n" + JST.printObject(formData, 2)); // from JST library - printObject(object, [deep level]);
-        JST.postJSON("api/check_login.json", formData, function(json) {
+        alert("Posted object:\n" + J2H.printObject(formData, 2)); // from JST library - printObject(object, [deep level]);
+        J2H.postJSON("api/check_login.json", formData, function(json) {
             if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
                 //display error message from json.error.title and json.error.message
                 alert(json.error.title + "\n" + json.error.message);

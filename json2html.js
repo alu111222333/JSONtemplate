@@ -1,16 +1,18 @@
 /**
  * The simplest "JSON->HTML" templater with multilanguage support
  * Author: Leonid Arefev
- * Created: 11-05-2013
+ * Started: 11-05-2013
+ * GitHub: https://github.com/wtf-develop/JSONtemplate
+ * Web: https://wtf-dev.ru/
  */
 
 // Wrap all widget code into anonymous function expression to avoid conflicts
 // that may occur with another code on the page (module pattern).
 
-if (window.JSONTemplateParserLoaded_v2 === undefined) {
-    var JST = (function($) {
+if (window.json2htmlWasLoaded === undefined) {
+    var J2H = (function($) {
         "use strict";
-        window.JSONTemplateParserLoaded_v2 = true; //exclude duble inject script to one page.
+        window.json2htmlWasLoaded = true; //exclude duble inject script to one page.
         var DEBUG = false;
         var translate_prefix = '@str.';
         /**
@@ -1108,5 +1110,5 @@ if (window.JSONTemplateParserLoaded_v2 === undefined) {
             printObject: printObject //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
         }
     }(jQuery));
-    var JSONTemplate = JST; //alternative name
+    var Json2Html = J2H; //alternative name
 }

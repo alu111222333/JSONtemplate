@@ -5,7 +5,7 @@
     <title>Content page</title>
     <meta charset="utf-8">
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../../json_templates.js"></script>
+    <script type="text/javascript" src="../../json2html.js"></script>
 
 
     <!--------------------------------------------->
@@ -47,9 +47,9 @@
     function init() {
         //before loading any templates, you need to set translation array, if you want multilanguage support
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-        //Or AJAX request to server for json, and only after that you can load templates with "JST.loadTemplateUrlsArray"
-        JST.setTranslationAssociativeArray(translatesEN); // optional
-        JST.loadTemplateUrlsArray(templates, [
+        //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplateUrlsArray"
+        J2H.setTranslationAssociativeArray(translatesEN); // optional
+        J2H.loadTemplateUrlsArray(templates, [
             "html/structure.html",
             "html/header.html",
             "html/footer.html",
@@ -78,13 +78,13 @@
     // ---------------------------------------
     function buildWebUI() {
         $("#content").show();
-        $("#content").html(JST.parseTemplate(templates, "structure", {}));
+        $("#content").html(J2H.parseTemplate(templates, "structure", {}));
         setTimeout(function() {
             $("#items_container").hide();
-            JST.getJSON("api/get_items.json", function(json) {
+            J2H.getJSON("api/get_items.json", function(json) {
                 if (notErrorResponse(json)) {
-                    JST.translateObject(json, ["button_text"]);
-                    var html = JST.parseTemplate(templates, "total_items", json);
+                    J2H.translateObject(json, ["button_text"]);
+                    var html = J2H.parseTemplate(templates, "total_items", json);
                     $("#items_container").html(html);
                     $("#items_container").fadeIn(200);
                 }
