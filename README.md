@@ -50,50 +50,48 @@ For example server-side APIs on PHP language
 
 # Methods List
 
-* **parseTemplate(templates,"template_name",json_data)** 
+* **parseTemplate(loaded_templates,"template_name",json_data)**
      ```
-    return HTML string. "templates" from method loadTemplateUrlsArray(...)
-    
+    return HTML string. "loaded_templates" from method loadTemplateUrlsArray(...)
+
     ```
 
-* **getJSON("url", function(json){...})** 
+* **getJSON("url", function(json_data){..})**
     ```
     send GET request with callback
-    
+
     ```
 
-* **postJSON("url", json_data, function(json){...})** 
+* **postJSON("url", json_data, function(json_data){..})**
     ```
     send POST request  with callback
-    
+
     ```
 
-* **loadTemplateUrlsArray(templates, ["url1","url2"...], function(){})** 
+* **loadTemplateUrlsArray(loaded_templates, ["url1","url2"...], function(){..})**
     ```
     load multi-files templates with callback. Result in "templates"
-    
+
     ```
-    
-* **setTranslationAssociativeArray(language_array)** 
+
+* **setTranslationAssociativeArray(language_array)**
     ```
     set translation array with keys as last part of "@str.key"
-    
-    ```
-    
 
-* **translateObject(Object,["ke1","key2",..])** 
+    ```
+
+* **translateObject(Object,["ke1","key2"..])**
     ```
     Translate all strings in object with keys (optional)
-    
-    ```
-    
 
-* **printObject(Object, level)** 
     ```
-    Return String with object content (Look below:[*vardump*])
-    
+
+* **printObject(Object, level)**
     ```
-    
+    Return String with object content (Look below:[*vardump*]). Level is optional
+
+    ```
+
 
 
 
