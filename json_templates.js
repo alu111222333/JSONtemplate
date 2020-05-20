@@ -1060,6 +1060,7 @@ if (window.JSONTemplateParserLoaded_v2 === undefined) {
 
         function translateString(str) {
             if (str === undefined) return '';
+            if ((translation_strings === undefined) || (translation_strings === null) || (!(translation_strings instanceof Object))) return str;
             if (Object.keys(translation_strings).length == 0) return str;
             var indexEnd = -1;
             var movedIndex = -1;
