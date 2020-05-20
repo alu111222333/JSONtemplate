@@ -4,26 +4,26 @@
 <head>
     <title>Example page</title>
     <meta charset="utf-8">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../json_templates.js"></script>
+
+
+    <!--------------------------------------------->
+    <!-- Other CSS and JS-Scripts tags put below -->
+    <!--------------------------------------------->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="../../json_templates.js"></script>
-
-
-    <!-- Other CSS and JS-Scripts tags put below -->
-    <!-- Other CSS and JS-Scripts tags put below -->
-    <!-- Other CSS and JS-Scripts tags put below -->
-    <!-- Other CSS and JS-Scripts tags put below -->
     <link rel="stylesheet" href="css/custom.css">
     <script type="text/javascript" src="js/functions.js"></script>
+
     <script type="text/javascript">
+        //------------------------------------------------------------------------------------------------------------
         //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
-        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
-        //this is unnecessary code. It must be generated on server side. Read below... Only one language must be here.
+        //------------------------------------------------------------------------------------------------------------
         var translates = {
             en: {
                 login: "UserName",
@@ -71,16 +71,15 @@
 
 <body>
     <div id="content">
+        ===================================================================================
         ====== This text will be replaced after loading all information from server. ======
-        ====== This text will be replaced after loading all information from server. ======
-        ====== This text will be replaced after loading all information from server. ======
+        ===================================================================================
     </div>
 </body>
 <script type="text/javascript">
+    // ----------------------------------------------
     // ------------- NECESSARY CODE -----------------
-    // ------------- NECESSARY CODE -----------------
-    // ------------- NECESSARY CODE -----------------
-    // ------------- NECESSARY CODE -----------------
+    // ----------------------------------------------
     var templates = {};
 
     function init() {
@@ -108,10 +107,9 @@
 
 
 
+    //-----------------------------------------------------
     //------------- login page special code ---------------
-    //------------- login page special code ---------------
-    //------------- login page special code ---------------
-    //------------- login page special code ---------------
+    //-----------------------------------------------------
     function buildWebUI() { //create all elements inside page (Structure of page)
         JST.getJSON("api/response.json", function(json) {
             if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
