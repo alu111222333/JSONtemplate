@@ -2,6 +2,9 @@
 html, body, html * {
   font-family: 'Roboto', sans-serif;
 }
+html, body{
+    height: 100vh;
+}
 body {
   margin: 0;
   padding: 0;
@@ -9,15 +12,37 @@ body {
   height: 100vh;
   font-size: 14px;
 }
-.container #login-row #login-column #login-box {
-  margin-top: 120px;
-  max-width: 400px;
-  height: auto;
-  background-color: #fff;
+#content{
+    height: 100vh;
 }
-.container #login-row #login-column #login-box #login-form {
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-width: 100%;
+  height: 100vh;
+  min-height: 100%;
   padding: 20px;
+  background-color: #fff;
+  /*background: url(img/some image.jpg) no-repeat center center fixed;*/
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
 }
-.container #login-row #login-column #login-box #login-form #register-link {
-  margin-top: -85px;
+
+#login-row {
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  width: 90%;
+  max-width: 350px;
+  position: relative;
+  padding: 0px;
+  margin-bottom: 100px;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  text-align: center;
 }
