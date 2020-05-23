@@ -57,7 +57,7 @@ For example server-side APIs on PHP language
 
 # Methods List
 
-* **loadTemplateUrlsArray(loaded_templates, ["url1","url2"...], function(){..})**
+* **loadTemplatesArray(loaded_templates, ["url1","url2"...], function(){..})**
     ```
     load multi-files templates with callback. Result in "loaded_templates" variable
 
@@ -65,7 +65,7 @@ For example server-side APIs on PHP language
 
 * **parseTemplate(loaded_templates,"template_name",json_data)**
      ```
-    return is a HTML string. Parameter "loaded_templates" from method loadTemplateUrlsArray(...)
+    return is a HTML string. Parameter "loaded_templates" from method loadTemplatesArray(...)
 
     ```
 
@@ -81,7 +81,7 @@ For example server-side APIs on PHP language
 
     ```
 
-* **setTranslationAssociativeArray(language_array)**
+* **setTranslationArray(language_array)**
     ```
     set translation array with keys as last part of "@str.key_name". Must be generated on server side accordingly to selected language.
 
@@ -278,9 +278,9 @@ var templates = {};
 function init() {
     //before loading any templates, you need to set translation array, if you want multilanguage support
     //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-    //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplateUrlsArray"
-    J2H.setTranslationAssociativeArray(<?php echo(json_encode(transtale_array['en'])); ?>)
-    J2H.loadTemplateUrlsArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
+    //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
+    J2H.setTranslationArray(<?php echo(json_encode(transtale_array['en'])); ?>)
+    J2H.loadTemplatesArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
 }
 
 function loadingCallback() {
@@ -322,11 +322,11 @@ If you nee to translate some response you can use function "J2H.translateObject(
 
 Example:
 ```javascript
-J2H.setTranslationAssociativeArray({
+J2H.setTranslationArray({
     login_name:"User",
     user_description:"Description"
 });
-J2H.loadTemplateUrlsArray(["url1_to_templates","url2_to_templates"],drawUI);
+J2H.loadTemplatesArray(["url1_to_templates","url2_to_templates"],drawUI);
 
 function drawUI(){
     //...

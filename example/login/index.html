@@ -85,9 +85,9 @@
     function init() {
         //before loading any templates, you need to set translation array, if you want multilanguage support
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-        //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplateUrlsArray"
-        J2H.setTranslationAssociativeArray(translates.en); // optional
-        J2H.loadTemplateUrlsArray(templates, ["html/templates.html"], loadingCallback);
+        //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
+        J2H.setTranslationArray(translates.en); // optional
+        J2H.loadTemplatesArray(templates, ["html/templates.html"], loadingCallback);
 
         $("#content").hide(); // optional
     }
@@ -132,8 +132,8 @@
             selectedLang = "en";
         }
         setCookie('lang', selectedLang, 365, "/example/");
-        J2H.setTranslationAssociativeArray(translates[selectedLang])
-        J2H.loadTemplateUrlsArray(templates, ["html/templates.html"], function() {
+        J2H.setTranslationArray(translates[selectedLang])
+        J2H.loadTemplatesArray(templates, ["html/templates.html"], function() {
             J2H.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
                     //display error message from json.error.title and json.error.message

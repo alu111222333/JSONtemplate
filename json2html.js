@@ -905,7 +905,7 @@ if (window.json2htmlWasLoaded === undefined) {
             templates_callback_function();
         }
 
-        function loadTemplateUrlsArray(template, arr, func) {
+        function loadTemplatesArray(template, arr, func) {
             if (!isAllTemplatesLoaded()) {
                 alert('Critical error.\nTrying to load templates before previous templates request is completed');
             }
@@ -1050,7 +1050,7 @@ if (window.json2htmlWasLoaded === undefined) {
         /* json object direct echo to JavaScript */
         var translation_strings = {};
 
-        function setTranslationAssociativeArray(jsonObject) {
+        function setTranslationArray(jsonObject) {
             translation_strings = jsonObject;
         }
 
@@ -1100,8 +1100,8 @@ if (window.json2htmlWasLoaded === undefined) {
             parseTemplate: parseTemplate, //parse loaded templates with JSON response from server - look documentation
             getJSON: getJSON, //send GET request with calback
             postJSON: postJSON, //send POST request  with calback
-            loadTemplateUrlsArray: loadTemplateUrlsArray, //load multi-files templates with callback after all files loaded successfully
-            setTranslationAssociativeArray: setTranslationAssociativeArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
+            loadTemplatesArray: loadTemplatesArray, //load multi-files templates with callback after all files loaded successfully
+            setTranslationArray: setTranslationArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
             printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
