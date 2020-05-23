@@ -25,7 +25,7 @@ function isGoodResponse(json){
     return true;
 }
 ```
-Templates can include some of this 3 placeholders in HTML:
+Templates can use this 3 placeholders in HTML:
 - **[\*variable\*]** - insert value from JSON data.
 - **[!template,array!]** - process arrays.
 - **{{template}}** - just show template.
@@ -33,11 +33,11 @@ Templates can include some of this 3 placeholders in HTML:
 For translation you can use:
 - **@str.array_key** - this will be replaced by string from translation["array_key"]
 
-Examples are below or on **example/** folder.
+Examples are below or in **example/** folder.
 
 
 # Recommended code structure
-For example server-side APIs on PHP language
+
 * /common (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
     * /api
     * /html
