@@ -38,13 +38,13 @@ Examples are below or in **example/** folder.
 
 # Recommended code structure
 
-* /common (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
+* **/common** (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
     * /api
     * /html
     * /js
     * /css
     * /img
-* /module1
+* **/module1**
     * /api - (all Data models from server database)
         * api1_result.php
         * ...
@@ -54,12 +54,12 @@ Examples are below or in **example/** folder.
         * content.html
         * ...
     * index.php - (control all events and process all data from server - Presenter)
-* /module2
+* **/module2**
     * /api
     * /html
     * index.php
 * .....
-* index.php (main project file for navigation or iframes)
+* **index.php** (main project file for navigation or iframes)
 
 
 # Methods List
