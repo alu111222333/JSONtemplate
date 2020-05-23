@@ -71,7 +71,8 @@ For example server-side APIs on PHP language
 
 * **setTranslationArray(language_array)**
     ```
-    set translation array with keys as last part of "@str.key_name". Must be generated on server side accordingly to selected language.
+    set translation array with keys as last part of "@str.key_name".
+    Must be generated on server side accordingly to selected language.
 
     ```
 ## Extentions
@@ -89,13 +90,16 @@ For example server-side APIs on PHP language
 
 * translateObject(Object,["ke1","key2"..])
     ```
-    Translate all strings in object with keys (optional). If you need to translate response from server. Templates are translated automatically.
+    Translate all strings in object with keys (optional).
+    If you need to translate response from server.
+    Templates are translated automatically.
 
     ```
 
 * serializeHtmlForm(JQuery_object)
     ```
-    extend $(??).serializeArray() with unchecked checkboxes and arrays. You can use $(??).serializeHtmlForm()
+    extention for $(??).serializeArray() with unchecked checkboxes and arrays. 
+    You can use $(??).serializeHtmlForm()
 
     ```
 
