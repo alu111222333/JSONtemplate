@@ -43,16 +43,14 @@ Examples are below or in **example/** folder.
     * /html
     * /js
     * /css
-    * ...
+    * /img
 * /module1
     * /api - (all Data models from server database)
         * api1_result.php
-        * api2_result.php
         * ...
     * /html - (all View elements and chunks in current module)
         * page_structure.html
         * header.html
-        * footer.html
         * content.html
         * ...
     * index.php - (control all events and process all data from server - Presenter)
@@ -107,7 +105,7 @@ Examples are below or in **example/** folder.
 
 * serializeHtmlForm(JQuery_object)
     ```
-    extention for $(??).serializeArray() with unchecked checkboxes and arrays. 
+    extention for $(??).serializeArray() with unchecked checkboxes and arrays.
     You can use $(??).serializeHtmlForm()
 
     ```
