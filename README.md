@@ -205,7 +205,7 @@ Same situation with templates:
  {{template[*some_value*]}} --> {{template100}}
 ```
 
-# Using templates {{template}}
+# Using {{template}}
 
 
 ```javascript
@@ -245,7 +245,7 @@ Second is to use parameters for template inside HTML code
 This very usefull if you have same data on different levels.
 
 
-# Using variables [\*variable\*]
+# Using [\*variable\*]
 ```javascript
 [*variable,if=`value||value2`then`TrueString`else`FalseString`*] //- show string depends of value
 
@@ -261,7 +261,7 @@ This very usefull if you have same data on different levels.
 ```
 
 
-# Using arrays [!template,array!]
+# Using [!template,array!]
 
 Here you can use also if condition.
 ```javascript
