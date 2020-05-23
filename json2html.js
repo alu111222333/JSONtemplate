@@ -701,7 +701,6 @@ if (window.json2htmlWasLoaded === undefined) {
                     mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
                 }
             });
-
         }
 
 
@@ -806,11 +805,8 @@ if (window.json2htmlWasLoaded === undefined) {
         }
 
 
-        //add new function to JQuerry object
-        //add new function to JQuerry object
-        //add new function to JQuerry object
-        //add new function to JQuerry object
-        $.fn.serializeHtmlForm = function(forceCheckbox) {
+        function serializeHtmlForm(formObj) {
+
             function updatejsonformat(obj, o) {
                 var n = o.name,
                     v = o.value;
@@ -856,34 +852,28 @@ if (window.json2htmlWasLoaded === undefined) {
                 }
             }
 
-            if (forceCheckbox === undefined) {
-                forceCheckbox = false;
-            } else {
-                forceCheckbox = true;
-            }
             var object = {},
                 names = {};
-            var sarray = this.serializeArray();
+            var sarray = formObj.serializeArray();
             $.each(sarray, function(index, o) {
                 updatejsonformat(object, o);
             });
-            $('#' + $(this).attr("id") + ' input[type="checkbox"]:not(:checked)').each(function(ind, elem) { //insert all unchecked values too
+            $(formObj).find('input[type="checkbox"]:not(:checked)').each(function(ind, elem) { //insert all unchecked values too
                 updatejsonformat(object, {
                     'name': elem.name,
                     'value': elem.value + '__false'
                 }) //value of unchecked elements will be ended with "__false"
             });
-            if (forceCheckbox) {
-                $('#' + $(this).attr("id") + ' input[type="checkbox"]:checked').each(function(ind, elem) { //insert all unchecked values too
-                    updatejsonformat(object, {
-                        'name': elem.name,
-                        'value': elem.value
-                    }) //value of unchecked elements will be ended with "__false"
-                });
-            }
+
+            $(formObj).find('input[type="checkbox"]:checked').each(function(ind, elem) { //insert all unchecked values too
+                updatejsonformat(object, {
+                    'name': elem.name,
+                    'value': elem.value
+                }) //value of unchecked elements will be ended with "__false"
+            });
 
 
-            $('#' + $(this).attr("id") + ' input[type="checkbox"]:disabled:checked').each(function(ind, elem) { //insert all unchecked values too
+            $(formObj).find('input[type="checkbox"]:disabled:checked').each(function(ind, elem) { //insert all unchecked values too
                 updatejsonformat(object, {
                     'name': elem.name,
                     'value': elem.value
@@ -892,6 +882,13 @@ if (window.json2htmlWasLoaded === undefined) {
 
 
             return object;
+        }
+        //add new function to JQuerry object
+        //add new function to JQuerry object
+        //add new function to JQuerry object
+        //add new function to JQuerry object
+        $.fn.serializeHtmlForm = function() {
+            return serializeHtmlForm(this)
         };
 
         function isAllTemplatesLoaded() {
@@ -1106,7 +1103,8 @@ if (window.json2htmlWasLoaded === undefined) {
             loadTemplateUrlsArray: loadTemplateUrlsArray, //load multi-files templates with callback after all files loaded successfully
             setTranslationAssociativeArray: setTranslationAssociativeArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
-            printObject: printObject //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
+            printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
+            serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
         }
     }(jQuery));
     var Json2Html = J2H; //alternative name

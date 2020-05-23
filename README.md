@@ -19,6 +19,13 @@ J2H.getJSON("api/get_info.php",function (json){ //send request to API
     }
 });
 ```
+Templates can include some of this 3 placeholders in HTML:
+- **[\*variable\*]** - insert value from JSON data.
+- **[!template,array!]** - process arrays.
+- **{{template}}** - just show template.
+
+Examples are below or on **example/** folder.
+
 
 # Recommended code structure
 For example server-side APIs on PHP language
@@ -50,9 +57,15 @@ For example server-side APIs on PHP language
 
 # Methods List
 
+* **loadTemplateUrlsArray(loaded_templates, ["url1","url2"...], function(){..})**
+    ```
+    load multi-files templates with callback. Result in "loaded_templates" variable
+
+    ```
+
 * **parseTemplate(loaded_templates,"template_name",json_data)**
      ```
-    return HTML string. "loaded_templates" from method loadTemplateUrlsArray(...)
+    return is a HTML string. Parameter "loaded_templates" from method loadTemplateUrlsArray(...)
 
     ```
 
@@ -68,30 +81,28 @@ For example server-side APIs on PHP language
 
     ```
 
-* **loadTemplateUrlsArray(loaded_templates, ["url1","url2"...], function(){..})**
-    ```
-    load multi-files templates with callback. Result in "templates"
-
-    ```
-
 * **setTranslationAssociativeArray(language_array)**
     ```
-    set translation array with keys as last part of "@str.key"
+    set translation array with keys as last part of "@str.key_name". Must be generated on server side accordingly to selected language.
 
     ```
 
 * **translateObject(Object,["ke1","key2"..])**
     ```
-    Translate all strings in object with keys (optional)
+    Translate all strings in object with keys (optional). If you need to translate response from server. Templates are translated automatically.
 
     ```
 
 * **printObject(Object, level)**
     ```
-    Return String with object content (Look below:[*vardump*]). Level is optional
+    Return String with object content (Look below:[*vardump*]). Level is optional, default=1
 
     ```
+* serializeHtmlForm: serializeHtmlForm
+    ```
+    extend $(??).serializeArray() with unchecked checkboxes and arrays. You can use $(??).serializeHtmlForm()
 
+    ```
 
 
 
@@ -126,11 +137,6 @@ And just call **J2H.parse_template** like here
     var html=J2H.parse_template(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
-
-This is a list of all possible placeholders. Only 3 totally:
-- **[\*variable\*]** - insert value from JSON
-- **[!template,array!]** - process array. Each element inserter in template
-- **{{template}}** - just show template with current data
 
 
 Example2 with the same JSON as before:
