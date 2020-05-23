@@ -82,7 +82,7 @@
         setTimeout(function() {
             $("#items_container").hide();
             J2H.getJSON("api/get_items.json", function(json) {
-                if (notErrorResponse(json)) {
+                if (isGoodResponse(json)) {
                     J2H.translateObject(json, ["button_text"]);
                     var html = J2H.parseTemplate(templates, "total_items", json);
                     $("#items_container").html(html);
@@ -92,10 +92,10 @@
         }, 500);
     }
 
-    function notErrorResponse(json) {
+
+    function isGoodResponse(json) {
         if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-            //display error message from json.error.title and json.error.message
-            alert(json.error.title + "\n" + json.error.message); // need replace to something else according to UI
+            alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
             return false;
         }
         return true;

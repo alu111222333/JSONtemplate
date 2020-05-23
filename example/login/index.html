@@ -112,10 +112,7 @@
     //-----------------------------------------------------
     function buildWebUI() { //create all elements inside page (Structure of page)
         J2H.getJSON("api/response.json", function(json) {
-            if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-                //display error message from json.error.title and json.error.message
-                alert(json.error.title + "\n" + json.error.message);
-            } else {
+            if (isGoodResponse(json)) {
                 $('#content').html(J2H.parseTemplate(templates, "page", json));
                 //language code
                 //TODO need to check if language already correct.
@@ -135,10 +132,7 @@
         J2H.setTranslationArray(translates[selectedLang])
         J2H.loadTemplatesArray(templates, ["html/templates.html"], function() {
             J2H.getJSON("api/response.json", function(json) { //change only some parts of page
-                if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-                    //display error message from json.error.title and json.error.message
-                    alert(json.error.title + "\n" + json.error.message); // need replace to something else according to UI
-                } else {
+                if (isGoodResponse(json)) {
                     $('#headerContainer').html(J2H.parseTemplate(templates, "header", json));
                     $('#logoContainer').html(J2H.parseTemplate(templates, "logo", json));
                     $('#formContainer').html(J2H.parseTemplate(templates, "form", json));
