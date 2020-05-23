@@ -11,13 +11,19 @@ JavaScript library for single-page web applications
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
 J2H.getJSON("api/get_info.php",function (json){ //send request to API
-    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-        alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
-    } else {
+    if (isGoodResponse(json)) {
         var html=J2H.parseTemplate(template,"head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
+
+function isGoodResponse(json){
+    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+        alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
+        return false;
+    }
+    return true;
+}
 ```
 Templates can include some of this 3 placeholders in HTML:
 - **[\*variable\*]** - insert value from JSON data.
