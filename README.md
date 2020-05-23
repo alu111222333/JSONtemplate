@@ -57,6 +57,7 @@ For example server-side APIs on PHP language
 
 # Methods List
 
+## Basic (3)
 * **loadTemplateUrlsArray(loaded_templates, ["url1","url2"...], function(){..})**
     ```
     load multi-files templates with callback. Result in "loaded_templates" variable
@@ -69,41 +70,43 @@ For example server-side APIs on PHP language
 
     ```
 
-* **getJSON("url", function(json_data){..})**
-    ```
-    send GET request with callback
-
-    ```
-
-* **postJSON("url", json_data, function(json_data){..})**
-    ```
-    send POST request  with callback
-
-    ```
-
 * **setTranslationAssociativeArray(language_array)**
     ```
     set translation array with keys as last part of "@str.key_name". Must be generated on server side accordingly to selected language.
 
     ```
+## Extentions
+* getJSON("url", function(json_data){..})
+    ```
+    send GET request with callback
 
-* **translateObject(Object,["ke1","key2"..])**
+    ```
+
+* postJSON("url", json_data, function(json_data){..})
+    ```
+    send POST request  with callback
+
+    ```
+
+* translateObject(Object,["ke1","key2"..])
     ```
     Translate all strings in object with keys (optional). If you need to translate response from server. Templates are translated automatically.
 
     ```
 
-* **printObject(Object, level)**
-    ```
-    Return String with object content (Look below:[*vardump*]). Level is optional, default=1
-
-    ```
-* serializeHtmlForm: serializeHtmlForm
+* serializeHtmlForm(JQuery_object)
     ```
     extend $(??).serializeArray() with unchecked checkboxes and arrays. You can use $(??).serializeHtmlForm()
 
     ```
+    
+## Debug
+* printObject(Object, level)
+    ```
+    Return String with object content (Look below:[*vardump*]). Level is optional, default=1
+    Also for logging in JS-console , you can set flag DEBUG=true at the top of library file.
 
+    ```
 
 
 # Parsing JSON into HTML
