@@ -64,19 +64,19 @@ Examples are below or in **example/** folder.
 
 # Methods List
 ## Basic (only 3 methods)
-* **loadTemplatesArray(loaded_templates, ["url1","url2"...], function(){..})**
+* **loadTemplatesArray**(loaded_templates, ["url1","url2"...], function(){..})
     ```
     load multi-files templates with callback. Result in "loaded_templates" variable
 
     ```
 
-* **process(loaded_templates,"template_name",json_data)**
+* **process**(loaded_templates,"template_name",json_data)
      ```
     return is a HTML string. Parameter "loaded_templates" from method loadTemplatesArray(...)
 
     ```
 
-* **setTranslationArray(language_array)**
+* **setTranslationArray**(language_array)
     ```
     set translation array with keys as last part of "@str.key_name".
     Must be generated on server side accordingly to selected language.
