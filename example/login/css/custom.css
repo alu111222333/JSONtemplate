@@ -8,9 +8,9 @@ html, body{
 body {
   margin: 0;
   padding: 0;
-  background-color: #fff;
   height: 100vh;
   font-size: 14px;
+  background-color: #98c81a;
 }
 #content{
     height: 100vh;
@@ -25,8 +25,7 @@ body {
   height: 100vh;
   min-height: 100%;
   padding: 20px;
-  background-color: #fff;
-  /*background: url(img/some image.jpg) no-repeat center center fixed;*/
+  background: url(../img/background.jpg) no-repeat center center fixed;
     -webkit-background-size: cover; /* For WebKit*/
     -moz-background-size: cover;    /* Mozilla*/
     -o-background-size: cover;      /* Opera*/
