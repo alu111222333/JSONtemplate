@@ -24,6 +24,9 @@ Templates can include some of this 3 placeholders in HTML:
 - **[!template,array!]** - process arrays.
 - **{{template}}** - just show template.
 
+For translation you can use:
+- **@str.array_key** - this will be replaced by string from translation["array_key"]
+
 Examples are below or on **example/** folder.
 
 
