@@ -42,6 +42,36 @@
             "button_text": "@str.enterprise_start",
             "button_type": 2
 
+        },
+        {
+            "name":"----------------------IGNOR------------------------",
+            "price":999,
+            "interval":"d",
+            "users":999,
+            "storage":99,
+            "list":[
+                "ignoring",
+                "ignoring"
+            ],
+            "button_text": "no translation",
+            "button_type": 2,
+            "ignore":true
+
+        },
+        {
+            "name":"BLACKLISTED",
+            "price":-1,
+            "interval":"d",
+            "users":999,
+            "storage":99,
+            "list":[
+                "BLACKLISTED",
+                "BLACKLISTED"
+            ],
+            "button_text": "BLACKLISTED",
+            "button_type": 2,
+            "ignore":false
+
         }
     ]
 }

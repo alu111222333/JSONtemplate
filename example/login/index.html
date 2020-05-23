@@ -113,7 +113,7 @@
     function buildWebUI() { //create all elements inside page (Structure of page)
         J2H.getJSON("api/response.json", function(json) {
             if (isGoodResponse(json)) {
-                $('#content').html(J2H.parseTemplate(templates, "page", json));
+                $('#content').html(J2H.process(templates, "page", json));
                 //language code
                 //TODO need to check if language already correct.
                 var lang = getCookie('lang');
@@ -133,9 +133,9 @@
         J2H.loadTemplatesArray(templates, ["html/templates.html"], function() {
             J2H.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (isGoodResponse(json)) {
-                    $('#headerContainer').html(J2H.parseTemplate(templates, "header", json));
-                    $('#logoContainer').html(J2H.parseTemplate(templates, "logo", json));
-                    $('#formContainer').html(J2H.parseTemplate(templates, "form", json));
+                    $('#headerContainer').html(J2H.process(templates, "header", json));
+                    $('#logoContainer').html(J2H.process(templates, "logo", json));
+                    $('#formContainer').html(J2H.process(templates, "form", json));
                     $('#content').fadeIn(50);
                 }
             })

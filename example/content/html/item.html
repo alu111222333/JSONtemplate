@@ -1,6 +1,8 @@
 NextTemplateName: total_items
 <div class="card-deck mb-3 text-center">
-    [!item,data!]
+    <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
+    <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
+    [! item, data, if=`(ignore!=true)&&(price>>-1)` !]
 </div>
 
 
@@ -10,16 +12,22 @@ NextTemplateName: item
         <h4 class="my-0 font-weight-normal">[*name*]</h4>
     </div>
     <div class="card-body">
-        <h1 class="card-title pricing-card-title">$[*price*] <small class="text-muted">/ [*interval*]</small></h1>
+        <h1 class="card-title pricing-card-title">
+            <!-- Example for conditions "if" and "ift" for placeholder [*variable*]-->
+            <!-- Example for conditions "if" and "ift" for placeholder [*variable*]-->
+            [* price, if=`0` then `` else`$` *][*price, if=`0` then `@str.no_pay` *] [* price, ift=`0` then `` else `interval` *]
+        </h1>
         <ul class="list-unstyled mt-3 mb-4">
-            <li>[*users*] users included</li>
-            <li>[*storage*] GB of storage</li>
-            [!features,list!]
+            <li>[* users *] users included</li>
+            <li>[* storage *] GB of storage</li>
+            [! features,list !]
         </ul>
         <button type="button" class="btn btn-lg btn-block {{button_class}}">[*button_text*]</button>
     </div>
 </div>
 
+NextTemplateName: interval
+<small class="text-muted">/ [*interval*]</small>
 
 NextTemplateName: features
 <li>[*this*]</li>

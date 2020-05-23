@@ -12,7 +12,7 @@ Library need JQuery for network requests. This is example code for processing da
 ```javascript
 J2H.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=J2H.parseTemplate(template,"head",json); //insert data to template
+        var html=J2H.process(template,"head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
@@ -72,7 +72,7 @@ Examples are below or in **example/** folder.
 
     ```
 
-* **parseTemplate(loaded_templates,"template_name",json_data)**
+* **process(loaded_templates,"template_name",json_data)**
      ```
     return is a HTML string. Parameter "loaded_templates" from method loadTemplatesArray(...)
 
@@ -97,7 +97,7 @@ Examples are below or in **example/** folder.
 
     ```
 
-* translateObject(Object,["ke1","key2"..])
+* translate(Object,["ke1","key2"..])
     ```
     Translate all strings in object with keys (optional).
     If you need to translate response from server.
@@ -147,9 +147,9 @@ var templates={
         head:'<h1>[*data.name*]</h1>'
     };
 ```
-And just call **J2H.parseTemplate** like here
+And just call **J2H.process** like here
 ```javascript
-    var html=J2H.parseTemplate(templates,"head",json);
+    var html=J2H.process(templates,"head",json);
     $('#content').html(html); //insert result in page
 ```
 
@@ -162,7 +162,7 @@ var templates={
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=J2H.parseTemplate(template,"all_page",json);
+var html=J2H.process(template,"all_page",json);
 ```
 Content of html variable:
 ```html
@@ -175,7 +175,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing table
 ```javascript
-var html=J2H.parseTemplate(template,"table_row",json.data.parameters[0]);
+var html=J2H.process(template,"table_row",json.data.parameters[0]);
 
 //---- result ----
 //<tr><td>1</td><td>2</td></tr>    
@@ -228,13 +228,13 @@ var templates={
         table:'<table>[!table_row,data.parameters!]</table>',
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
     };
-var html=J2H.parseTemplate(template,"table",json);
+var html=J2H.process(template,"table",json);
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=J2H.parseTemplate(template,"table_row",json.data.parameters[0]);
+var html=J2H.process(template,"table_row",json.data.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
@@ -333,7 +333,7 @@ All templates are translated automatically if there is keywords in format "@str.
 
 Key name not longer than 40 simbols.
 
-If you nee to translate some response you can use function "J2H.translateObject(jsonObject,[keys])". Keys is optional.
+If you nee to translate some response you can use function "J2H.translate(jsonObject,[keys])". Keys is optional.
 
 Example:
 ```javascript

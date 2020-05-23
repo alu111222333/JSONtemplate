@@ -26,7 +26,8 @@
         var translatesEN = {
             free_start: "Start for free",
             pro_start: "Get started",
-            enterprise_start: "EEEeee!!!"
+            enterprise_start: "EEEeee!!!",
+            no_pay: '&#x1F440'
         };
     </script>
 </head>
@@ -78,13 +79,13 @@
     // ---------------------------------------
     function buildWebUI() {
         $("#content").show();
-        $("#content").html(J2H.parseTemplate(templates, "structure", {}));
+        $("#content").html(J2H.process(templates, "structure", {}));
         setTimeout(function() {
             $("#items_container").hide();
             J2H.getJSON("api/get_items.json", function(json) {
                 if (isGoodResponse(json)) {
-                    J2H.translateObject(json, ["button_text"]);
-                    var html = J2H.parseTemplate(templates, "total_items", json);
+                    J2H.translate(json, ["button_text"]);
+                    var html = J2H.process(templates, "total_items", json);
                     $("#items_container").html(html);
                     $("#items_container").fadeIn(200);
                 }

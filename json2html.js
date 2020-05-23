@@ -9,32 +9,24 @@
 // Wrap all widget code into anonymous function expression to avoid conflicts
 // that may occur with another code on the page (module pattern).
 
-if (window.json2htmlWasLoaded === undefined) {
+if ((J2H === undefined) || (Json2Html === undefined)) {
     var J2H = (function($) {
         "use strict";
-        window.json2htmlWasLoaded = true; //exclude duble inject script to one page.
         var DEBUG = false;
         var translate_prefix = '@str.';
-        /**
-         * {{template}} - another template from array
-         * [! filter !] - repeated blocks to process arrays
-         * [* variable.name_or_this *]
-         */
-
 
         /**
-        //if=`` - content filter
-        //example like JavaScript boolen expression.
-        //Can add to [!...!] -> if=`...`
-        //[!template_name,"jsonData",if=`((in_array(test.arr;;"777"))&&(test.data=="555")||(test.data>>"444"))&&(test.subj!="fff")`!]
-        //first - data from object (! attention !)
-        //second - compare with (constant)
-        //can use: == , != ,() , >> eq > , << eq < , || , &&, in_array
+        // [!template,array,if=`(expression)`!] - content filter
+        // example like JavaScript boolen expression.
+        // [!template_name,"jsonArray",if=`((in_array(test.arr;;"777"))&&(test.data=="555")||(test.data>>"444"))&&(test.subj!="fff")`!]
+        // can use: == , != ,() , || , &&, in_array
+        // more: >>
+        // less: <<
         */
 
         /**
-         * recommended server error response format
-         * {"error":{"state":true,"title":"ErrorTitle","message":"ErrorMessage","code":intErrorCode}}
+         // Recommended server error response format
+         // {"error":{"state":true,"title":"ErrorTitle","message":"ErrorMessage","code":intErrorCode}}
          */
 
         function in_array(arr, value) {
@@ -112,7 +104,7 @@ if (window.json2htmlWasLoaded === undefined) {
 
         var level_parce = 0; //stack overflow protection
         //function change HTML code with templates to HTML code with data.
-        function parseTemplate(templates, name, data) {
+        function process(templates, name, data) {
             //check stack overflow
             ///********************** loop part ***************************
             var global_filter = '';
@@ -364,7 +356,7 @@ if (window.json2htmlWasLoaded === undefined) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = parseTemplate(templates, then_v, data);
+                                    temp = process(templates, then_v, data);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -374,7 +366,7 @@ if (window.json2htmlWasLoaded === undefined) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = parseTemplate(templates, else_v, data);
+                                    temp = process(templates, else_v, data);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -410,7 +402,7 @@ if (window.json2htmlWasLoaded === undefined) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = parseTemplate(templates, then_v, data);
+                                    temp = process(templates, then_v, data);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -420,7 +412,7 @@ if (window.json2htmlWasLoaded === undefined) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = parseTemplate(templates, else_v, data);
+                                    temp = process(templates, else_v, data);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -525,7 +517,7 @@ if (window.json2htmlWasLoaded === undefined) {
                             };
                         }
 
-                        temp_str = temp_str + parseTemplate(templates, temp_template[0], temp_data[key]);
+                        temp_str = temp_str + process(templates, temp_template[0], temp_data[key]);
 
                         k++;
                     }
@@ -558,7 +550,7 @@ if (window.json2htmlWasLoaded === undefined) {
                         name_template = name_template[0];
                         curData = get_from_data(curData, dataindex);
                     }
-                    str = str_replace('{{' + name_template_all + '}}', parseTemplate(templates, name_template, curData), str);
+                    str = str_replace('{{' + name_template_all + '}}', process(templates, name_template, curData), str);
                 } else {
                     debug_log('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
@@ -739,6 +731,33 @@ if (window.json2htmlWasLoaded === undefined) {
             all_templates_loaded--;
         }
 
+        function normalizeTemplates(arr) {
+            for (var item in arr) {
+                arr[item] = str_replace('[*  ', '[*', arr[item]);
+                arr[item] = str_replace('[* ', '[*', arr[item]);
+                arr[item] = str_replace('[!  ', '[!', arr[item]);
+                arr[item] = str_replace('[! ', '[!', arr[item]);
+                arr[item] = str_replace('{{  ', '{{', arr[item]);
+                arr[item] = str_replace('{{ ', '{{', arr[item]);
+                arr[item] = str_replace('  *]', '*]', arr[item]);
+                arr[item] = str_replace(' *]', '*]', arr[item]);
+                arr[item] = str_replace('  !]', '!]', arr[item]);
+                arr[item] = str_replace(' !]', '!]', arr[item]);
+                arr[item] = str_replace('  }}', '}}', arr[item]);
+                arr[item] = str_replace(' }}', '}}', arr[item]);
+                arr[item] = str_replace('` then `', '`then`', arr[item]);
+                arr[item] = str_replace('` then', '`then', arr[item]);
+                arr[item] = str_replace('then `', 'then`', arr[item]);
+                arr[item] = str_replace('` else `', '`else`', arr[item]);
+                arr[item] = str_replace('` else', '`else', arr[item]);
+                arr[item] = str_replace('else `', 'else`', arr[item]);
+                arr[item] = str_replace('if = `', 'if=`', arr[item]);
+                arr[item] = str_replace('if= `', 'if=`', arr[item]);
+                arr[item] = str_replace('if =`', 'if=`', arr[item]);
+            }
+            return arr;
+        }
+
         function load_template(to_template, url, common_func) {
             if (url === undefined) {
                 debug_log('Undefined URL in templates array');
@@ -901,7 +920,8 @@ if (window.json2htmlWasLoaded === undefined) {
 
         function shadow_templates_callback() {
             if (!isAllTemplatesLoaded()) return false;
-            translateObject(shadow_templates_object);
+            normalizeTemplates(shadow_templates_object);
+            translate(shadow_templates_object);
             templates_callback_function();
         }
 
@@ -998,9 +1018,13 @@ if (window.json2htmlWasLoaded === undefined) {
 
         var level = 10;
 
-        function translateObject(obj, keys = []) {
+        function translate(obj, keys = []) {
             if (obj === undefined) return '';
             if (obj === null || Number.isInteger(obj)) return obj;
+            if ((translation_strings === undefined) || (translation_strings === null) || (!(translation_strings instanceof Object))) return obj;
+            if (typeof obj === 'string') {
+                return translateString(obj);
+            }
             level--;
             if (level < 0) {
                 level++;
@@ -1016,7 +1040,7 @@ if (window.json2htmlWasLoaded === undefined) {
             for (var key in obj) {
                 if (obj[key] === undefined || obj[key] === null || Number.isInteger(obj[key])) continue;
                 if (Array.isArray(obj[key]) || (typeof obj[key]) == 'object') {
-                    translateObject(obj[key], keys)
+                    translate(obj[key], keys)
                 } else if (typeof obj[key] === 'string' || obj[key] instanceof String) {
                     if (customKeys) {
                         if (keys.includes(key)) {
@@ -1048,10 +1072,13 @@ if (window.json2htmlWasLoaded === undefined) {
         }
 
         /* json object direct echo to JavaScript */
-        var translation_strings = {};
+        var translation_strings = null;
 
         function setTranslationArray(jsonObject) {
             translation_strings = jsonObject;
+            if (Object.keys(translation_strings).length == 0) {
+                translation_strings = null;
+            }
         }
 
 
@@ -1060,7 +1087,6 @@ if (window.json2htmlWasLoaded === undefined) {
         function translateString(str) {
             if (str === undefined) return '';
             if ((translation_strings === undefined) || (translation_strings === null) || (!(translation_strings instanceof Object))) return str;
-            if (Object.keys(translation_strings).length == 0) return str;
             var indexEnd = -1;
             var movedIndex = -1;
             var prefix_length = translate_prefix.length;
@@ -1097,12 +1123,12 @@ if (window.json2htmlWasLoaded === undefined) {
 
 
         return {
-            parseTemplate: parseTemplate, //parse loaded templates with JSON response from server - look documentation
+            process: process, //parse loaded templates with JSON response from server - look documentation
             getJSON: getJSON, //send GET request with calback
             postJSON: postJSON, //send POST request  with calback
             loadTemplatesArray: loadTemplatesArray, //load multi-files templates with callback after all files loaded successfully
             setTranslationArray: setTranslationArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
-            translateObject: translateObject, //if you need to translate JSON object manually. All templates are translated automatically
+            translate: translate, //if you need to translate JSON object manually. All templates are translated automatically
             printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
         }
