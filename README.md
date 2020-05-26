@@ -39,12 +39,12 @@ function isGoodResponse(json){
 }
 ```
 Templates can use this 3 placeholders in HTML:
-- **[\*variable\*]** - insert value from JSON data.
-- **[!template,array!]** - process arrays.
-- **{{template}}** - just show template.
+- **[\*variable\*]** - [insert value from JSON data](#using-variable)
+- **[!template,array!]** - [process arrays](#using-templatearray)
+- **{{template}}** - [just show template](#using-template)
 
 For translation you can use:
-- **@str.array_key** - this will be replaced by string from translation["array_key"]
+- **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
 
 Examples are below or in **example/** folder.
 
