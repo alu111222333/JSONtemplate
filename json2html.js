@@ -15,6 +15,14 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
         var DEBUG = false;
         var translate_prefix = '@str.';
 
+        // Recommended to keep current values of j_var, j_loop and j_templ.
+        // But if you want, you can change it. Then test everything again.
+        // 2 simbols for open tag and 2 simbols for closing tag.
+        var j_var = ['[*', '*]']; // 2 simbols for each not more, not less
+        var j_loop = ['[!', '!]']; // 2 simbols for each not more, not less
+        var j_templ = ['{{', '}}']; // 2 simbols for each not more, not less
+
+
         /**
         // [!template,array,if=`(expression)`!] - content filter
         // example like JavaScript boolen expression.
@@ -208,9 +216,9 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             ind_s = 0;
             ind_e = 0;
 
-            while (str.indexOf('[*', ind_s) != -1) {
-                ind_s = str.indexOf('[*', ind_s);
-                ind_e = str.indexOf('*]', ind_s + 2);
+            while (str.indexOf(j_var[0], ind_s) != -1) {
+                ind_s = str.indexOf(j_var[0], ind_s);
+                ind_e = str.indexOf(j_var[1], ind_s + j_var[0].length);
                 crop = -1;
                 replace = -1;
                 hash = -1;
@@ -221,7 +229,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                 else_v = '';
                 variable = '';
                 if ((ind_e != -1) && ((ind_e - ind_s) < 155) && ((ind_e - ind_s) > 0)) {
-                    name_var = str.substr(ind_s + 2, ind_e - (ind_s + 2));
+                    name_var = str.substr(ind_s + j_var[0].length, ind_e - (ind_s + j_var[0].length));
                     name_var2 = name_var;
                     variable = '';
                     if (name_var.indexOf(',') != -1) {
@@ -421,7 +429,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                             };
                         }
                     }
-                    str = str_replace('[*' + name_var + '*]', temp + '', str);
+                    str = str_replace(j_var[0] + name_var + j_var[1], temp + '', str);
                 } else {
                     debug_log('too long or short Value[*..*] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
@@ -435,17 +443,17 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             ind_s = 0;
             ind_e = 0;
             var filter = '';
-            while (str.indexOf('[!', ind_s) != -1) {
+            while (str.indexOf(j_loop[0], ind_s) != -1) {
                 crop = -1;
                 limits = -1;
                 if_type = -1;
-                ind_s = str.indexOf('[!', ind_s);
-                ind_e = str.indexOf('!]', ind_s + 2);
+                ind_s = str.indexOf(j_loop[0], ind_s);
+                ind_e = str.indexOf(j_loop[1], ind_s + j_loop[0].length);
                 filter = '';
                 set_filter(filter);
                 temp_str = '';
                 if ((ind_e != -1) && ((ind_e - ind_s) < 195) && ((ind_e - ind_s) > 0)) {
-                    name_template = str.substr(ind_s + 2, ind_e - (ind_s + 2));
+                    name_template = str.substr(ind_s + j_loop[0].length, ind_e - (ind_s + j_loop[0].length));
                     temp_template = name_template.split(',');
                     temp_str = '';
 
@@ -522,7 +530,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                         k++;
                     }
 
-                    str = str_replace('[!' + name_template + '!]', temp_str, str);
+                    str = str_replace(j_loop[0] + name_template + j_loop[1], temp_str, str);
 
                 } else {
                     debug_log('too long or short Foreach[!..!] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
@@ -535,14 +543,14 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             ///parse HTML templates
             ind_s = 0;
             ind_e = 0;
-            while (str.indexOf('{{', ind_s) != -1) {
+            while (str.indexOf(j_templ[0], ind_s) != -1) {
                 crop = -1;
                 if_type = -1;
-                ind_s = str.indexOf('{{', ind_s);
-                ind_e = str.indexOf('}}', ind_s + 2);
+                ind_s = str.indexOf(j_templ[0], ind_s);
+                ind_e = str.indexOf(j_templ[1], ind_s + j_templ[0].length);
                 var curData = data;
                 if ((ind_e != -1) && ((ind_e - ind_s) < 95) && ((ind_e - ind_s) > 0)) {
-                    name_template = str.substr(ind_s + 2, ind_e - (ind_s + 2));
+                    name_template = str.substr(ind_s + j_templ[0].length, ind_e - (ind_s + j_templ[0].length));
                     var name_template_all = name_template;
                     if (name_template.includes(',')) {
                         name_template = name_template.split(',', 2);
@@ -550,7 +558,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                         name_template = name_template[0];
                         curData = get_from_data(curData, dataindex);
                     }
-                    str = str_replace('{{' + name_template_all + '}}', process(templates, name_template, curData), str);
+                    str = str_replace(j_templ[0] + name_template_all + j_templ[1], process(templates, name_template, curData), str);
                 } else {
                     debug_log('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
@@ -653,7 +661,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
 
         function debug_log(s) {
             if (DEBUG) {
-                console.log('JSTemplater: ' + s);
+                console.log('Json2Html: ' + s);
             };
         }
 
@@ -733,18 +741,18 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
 
         function normalizeTemplates(arr) {
             for (var item in arr) {
-                arr[item] = str_replace('[*  ', '[*', arr[item]);
-                arr[item] = str_replace('[* ', '[*', arr[item]);
-                arr[item] = str_replace('[!  ', '[!', arr[item]);
-                arr[item] = str_replace('[! ', '[!', arr[item]);
-                arr[item] = str_replace('{{  ', '{{', arr[item]);
-                arr[item] = str_replace('{{ ', '{{', arr[item]);
-                arr[item] = str_replace('  *]', '*]', arr[item]);
-                arr[item] = str_replace(' *]', '*]', arr[item]);
-                arr[item] = str_replace('  !]', '!]', arr[item]);
-                arr[item] = str_replace(' !]', '!]', arr[item]);
-                arr[item] = str_replace('  }}', '}}', arr[item]);
-                arr[item] = str_replace(' }}', '}}', arr[item]);
+                arr[item] = str_replace(j_var[0] + '  ', j_var[0], arr[item]);
+                arr[item] = str_replace(j_var[0] + ' ', j_var[0], arr[item]);
+                arr[item] = str_replace(j_loop[0] + '  ', j_loop[0], arr[item]);
+                arr[item] = str_replace(j_loop[0] + ' ', j_loop[0], arr[item]);
+                arr[item] = str_replace(j_templ[0] + '  ', j_templ[0], arr[item]);
+                arr[item] = str_replace(j_templ[0] + ' ', j_templ[0], arr[item]);
+                arr[item] = str_replace('  ' + j_var[1], j_var[1], arr[item]);
+                arr[item] = str_replace(' ' + j_var[1], j_var[1], arr[item]);
+                arr[item] = str_replace('  ' + j_loop[1], j_loop[1], arr[item]);
+                arr[item] = str_replace(' ' + j_loop[1], j_loop[1], arr[item]);
+                arr[item] = str_replace('  ' + j_templ[1], j_templ[1], arr[item]);
+                arr[item] = str_replace(' ' + j_templ[1], j_templ[1], arr[item]);
                 arr[item] = str_replace('` then `', '`then`', arr[item]);
                 arr[item] = str_replace('` then', '`then', arr[item]);
                 arr[item] = str_replace('then `', 'then`', arr[item]);
@@ -1121,6 +1129,9 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             return str
         }
 
+        function setDebug(isDebug) {
+            DEBUG = isDebug;
+        }
 
         return {
             process: process, //parse loaded templates with JSON response from server - look documentation
@@ -1130,6 +1141,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             setTranslationArray: setTranslationArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translate: translate, //if you need to translate JSON object manually. All templates are translated automatically
             printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
+            setDebug: setDebug, //for console output of all library warnings and errors
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
         }
     }(jQuery));

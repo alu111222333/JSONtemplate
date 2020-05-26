@@ -118,6 +118,11 @@ Examples are below or in **example/** folder.
 
     ```
 
+* setDebug(boolean)
+    ```
+    Run next part of code in debug mode if true. Disable debug output to console setDebug(false);
+
+    ```
 
 # Parsing JSON into HTML
 This library make a lot of work for converting data from JSON to HTML.
