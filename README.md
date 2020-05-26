@@ -1,18 +1,18 @@
 # JSON2HTML templates + Multilanguage support
 JavaScript library for single-page web applications
-- [Installation] (#installation)
-- [Basic example] (#basic-request-example)
-- [Recommended code structure] (#recommended-code-structure)
-- [Methods List] (#methods-list)
-    - [Basic] (#basic-only-3-methods)
-    - [Extentions] (#extentions)
-    - [Debug] (#debug)
-- [Some examples and explanations] (#parsing-json-into-html)
-- [{{template}}] (#using-template)
-- [\[\*variable\*\]] (#using-variable)
-- [\[!template,array!\]] (#using-templatearray)
-- [Loading templates from files] (#loading-templates)
-- [Translation] (#translation)
+- [Installation](#installation)
+- [Basic example](#basic-request-example)
+- [Recommended code structure](#recommended-code-structure)
+- [Methods List](#methods-list)
+    - [Basic](#basic-only-3-methods)
+    - [Extentions](#extentions)
+    - [Debug](#debug)
+- [Some examples and explanations](#parsing-json-into-html)
+    - [**{{template}}**](#using-template)
+    - [**\[\*variable\*\]**](#using-variable)
+    - [**\[!template,array!\]**](#using-templatearray)
+- [Loading templates from files](#loading-templates)
+- [Translation](#translation)
 
 # Installation
 ```html
