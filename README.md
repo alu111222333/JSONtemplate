@@ -20,6 +20,25 @@ JavaScript library for single-page web applications
 <script type="text/javascript" src="path_to/json2html.js"></script>
 ```
 
+And at the end of file
+```javascript
+<script type="text/javascript">
+    var templates = {};
+
+    function init() {
+        J2H.setTranslationArray(translates.en); // optional
+        J2H.loadTemplatesArray(templates, ["html/templates.html"], loadingCallback);
+    }
+
+    function loadingCallback() {
+        buildWebUI();
+    }
+
+    init(); //Run it immediately after loading page
+    //...
+</script>
+```
+
 # Basic request example
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
