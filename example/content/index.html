@@ -51,7 +51,7 @@
         //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
         J2H.setDebug(false);
         J2H.setTranslationArray(translatesEN); // optional
-        J2H.loadTemplatesArray(templates, [
+        J2H.loadTemplatesArray([
             "html/structure.html",
             "html/header.html",
             "html/footer.html",
@@ -80,13 +80,13 @@
     // ---------------------------------------
     function buildWebUI() {
         $("#content").show();
-        $("#content").html(J2H.process(templates, "structure", {}));
+        $("#content").html(J2H.process("structure", {}));
         setTimeout(function() {
             $("#items_container").hide();
             J2H.getJSON("api/get_items.json", function(json) {
                 if (isGoodResponse(json)) {
                     J2H.translate(json, ["button_text"]);
-                    var html = J2H.process(templates, "total_items", json);
+                    var html = J2H.process("total_items", json);
                     $("#items_container").html(html);
                     $("#items_container").fadeIn(200);
                 }

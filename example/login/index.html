@@ -87,7 +87,7 @@
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
         //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
         J2H.setTranslationArray(translates.en); // optional
-        J2H.loadTemplatesArray(templates, ["html/templates.html"], loadingCallback);
+        J2H.loadTemplatesArray(["html/templates.html"], loadingCallback);
 
         $("#content").hide(); // optional
     }
@@ -113,7 +113,7 @@
     function buildWebUI() { //create all elements inside page (Structure of page)
         J2H.getJSON("api/response.json", function(json) {
             if (isGoodResponse(json)) {
-                $('#content').html(J2H.process(templates, "page", json));
+                $('#content').html(J2H.process("page", json));
                 //language code
                 //TODO need to check if language already correct.
                 var lang = getCookie('lang');
@@ -130,12 +130,12 @@
         }
         setCookie('lang', selectedLang, 365, "/example/");
         J2H.setTranslationArray(translates[selectedLang])
-        J2H.loadTemplatesArray(templates, ["html/templates.html"], function() {
+        J2H.loadTemplatesArray(["html/templates.html"], function() {
             J2H.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (isGoodResponse(json)) {
-                    $('#headerContainer').html(J2H.process(templates, "header", json));
-                    $('#logoContainer').html(J2H.process(templates, "logo", json));
-                    $('#formContainer').html(J2H.process(templates, "form", json));
+                    $('#headerContainer').html(J2H.process("header", json));
+                    $('#logoContainer').html(J2H.process("logo", json));
+                    $('#formContainer').html(J2H.process("form", json));
                     $('#content').fadeIn(50);
                 }
             })

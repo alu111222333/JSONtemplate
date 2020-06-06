@@ -23,11 +23,9 @@ JavaScript library for single-page web applications
 And at the end of file
 ```javascript
 <script type="text/javascript">
-    var templates = {};
-
     function init() {
         J2H.setTranslationArray(translates.en); // optional
-        J2H.loadTemplatesArray(templates, ["html/templates.html"], loadingCallback);
+        J2H.loadTemplatesArray(["html/templates.html"], loadingCallback);
     }
 
     function loadingCallback() {
@@ -44,7 +42,7 @@ Library need JQuery for network requests. This is example code for processing da
 ```javascript
 J2H.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=J2H.process(template,"head",json); //insert data to template
+        var html=J2H.process("head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
@@ -99,15 +97,15 @@ Examples are below or in **example/** folder.
 
 # Methods List
 ## Basic (only 3 methods)
-* **loadTemplatesArray**(loaded_templates, ["url1","url2"...], function(){..})
+* **loadTemplatesArray**(["url1","url2"...], function(){..})
     ```
     load multi-files templates with callback. Result in "loaded_templates" variable
 
     ```
 
-* **process**(loaded_templates,"template_name",json_data)
+* **process**("template_name",json_data)
      ```
-    return is a HTML string. Parameter "loaded_templates" from method loadTemplatesArray(...)
+    return is a HTML string created from HTMLs loaded by loadTemplatesArray(...)
 
     ```
 
@@ -187,7 +185,7 @@ var templates={
 ```
 And just call **J2H.process** like here
 ```javascript
-    var html=J2H.process(templates,"head",json);
+    var html=J2H.process("head",json);
     $('#content').html(html); //insert result in page
 ```
 
@@ -200,7 +198,7 @@ var templates={
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=J2H.process(template,"all_page",json);
+var html=J2H.process("all_page",json);
 ```
 Content of html variable:
 ```html
@@ -213,7 +211,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing table
 ```javascript
-var html=J2H.process(template,"table_row",json.data.parameters[0]);
+var html=J2H.process("table_row",json.data.parameters[0]);
 
 //---- result ----
 //<tr><td>1</td><td>2</td></tr>    
@@ -266,13 +264,13 @@ var templates={
         table:'<table>[!table_row,data.parameters!]</table>',
         table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
     };
-var html=J2H.process(template,"table",json);
+var html=J2H.process("table",json);
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=J2H.process(template,"table_row",json.data.parameters[0]);
+var html=J2H.process("table_row",json.data.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
@@ -333,7 +331,7 @@ function init() {
     //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
     //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
     J2H.setTranslationArray(<?php echo(json_encode(transtale_array['en'])); ?>)
-    J2H.loadTemplatesArray(templates, ["html/example_template.html", "html/example_text.html"], loadingCallback)
+    J2H.loadTemplatesArray(["html/example_template.html", "html/example_text.html"], loadingCallback)
 }
 
 function loadingCallback() {
