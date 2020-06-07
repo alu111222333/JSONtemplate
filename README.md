@@ -1,11 +1,11 @@
 # JSON2HTML templates + Multilanguage support
 JavaScript library for single-page web applications
 - [Installation](#installation)
-- [Basic example](#basic-request-example)
+- [Basic example](#basic-example)
 - [Recommended code structure](#recommended-code-structure)
 - [Methods List](#methods-list)
     - [Basic](#basic-only-3-methods)
-    - [Extentions](#extentions)
+    - [Extentions](#additional)
     - [Debug](#debug)
 - [Some examples and explanations](#parsing-json-into-html)
     - [**{{template}}**](#using-template)
@@ -37,7 +37,7 @@ And at the end of file
 </script>
 ```
 
-# Basic request example
+# Basic example
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
 J2H.getJSON("api/get_info.php",function (json){ //send request to API
@@ -49,7 +49,7 @@ J2H.getJSON("api/get_info.php",function (json){ //send request to API
 
 
 
-// -- common example for respose checking --
+// -- common function for response checking --
 function isGoodResponse(json){
     if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
         alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
@@ -115,7 +115,7 @@ Examples are below or in **example/** folder.
     Must be generated on server side accordingly to selected language.
 
     ```
-## Extentions
+## Additional
 * getJSON("url", function(json_data){..})
     ```
     send GET request with callback
