@@ -369,14 +369,13 @@ All templates are translated automatically if there is keywords in format "@str.
 
 Key name not longer than 40 simbols.
 
-If you nee to translate some response you can use function "J2H.translate(jsonObject,[keys])". Keys is optional.
-
 Example:
 ```javascript
 J2H.setTranslationArray({
     login_name:"User",
     user_description:"Description"
 });
+// all templates will be translated right after loading. You don't need to do anything additionally
 J2H.loadTemplatesArray(["url1_to_templates","url2_to_templates"],drawUI);
 
 function drawUI(){
@@ -384,6 +383,7 @@ function drawUI(){
 }
 ```
 
+Example for templaes with **@str.** prefix
 ```html
 NextTemplateName: users_table
 <table class="table table-striped table-bordered">[!users_table_items,users!]</table>
@@ -400,3 +400,5 @@ NextTemplateName: users_table_items
 
 </tr>
 ```
+
+If you need to translate some response, you can use function "J2H.translate(json,[keys])". Keys parameter is optional.
