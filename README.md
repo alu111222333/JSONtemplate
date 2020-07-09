@@ -314,14 +314,7 @@ You can combine all conditions into one
 ```
 
 # Loading templates
-Easiest way to create a templates is just create a variable in script that use this library
-```javascript
-var templateForCurrentPage={
-    table: '<table>{{row}}</table>',
-    row: '<tr><td>[*value*]</td></tr>'
-};
-```
-You can also create a HTML file on server with template.
+You can create a HTML file on server with templates.
 For example files **example_template.html** and **example_text.html**
 ```javascript
 var templates = {};
@@ -365,7 +358,7 @@ After loading this file its name will be ignored and name after **NextTemplateNa
 
 
 # Translation
-All templates are translated automatically if there is keywords in format "@str.array_key"
+All templates are translated automatically while loading, if there is a keywords present in format "@str.array_key"
 
 Key name not longer than 40 simbols.
 
