@@ -164,15 +164,14 @@ For example JSON
 ```javascript
 {
     "data":{
-        "id":123,
-        "name":"Hello",
+        "name":"Name",
         "parameters":[{
             "param1":1,
             "param2":2
         },
         {
-            "param1":11,
-            "param2":22
+            "param1":3,
+            "param2":4
         }]
     }
 }
@@ -202,10 +201,10 @@ var html=J2H.process("all_page",json);
 ```
 Content of html variable:
 ```html
-<h1>Hello</h1>
+<h1>Name</h1>
 <table>
     <tr><td>1</td><td>2</td></tr>
-    <tr><td>11</td><td>22</td></tr>
+    <tr><td>3</td><td>4</td></tr>
 </table>
 ```
 
@@ -247,15 +246,14 @@ Same situation with templates:
 ```javascript
 var json={
         "data":{
-            "id":123,
-            "name":"Hello",
+            "name":"Name",
             "parameters":[{
                 "param1":1,
                 "param2":2
             },
             {
-                "param1":11,
-                "param2":22
+                "param1":3,
+                "param2":4
             }]
         }
     }
