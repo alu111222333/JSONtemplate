@@ -12,7 +12,7 @@ JavaScript library for single-page web applications
     - [**\[\*variable\*\]**](#using-variable)
     - [**\[!template,array!\]**](#using-templatearray)
 - [Loading templates from files](#loading-templates)
-- [Translation](#translation)
+- [Multilanguage support](#multilanguage-support)
 
 # Installation
 ```html
@@ -355,7 +355,7 @@ So it's possible to put all templates together in one file. **users_table** temp
 After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
 
 
-# Translation
+# Multilanguage support
 All templates are translated automatically while loading, if there is a keywords present in format "@str.array_key"
 
 Key name not longer than 40 simbols.
