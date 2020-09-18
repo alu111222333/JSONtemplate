@@ -71,7 +71,7 @@ Examples are below or in **example/** folder.
 
 # Recommended code structure
 I suppose better to use iframes for each module. In this case you will never have a conflicts
-and don't need to load all JS-libraries that needed on your WHOLE project.
+and don't need to load all JS-libraries that needed in your WHOLE project.
 
 
 * **/common** (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
