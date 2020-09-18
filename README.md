@@ -70,6 +70,9 @@ Examples are below or in **example/** folder.
 
 
 # Recommended code structure
+I suppose better to use iframes for each module. In this case you will never have a conflicts
+and don't need to load all JS-libraries that needed on your WHOLE project.
+
 
 * **/common** (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
     * /api
@@ -92,8 +95,21 @@ Examples are below or in **example/** folder.
     * /html
     * index.php
 * .....
-* **index.php** (main project file for navigation or iframes)
+* **index.php** (main project file for iframes navigation)
 
+### Schema in each module
+Clients browsers became more powerful every year. It's very silly to build all
+HTML pages on server side if this work can be done on client with JavaScript.
+This will save server time and money.
+```
+   Browser                    Server
+|-----------|               |-------|
+|   index   |----- AJAX --->|  API  |
+|~~~~~^~~~~~|               |-------|
+|~~~~~|~~~~~|                   |
+|   HTML    |<-------JSON-------|
+|-----------|
+```
 
 # Methods List
 ## Basic (only 3 methods)
