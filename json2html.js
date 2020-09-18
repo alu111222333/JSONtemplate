@@ -13,14 +13,14 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
     var J2H = (function($) {
         "use strict";
         let DEBUG = false;
-        let translate_prefix = '@str.';
+        const translate_prefix = '@str.';
 
         // Recommended to keep current values of j_var, j_loop and j_templ.
         // But if you want, you can change it. Then test everything again.
         // 2 simbols for open tag and 2 simbols for closing tag.
-        let j_var = ['[*', '*]']; // 2 simbols for each not more, not less
-        let j_loop = ['[!', '!]']; // 2 simbols for each not more, not less
-        let j_templ = ['{{', '}}']; // 2 simbols for each not more, not less
+        const j_var = ['[*', '*]']; // 2 simbols for each not more, not less
+        const j_loop = ['[!', '!]']; // 2 simbols for each not more, not less
+        const j_templ = ['{{', '}}']; // 2 simbols for each not more, not less
 
 
         /**
@@ -933,7 +933,7 @@ let tData = my_trim(temlArr[i].substring(nIndex + 1));*/
          * @return {number} 32-bit positive integer hash
          */
 
-        let murmurSeed = Math.round(((Math.random() * 10000) + 10000));
+        const murmurSeed = Math.round(((Math.random() * 10000) + 10000));
 
         function murmurhash3_32_gc(key) {
             let seed = murmurSeed;
@@ -1063,7 +1063,7 @@ let tData = my_trim(temlArr[i].substring(nIndex + 1));*/
         }
 
 
-        let stopSimbols = [' ', '<', '[', '{', '(', "\n", "\t", "\r", '*', ')', '}', ']', '>', '.', ',', '?', ':', ';', '-', '"', '`', "'", '!', '@', '#', '%', '&', '$', '^', '~', '+', '/', '\\', '='];
+        const stopSimbols = [' ', '<', '[', '{', '(', "\n", "\t", "\r", '*', ')', '}', ']', '>', '.', ',', '?', ':', ';', '-', '"', '`', "'", '!', '@', '#', '%', '&', '$', '^', '~', '+', '/', '\\', '='];
 
         function translateString(str) {
             if (str === undefined) return '';
