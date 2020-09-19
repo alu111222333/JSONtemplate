@@ -476,7 +476,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                         };
                         //filter_end
 
-                        if ((temp_data[key] instanceof Object)) {
+                        if ((typeof temp_data[key] == "object")) {
                             temp_data[key]['j2h_counter'] = k + '';
                             temp_data[key]['j2h_key'] = key + '';
                             //k=parseInt(k);
@@ -963,7 +963,7 @@ let tData = my_trim(temlArr[i].substring(nIndex + 1));*/
         function translate(obj, keys = []) {
             if (obj === undefined) return '';
             if (obj === null || Number.isInteger(obj)) return obj;
-            if ((translation_strings === undefined) || (translation_strings === null) || (!(translation_strings instanceof Object))) return obj;
+            if ((translation_strings === undefined) || (translation_strings === null) || (!(typeof translation_strings == "object"))) return obj;
             if (typeof obj === 'string') {
                 return translateString(obj);
             }
@@ -1032,7 +1032,7 @@ let tData = my_trim(temlArr[i].substring(nIndex + 1));*/
 
         function translateString(str) {
             if (str === undefined) return '';
-            if ((translation_strings === undefined) || (translation_strings === null) || (!(translation_strings instanceof Object))) return str;
+            if ((translation_strings === undefined) || (translation_strings === null) || (!(typeof translation_strings == "object"))) return str;
             let indexEnd = -1;
             let movedIndex = -1;
             let prefix_length = translate_prefix.length;
