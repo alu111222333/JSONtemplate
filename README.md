@@ -315,7 +315,7 @@ This very usefull if you have same data on different levels.
 
 Here you can use also if condition.
 ```javascript
-[!template,array,if=`condition`] //- show items if condition is TRUE
+[!template,array,if=`condition`] //- show items. Use "obj.property". Read header of json2html.js
 
 [!template,array,limit=`100`] //- show first 100 items
 

@@ -25,11 +25,16 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
 
         /**
         // [!template,array,if=`(expression)`!] - content filter
-        // example like JavaScript boolen expression.
-        // [!template_name,"jsonArray",if=`((in_array(test.arr;;"777"))&&(test.data=="555")||(test.data>>"444"))&&(test.subj!="fff")`!]
-        // can use: == , != ,() , || , &&, in_array
-        // more: >>
-        // less: <<
+        // expression: JavaScript boolen expression. + cab be used: in_array(arr,value)
+        // - TRUE item will be processed
+        // - FALSE item will be ignored
+        // - use prefix "obj." to access item properties
+        // - Javascript expression will run in eval() function if there is something
+        // - was undefined - result will be FALSE
+        // - use this fix UNDEFINED problem:
+             (("prop" in obj) ? obj.prop : "default")
+
+        // - or be sure than this field always exists in response from server
         */
 
         /**
@@ -46,8 +51,6 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
             }
             return false;
         }
-
-
 
 
         let error_parcer = '';
@@ -130,60 +133,22 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                 global_filter = str_replace('if=`', '', global_filter);
                 global_filter = str_replace('`', '', global_filter);
                 global_filter = my_trim(global_filter);
-                if (global_filter == '') {
+                if (global_filter.length < 1) {
                     return false;
                 };
-                let temp = global_filter;
-                temp = str_replace('&&', '~~', temp);
-                temp = str_replace('||', '~~', temp);
-                temp = str_replace(';;', '~~', temp);
-                temp = str_replace('==', '~~', temp);
-                temp = str_replace('!=', '~~', temp);
-                temp = str_replace('in_array', '~~', temp);
-                temp = str_replace('<<', '~~', temp);
-                temp = str_replace('>>', '~~', temp);
-                temp = str_replace('(', '~~', temp);
-                temp = str_replace(')', '~~', temp);
-                while (temp.indexOf('~~~') != -1) {
-                    temp = str_replace('~~~', '~~', temp);
-                }
-                temp = temp.split('~~');
-                let c = temp.length;
-                let i = 0;
-                let str = '';
-                let tt = true;
-                let start = 0;
-                for (i = 0; i < c; i++) {
-                    temp[i] = my_trim(temp[i]);
-                    if (temp[i] == '') {
-                        continue;
-                    };
-                    if (tt) {
-                        str = 'data["' + str_replace('.', '"]["', temp[i]) + '"]';
-                        global_filter = str_replace_first(temp[i], str, global_filter, start);
-                        start = global_filter.indexOf(str, start) + str.length - 2;
-                    }; //if tt
-                    tt = !tt;
-                }; //for
-                global_filter = str_replace('>>', '>', global_filter);
-                global_filter = str_replace('<<', '<', global_filter);
-                global_filter = str_replace(';;', ',', global_filter);
-                return false;
+                return true;
             }
 
-            function check_filter(data) {
-                if (global_filter == '') {
+            function check_filter(obj) {
+                if (global_filter.length < 1) {
                     return true;
                 };
-                let ret = false;
                 try {
-                    ret = eval('(' + global_filter + ')');
+                    return Boolean(eval('(' + global_filter + ')'));
                 } catch (e) {
                     debug_log('debug error in filter!' + "\n" + global_filter + "\n" + e.name);
-                    ret = false;
                 };
-
-                return ret;
+                return false;
             }
             //*********************** loop end ****************************
 
@@ -505,6 +470,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                         if ((limits > 0) && (k >= limits)) {
                             break;
                         };
+
                         if (!check_filter(temp_data[key])) {
                             continue;
                         };
@@ -533,6 +499,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
 
                         k++;
                     }
+
 
                     str = str_replace(j_loop[0] + name_template + j_loop[1], temp_str, str);
 

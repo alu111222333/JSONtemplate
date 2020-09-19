@@ -2,7 +2,7 @@ NextTemplateName: total_items
 <div class="card-deck mb-3 text-center">
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
-    [! item, data, if=`(ignore!=true)&&(price>>-1)` !]
+    [! item, data, if=`(!(("ignore" in obj) ? obj.ignore : false)) && (obj.price>-1)` !]
 </div>
 
 
