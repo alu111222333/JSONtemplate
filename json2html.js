@@ -25,7 +25,7 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
 
         /**
         // [!template,array,if=`(expression)`!] - content filter
-        // expression: JavaScript boolen expression. + cab be used: in_array(arr,value)
+        // expression: JavaScript boolen expression. + can be used: in_array(arr,value)
         // - TRUE item will be processed
         // - FALSE item will be ignored
         // - use prefix "obj." to access item properties
