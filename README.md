@@ -179,23 +179,19 @@ This library make a lot of work for converting data from JSON to HTML.
 For example JSON
 ```javascript
 {
-    "data":{
-        "name":"Name",
-        "parameters":[{
-            "param1":1,
-            "param2":2
-        },
-        {
-            "param1":3,
-            "param2":4
-        }]
-    }
+    "name":"Name",
+    "parameters":[{
+        "param1":1,
+    },
+    {
+        "param1":3,
+    }]
 }
 ```
 we want to show **name** from this JSON inside HTML.
 ```javascript
 var templates={
-        head:'<h1>[*data.name*]</h1>'
+        head:'<h1>[*name*]</h1>'
     };
 ```
 And just call **J2H.process** like here
@@ -208,9 +204,9 @@ And just call **J2H.process** like here
 Example2 with the same JSON as before:
 ```javascript
 var templates={
-        head:'<h1>[*data.name*]</h1>',
-        table:'<table>[!table_row,data.parameters!]</table>',
-        table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
+        head:'<h1>[*name*]</h1>',
+        table:'<ul>[!table_row,parameters!]</ul>',
+        table_row:'<li>[*param1*]</li>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
 var html=J2H.process("all_page",json);
@@ -218,18 +214,18 @@ var html=J2H.process("all_page",json);
 Content of html variable:
 ```html
 <h1>Name</h1>
-<table>
-    <tr><td>1</td><td>2</td></tr>
-    <tr><td>3</td><td>4</td></tr>
-</table>
+<ul>
+    <li>1</li>
+    <li>3</li>
+</ul>
 ```
 
-OR you can generate only one row with template **table_row** and replace/add it to existing table
+OR you can generate only one row with template **table_row** and replace/add it to existing list
 ```javascript
-var html=J2H.process("table_row",json.data.parameters[0]);
+var html=J2H.process("table_row",json.parameters[0]);
 
 //---- result ----
-//<tr><td>1</td><td>2</td></tr>    
+//<li>1</li>    
 ```
 
 There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
@@ -244,11 +240,11 @@ First what you need to know, is the order - how values are replaced in static HT
 
 So you can use variables for processing arrays and templates like that:
 ```html
- [!table_row[*some_value*],data.parameters!]
+ [!table_row[*some_value*],parameters!]
 ```
 On first step [\*some_value\*] will be replaced. For example some_value=100. Then on second step:
 ```html
- [!table_row100,data.parameters!]
+ [!table_row100,parameters!]
 ```
 This is very bad idea, but sometimes may be useful.
 Same situation with templates:
@@ -261,22 +257,18 @@ Same situation with templates:
 
 ```javascript
 var json={
-        "data":{
-            "name":"Name",
-            "parameters":[{
-                "param1":1,
-                "param2":2
-            },
-            {
-                "param1":3,
-                "param2":4
-            }]
-        }
-    }
+    "name":"Name",
+    "parameters":[{
+        "param1":1,
+    },
+    {
+        "param1":3,
+    }]
+}
 
-var templates={
-        table:'<table>[!table_row,data.parameters!]</table>',
-        table_row:'<tr><td>[*param1*]</td><td>[*param2*]</td></tr>',
+var templates={ //loaded from file and already injected in library
+        table:'<ul>[!table_row,parameters!]</ul>',
+        table_row:'<li>[*param1*]</td><td>[*param2*]</li>',
     };
 var html=J2H.process("table",json);
 ```
@@ -284,13 +276,13 @@ There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=J2H.process("table_row",json.data.parameters[0]);
+var html=J2H.process("table_row",json.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
-{{table_row,data.parameters.0}}
+{{table_row,parameters.0}}
 ```
-**,data.parameters.0** will change current parse level data for template to data.parameters[0]
+**parameters.0** will change current variables scope for template to **parameters[0]**
 
 This very usefull if you have same data on different levels.
 
@@ -331,7 +323,6 @@ You can combine all conditions into one
 You can create a HTML file on server with templates.
 For example files **example_template.html** and **example_text.html**
 ```javascript
-var templates = {};
 
 function init() {
     //before loading any templates, you need to set translation array, if you want multilanguage support
@@ -350,20 +341,21 @@ function loadingCallback() {
 init(); //Run it immediately after loading page HTML content
 ```
 
-Also you can put few templates into one file separated by special keyword ( **NextTemplateName:** ).
+Also you can put few templates into one file separated by special keyword  **NextTemplateName:** 
+
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table
-<table class="table table-striped table-bordered">[!users_table_items,users!]</table>
+<table>[!users_table_items,users!]</table>
 
 
 NextTemplateName: users_table_items
 <tr>
-    <td nowrap width=8%>
-        <a href=# style="color:black;" onClick="return users_edit([*id*]);">[*uname,crop=`30`*] [*usinfo*]</a>
+    <td nowrap width=95%>
+        <a href=# onClick="return edit([*id*]);">[*login,crop=`30`*] : [*info*]</a>
     </td>
-    <td align="center" style="vertical-align:middle;cursor:pointer;" width=4% onClick="return users_remove([*id*]);">
-        <img src="../img/remove_icon.png" />
+    <td width=5% onClick="return remove([*id*]);">
+        <img src="remove_icon.png" />
     </td>
 </tr>
 ```
@@ -380,31 +372,23 @@ Example:
 ```javascript
 J2H.setTranslationArray({
     login_name:"User",
-    user_description:"Description"
+    ...
 });
 // all templates will be translated right after loading. You don't need to do anything additionally
-J2H.loadTemplatesArray(["url1_to_templates","url2_to_templates"],drawUI);
+J2H.loadTemplatesArray(["templates_url"],drawUI);
 
 function drawUI(){
     //...
 }
 ```
 
-Example for templaes with **@str.** prefix
+Example of template with **@str.** prefix-strings
 ```html
-NextTemplateName: users_table
-<table class="table table-striped table-bordered">[!users_table_items,users!]</table>
-
-
-NextTemplateName: users_table_items
+NextTemplateName: users_table_item
 <tr>
-    <td nowrap width=8%>
-        <a href=# style="color:black;" onClick="return false;">@str.login_name: [*uname*]</a>
-    </td>
     <td>
-        <a href=# style="color:black;" onClick="return false;">@str.user_description: [*usinfo*]</a>
+        <a href=#>@str.login_name: [*uname*]</a>
     </td>
-
 </tr>
 ```
 
