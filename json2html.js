@@ -578,8 +578,8 @@ if ((J2H === undefined) || (Json2Html === undefined)) {
                 return '';
             };
             if (str.length < 1) return '';
-            str = str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')
-            return str
+            //str = str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+            return str.trim();
         }
 
         function del_dub_space(str) {
