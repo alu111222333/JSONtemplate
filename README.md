@@ -24,8 +24,8 @@ And at the end of file
 ```javascript
 <script type="text/javascript">
     function init() {
-        J2H.setTranslationArray(translates.en); // optional
-        J2H.loadTemplatesArray(["html/templates.html"], loadingCallback);
+        jth.setTranslationArray(translates.en); // optional
+        jth.loadTemplatesArray(["html/templates.html"], loadingCallback);
     }
 
     function loadingCallback() {
@@ -36,13 +36,14 @@ And at the end of file
     //...
 </script>
 ```
+You can use **json2html** name or **jth** for access to [library methods](#basic-only-3-methods). In examples below i use "jth" prefix.
 
 # Basic example
 Library need JQuery for network requests. This is example code for processing data from server.
 ```javascript
-J2H.getJSON("api/get_info.php",function (json){ //send request to API
+jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=J2H.process("head",json); //insert data to template
+        var html=jth.process("head",json); //insert data to template
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
@@ -194,9 +195,9 @@ var templates={
         head:'<h1>[*name*]</h1>'
     };
 ```
-And just call **J2H.process** like here
+And just call **jth.process** like here
 ```javascript
-    var html=J2H.process("head",json);
+    var html=jth.process("head",json);
     $('#content').html(html); //insert result in page
 ```
 
@@ -209,7 +210,7 @@ var templates={
         table_row:'<li>[*param1*]</li>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=J2H.process("all_page",json);
+var html=jth.process("all_page",json);
 ```
 Content of html variable:
 ```html
@@ -222,7 +223,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing list
 ```javascript
-var html=J2H.process("table_row",json.parameters[0]);
+var html=jth.process("table_row",json.parameters[0]);
 
 //---- result ----
 //<li>1</li>    
@@ -270,13 +271,13 @@ var templates={ //loaded from file and already injected in library
         table:'<ul>[!table_row,parameters!]</ul>',
         table_row:'<li>[*param1*]</td><td>[*param2*]</li>',
     };
-var html=J2H.process("table",json);
+var html=jth.process("table",json);
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=J2H.process("table_row",json.parameters[0]);
+var html=jth.process("table_row",json.parameters[0]);
 ```
 Second is to use parameters for template inside HTML code
 ```html
@@ -327,9 +328,9 @@ For example files **example_template.html** and **example_text.html**
 function init() {
     //before loading any templates, you need to set translation array, if you want multilanguage support
     //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-    //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
-    J2H.setTranslationArray(<?php echo(json_encode(transtale_array['en'])); ?>)
-    J2H.loadTemplatesArray(["html/example_template.html", "html/example_text.html"], loadingCallback)
+    //Or AJAX request to server for json, and only after that you can load templates with "jth.loadTemplatesArray"
+    jth.setTranslationArray(<?php echo(json_encode(transtale_array['en'])); ?>)
+    jth.loadTemplatesArray(["html/example_template.html", "html/example_text.html"], loadingCallback)
 }
 
 function loadingCallback() {
@@ -341,7 +342,7 @@ function loadingCallback() {
 init(); //Run it immediately after loading page HTML content
 ```
 
-Also you can put few templates into one file separated by special keyword  **NextTemplateName:** 
+Also you can put few templates into one file separated by special keyword  **NextTemplateName:**
 
 Example **few_templates.html**
 ```html
@@ -370,12 +371,12 @@ Key name not longer than 40 simbols.
 
 Example:
 ```javascript
-J2H.setTranslationArray({
+jth.setTranslationArray({
     login_name:"User",
     ...
 });
 // all templates will be translated right after loading. You don't need to do anything additionally
-J2H.loadTemplatesArray(["templates_url"],drawUI);
+jth.loadTemplatesArray(["templates_url"],drawUI);
 
 function drawUI(){
     //...
@@ -392,4 +393,4 @@ NextTemplateName: users_table_item
 </tr>
 ```
 
-If you need to translate some response, you can use function "J2H.translate(json,[keys])". Keys parameter is optional.
+If you need to translate some response, you can use function "jth.translate(json,[keys])". Keys parameter is optional.

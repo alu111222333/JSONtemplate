@@ -34,8 +34,8 @@
 
 <body>
     <div id="content">
-        ===================================================================================
-        ====== This text will be replaced after loading all information from server. ======
+        ===================================================================================<br>
+        ====== This text will be replaced after loading all information from server. ======<br>
         ===================================================================================
     </div>
 </body>
@@ -48,10 +48,10 @@
     function init() {
         //before loading any templates, you need to set translation array, if you want multilanguage support
         //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-        //Or AJAX request to server for json, and only after that you can load templates with "J2H.loadTemplatesArray"
-        J2H.setDebug(false);
-        J2H.setTranslationArray(translatesEN); // optional
-        J2H.loadTemplatesArray([
+        //Or AJAX request to server for json, and only after that you can load templates with "jth.loadTemplatesArray"
+        jth.setDebug(false);
+        jth.setTranslationArray(translatesEN); // optional
+        jth.loadTemplatesArray([
             "html/structure.html",
             "html/header.html",
             "html/footer.html",
@@ -72,26 +72,23 @@
 
 
 
-
-
-
     // ---------------------------------------
     // ----------- Custom JS-code ------------
     // ---------------------------------------
     function buildWebUI() {
-        $("#content").show();
-        $("#content").html(J2H.process("structure", {}));
+        $("#content").fadeIn(500);
+        $("#content").html(jth.process("structure", {}));
         setTimeout(function() {
             $("#items_container").hide();
-            J2H.getJSON("api/get_items.json", function(json) {
+            jth.getJSON("api/get_items.json", function(json) {
                 if (isGoodResponse(json)) {
-                    J2H.translate(json, ["button_text"]);
-                    var html = J2H.process("total_items", json);
+                    jth.translate(json, ["button_text"]);
+                    var html = jth.process("total_items", json);
                     $("#items_container").html(html);
-                    $("#items_container").fadeIn(200);
+                    $("#items_container").fadeIn(500);
                 }
             });
-        }, 500);
+        }, 1000);
     }
 
 
