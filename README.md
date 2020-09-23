@@ -64,8 +64,8 @@ I suppose better to use iframes for each module. In this case you will never hav
 and don't need to load all JS-libraries that needed in your WHOLE project.
 
 
-* **/common** (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
-    * /api - (some common functions for server JSON API)
+* **/common**
+    * /api - (common functions for server JSON API on PHP/Python)
     * /html - (view elements that needed in few places in project)
     * /js - (here can be implementer function **isGoodResponse(json)** and others)
     * /css
