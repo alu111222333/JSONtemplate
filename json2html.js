@@ -659,7 +659,14 @@ if ((jth === undefined) || (json2html === undefined)) {
                     mycallback(data);
                 })
                 .catch(function(error) {
-                    net_error(e.message, error);
+                    if (rtype.trim().toUpperCase() == 'JSON') {
+                        net_error(error.message, error);
+                    } else {
+                        if (DEBUG) {
+                            debug_log(textStatus + "\n" + printObject(errorThrown));
+                        }
+                        alert('json2html: "' + url + '" ' + error.message);
+                    }
                 });
         }
 
