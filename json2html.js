@@ -13,6 +13,7 @@ if ((jth === undefined) || (json2html === undefined)) {
     var json2html = (function($) {
         "use strict";
         let DEBUG = false;
+        let CORS = false; //cross origin requests
         const translate_prefix = '@str.';
 
         // Recommended to keep current values of j_var, j_loop and j_templ.
@@ -618,46 +619,96 @@ if ((jth === undefined) || (json2html === undefined)) {
             return print_red_text;
         };
 
+
+
+        function net_error(text, error, code = 500) {
+            if (DEBUG) {
+                debug_log('Network: ' + text + "\n" + printObject(error));
+            }
+            mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', text)) + '","code":' + code + '}}'));
+        }
+
+        function fetchRequest(method, rtype, url, postdata, mycallback_func) {
+            let mycallback = mycallback_func;
+            let options = {
+                mode: CORS ? 'cors' : 'same-origin', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: CORS ? 'include' : 'same-origin',
+                redirect: 'follow',
+            }
+            if (method.trim().toUpperCase() == 'POST') {
+                options.method = 'POST';
+                options.body = JSON.stringify(postdata);
+                options.headers = {
+                    'Content-Type': 'application/json'
+                };
+            } else {
+                options.method = 'GET';
+            }
+            fetch(url, options)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw Error(response.statusText);
+                    }
+                    if (rtype.trim().toUpperCase() == 'JSON') {
+                        return response.json();
+                    }
+                    return response.text();
+                })
+                .then(function(data) {
+                    mycallback(data);
+                })
+                .catch(function(error) {
+                    net_error(e.message, error);
+                });
+        }
+
         function getJSON(url, mycallback_func) {
+            if ('fetch' in window) {
+                fetchRequest('get', 'json', url, null, mycallback_func);
+                return;
+            }
             let mycallback = mycallback_func;
             $.getJSON({
                 url: url,
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json',
+                crossDomain: CORS,
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function(data) {
                     mycallback(data);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    if (DEBUG) {
-                        debug_log('Network: ' + textStatus + "\n" + printObject(errorThrown));
-                    }
-                    mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
+                    net_error(textStatus, errorThrown);
                 }
             });
         }
 
+        function postJSON(url, postdata, mycallback_func) {
+            if ('fetch' in window) {
+                fetchRequest('post', 'json', url, postdata, mycallback_func);
+                return;
+            }
 
-        function postJSON(url, data, mycallback_func) {
             let mycallback = mycallback_func;
-            /*var wrapperdata = {
-                'postedData': data
-            };*/
-            let wrapperdata = data;
             $.post({
                 url: url,
-                data: JSON.stringify(wrapperdata),
+                data: JSON.stringify(postdata),
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
+                crossDomain: CORS,
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function(data) {
                     mycallback(data);
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    if (DEBUG) {
-                        debug_log(textStatus + "\n" + printObject(errorThrown));
-                    }
-                    mycallback(JSON.parse('{"error":{"state":true,"title":"Network error","message":"' + str_replace("'", '', str_replace('"', '', textStatus)) + '","code":500}}'));
+                    net_error(textStatus, errorThrown);
                 }
             });
 
@@ -706,64 +757,83 @@ if ((jth === undefined) || (json2html === undefined)) {
                 return;
             }
             all_templates_loaded++; //increace template requests counter
-            let myParam = url.substring(url.lastIndexOf('/') + 1);
-            myParam = my_trim(myParam.substring(0, myParam.lastIndexOf('.')));
+
+            if ('fetch' in window) {
+                fetchRequest('get', 'text', url, null, function(data) {
+                    __build_templates(data, to_template, common_func, url)
+                });
+                return;
+            }
+
             $.get({
                 processData: false,
                 url: url,
+                crossDomain: CORS,
+                xhrFields: {
+                    withCredentials: true
+                },
                 success: function(data) {
-                    if (data.match(/^ *?NextTemplateName: *?\S{1,100} *?$/m)) {
-                        debug_log('File with templates detected: ' + myParam)
-                        let temlArr = data.split('NextTemplateName:');
-                        let i = 0;
-                        for (i = 0; i < temlArr.length; i++) {
-                            let nIndex = temlArr[i].indexOf('\n');
-                            let tParam = '';
-                            let tData = '';
-                            if (i > 0) {
-                                if (nIndex < 0 || nIndex > 100) {
-                                    debug_log('Strange template loaded from file ' + myParam + '. All templates should be starter with line "NextTemplateName: name_of_template"');
-                                    debug_log(temlArr[i]);
-                                    continue;
-                                }
-                                tParam = my_trim(temlArr[i].substring(0, nIndex));
-                                tData = my_trim(temlArr[i].substring(nIndex + 1));
-                            } else {
-                                tData = my_trim(temlArr[i]);
-                                if (tData.length == 0) {
-                                    debug_log('thete is nothing in first "' + myParam + '" of the content ' + i);
-                                    continue;
-                                }
-                                tParam = myParam;
-                            }
-                            /*var tParam = my_trim(temlArr[i].substring(0, nIndex));
-let tData = my_trim(temlArr[i].substring(nIndex + 1));*/
-                            if (tData.length == 0) {
-                                debug_log('thete is nothing in one of the content ' + i);
-                                continue;
-                            }
-                            if (tParam.length == 0) {
-                                debug_log('thete is no title in one of the templates ' + i);
-                                tParam = myParam;
-                            }
-                            to_template[tParam] = tData;
-                            debug_log('Loaded template ' + tParam + ' from file ' + myParam);
-                        }
-                    } else {
-                        to_template[myParam] = data;
-                        debug_log('Loaded file ' + myParam);
-                    }
-
-                    all_templates_loaded--; //decrease template requests counter
-                    if (all_templates_loaded == 0) common_func(); //sending inital requests
+                    __build_templates(data, to_template, common_func, url)
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
                     if (DEBUG) {
                         debug_log(textStatus + "\n" + printObject(errorThrown));
                     }
+                    alert('json2html template: ' + url + ' not exists');
                 }
             });
         }
+
+
+
+        function __build_templates(data, to_template, common_func, url) {
+            let myParam = url.substring(url.lastIndexOf('/') + 1);
+            myParam = my_trim(myParam.substring(0, myParam.lastIndexOf('.')));
+            if (data.match(/^\s*?NextTemplateName:\s*?\S{1,100}\s*?$/m)) {
+                debug_log('File with templates detected: ' + myParam)
+                let temlArr = data.split('NextTemplateName:');
+                let i = 0;
+                for (i = 0; i < temlArr.length; i++) {
+                    let nIndex = temlArr[i].indexOf('\n');
+                    let tParam = '';
+                    let tData = '';
+                    if (i > 0) {
+                        if (nIndex < 0 || nIndex > 100) {
+                            debug_log('Strange template loaded from file ' + myParam + '. All templates should be starter with line "NextTemplateName: name_of_template"');
+                            debug_log(temlArr[i]);
+                            continue;
+                        }
+                        tParam = my_trim(temlArr[i].substring(0, nIndex));
+                        tData = my_trim(temlArr[i].substring(nIndex + 1));
+                    } else {
+                        tData = my_trim(temlArr[i]);
+                        if (tData.length == 0) {
+                            debug_log('thete is nothing in first "' + myParam + '" of the content ' + i);
+                            continue;
+                        }
+                        tParam = myParam;
+                    }
+
+                    if (tData.length == 0) {
+                        debug_log('thete is nothing in one of the content ' + i);
+                        continue;
+                    }
+                    if (tParam.length == 0) {
+                        debug_log('thete is no title in one of the templates ' + i);
+                        tParam = myParam;
+                    }
+                    to_template[tParam] = tData;
+                    debug_log('Loaded template ' + tParam + ' from file ' + myParam);
+                }
+            } else {
+                to_template[myParam] = data;
+                debug_log('Loaded file ' + myParam);
+            }
+
+            all_templates_loaded--; //decrease template requests counter
+            if (all_templates_loaded == 0) common_func(); //sending inital requests
+        }
+
 
 
         function serializeHtmlForm(formObj) {
