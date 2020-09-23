@@ -36,7 +36,7 @@ And at the end of file
     //...
 </script>
 ```
-You can use **json2html** name or **jth** for access to [library methods](#basic-only-3-methods). In examples below i use "jth" prefix.
+You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below i use "jth" prefix.
 
 # Basic example
 Library need JQuery for network requests. This is example code for processing data from server.
@@ -47,17 +47,6 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
         $('#content').html(html); //show result inside 'id=content' page item
     }
 });
-
-
-
-// -- common function for response checking --
-function isGoodResponse(json){
-    if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
-        alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
-        return false;
-    }
-    return true;
-}
 ```
 Templates can use this 3 placeholders in HTML:
 - **[\*variable\*]** - [insert value from JSON data](#using-variable)
@@ -76,16 +65,16 @@ and don't need to load all JS-libraries that needed in your WHOLE project.
 
 
 * **/common** (some common elements like CSS, HTML, JavaScript, PHP, Python and etc.)
-    * /api
-    * /html
-    * /js
+    * /api - (some common functions for server JSON API)
+    * /html - (view elements that needed in few places in project)
+    * /js - (here can be implementer function **isGoodResponse(json)** and others)
     * /css
     * /img
 * **/module1**
-    * /api - (all Data models from server database)
-        * api1_result.php
+    * /api - (data response from server database)
+        * api_result.php
         * ...
-    * /html - (all View elements and chunks in current module)
+    * /html - (view elements in current module)
         * page_structure.html
         * header.html
         * content.html
@@ -96,7 +85,7 @@ and don't need to load all JS-libraries that needed in your WHOLE project.
     * /html
     * index.php
 * .....
-* **index.php** (main project file for iframes navigation)
+* **index.php** (entry point for iframes navigation)
 
 ### Schema in each module
 Clients browsers became more powerful every year. It's very silly to build all
@@ -108,7 +97,7 @@ This will save server time and money.
 |   index   |----- AJAX --->|  API  |
 |~~~~~^~~~~~|               |-------|
 |~~~~~|~~~~~|                   |
-|   HTML    |<-------JSON-------|
+|   HTML    |<------JSON--------|
 |-----------|
 ```
 
