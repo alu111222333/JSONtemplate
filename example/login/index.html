@@ -67,7 +67,7 @@
     // action triggered from templates.html
     // onsubmit="return checkLogin();"
     function checkLogin() {
-        var formData = $("#login-form").serializeHtmlForm(); // from JTH library - force add unchecked checkboxes with postfix "__false" to it values.
+        var formData = jth.serializeHtmlForm($("#login-form")[0]); // --- $("#login-form").serializeHtmlForm(); will also work id jQuery was added
         alert("Posted object:\n" + jth.printObject(formData, 2)); // from JTH library - printObject(object, [deep level]);
         jth.postJSON("api/check_login.json", formData, function(json) {
             if (isGoodResponse(json)) {

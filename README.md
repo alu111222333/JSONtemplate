@@ -15,8 +15,8 @@ JavaScript library for single-page web applications
 - [Multilanguage support](#multilanguage-support)
 
 # Installation
+jQuery is NOT necessary for this library. But you can use it ;-)
 ```html
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="path_to/json2html.js"></script>
 ```
 

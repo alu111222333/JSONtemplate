@@ -10,7 +10,7 @@
 // that may occur with another code on the page (module pattern).
 
 if ((jth === undefined) || (json2html === undefined)) {
-    var json2html = (function($) {
+    var json2html = (function() {
         "use strict";
         let DEBUG = false;
         let CORS = false; //cross origin requests
@@ -579,8 +579,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 return '';
             };
             if (str.length < 1) return '';
-            //str = str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-            return str.trim();
+            return str.trim(); //str = str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         }
 
         function del_dub_space(str) {
@@ -676,22 +675,26 @@ if ((jth === undefined) || (json2html === undefined)) {
                 return;
             }
             let mycallback = mycallback_func;
-            $.getJSON({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-                crossDomain: CORS,
-                xhrFields: {
-                    withCredentials: true
-                },
-                success: function(data) {
-                    mycallback(data);
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    net_error(textStatus, errorThrown);
-                }
-            });
+            if (jQuery !== undefined && jQuery.fn.getJSON !== undefined) {
+                jQuery.getJSON({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    crossDomain: CORS,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(data) {
+                        mycallback(data);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        net_error(textStatus, errorThrown);
+                    }
+                });
+            } else {
+                alert('old browser - jQuery required');
+            }
         }
 
         function postJSON(url, postdata, mycallback_func) {
@@ -701,23 +704,27 @@ if ((jth === undefined) || (json2html === undefined)) {
             }
 
             let mycallback = mycallback_func;
-            $.post({
-                url: url,
-                data: JSON.stringify(postdata),
-                type: 'POST',
-                dataType: 'json',
-                contentType: 'application/json',
-                crossDomain: CORS,
-                xhrFields: {
-                    withCredentials: true
-                },
-                success: function(data) {
-                    mycallback(data);
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    net_error(textStatus, errorThrown);
-                }
-            });
+            if (jQuery !== undefined && jQuery.fn.post !== undefined) {
+                jQuery.post({
+                    url: url,
+                    data: JSON.stringify(postdata),
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    crossDomain: CORS,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(data) {
+                        mycallback(data);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        net_error(textStatus, errorThrown);
+                    }
+                });
+            } else {
+                alert('old browser - jQuery required');
+            }
 
         }
 
@@ -771,24 +778,27 @@ if ((jth === undefined) || (json2html === undefined)) {
                 });
                 return;
             }
-
-            $.get({
-                processData: false,
-                url: url,
-                crossDomain: CORS,
-                xhrFields: {
-                    withCredentials: true
-                },
-                success: function(data) {
-                    __build_templates(data, to_template, common_func, url)
-                },
-                error: function(XMLHttpRequest, textStatus, errorThrown) {
-                    if (DEBUG) {
-                        debug_log(textStatus + "\n" + printObject(errorThrown));
+            if (jQuery !== undefined && jQuery.fn.get !== undefined) {
+                jQuery.get({
+                    processData: false,
+                    url: url,
+                    crossDomain: CORS,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function(data) {
+                        __build_templates(data, to_template, common_func, url)
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        if (DEBUG) {
+                            debug_log(textStatus + "\n" + printObject(errorThrown));
+                        }
+                        alert('json2html template: ' + url + ' not exists');
                     }
-                    alert('json2html template: ' + url + ' not exists');
-                }
-            });
+                });
+            } else {
+                alert('old browser - jQuery required');
+            }
         }
 
 
@@ -843,91 +853,83 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
 
-        function serializeHtmlForm(formObj) {
-
-            function updatejsonformat(obj, o) {
-                let n = o.name,
-                    v = o.value;
-                if ((/\[.*?\]/).test(n)) {
-                    let firstN = n.split('[')[0];
-                    let indexes = n.match(/\[.*?\]/g);
-                    let c = indexes.length;
-                    let numerisArraFinal = n.includes('[]');
-                    if (obj[firstN] === undefined) {
-                        if (c == 1 && numerisArraFinal) {
-                            obj[firstN] = new Array();
-                        } else {
-                            obj[firstN] = {};
-                        }
+        function __updatejsonformat(obj, o) {
+            let n = o.name,
+                v = o.value;
+            if ((/\[.*?\]/).test(n)) {
+                let firstN = n.split('[')[0];
+                let indexes = n.match(/\[.*?\]/g);
+                let c = indexes.length;
+                let numerisArraFinal = n.includes('[]');
+                if (obj[firstN] === undefined) {
+                    if (c == 1 && numerisArraFinal) {
+                        obj[firstN] = new Array();
+                    } else {
+                        obj[firstN] = {};
                     }
+                }
 
-                    let i = 0;
+                let i = 0;
 
-                    let curObj = obj[firstN];
-                    for (i = 0; i < c; i++) {
-                        let index = str_replace('[', '', str_replace(']', '', indexes[i]));
-                        if (i == c - 1) {
-                            if (index == '') {
-                                if ($.isArray(curObj)) {
-                                    curObj.push(v)
-                                }
+                let curObj = obj[firstN];
+                for (i = 0; i < c; i++) {
+                    let index = str_replace('[', '', str_replace(']', '', indexes[i]));
+                    if (i == c - 1) {
+                        if (index == '') {
+                            if (Array.isArray(curObj)) {
+                                curObj.push(v)
+                            }
+                        } else {
+                            curObj[index] = v;
+                        }
+                    } else {
+                        if (curObj[index] === undefined) {
+                            if ((i == (c - 2)) && numerisArraFinal) {
+                                curObj[index] = new Array();
                             } else {
-                                curObj[index] = v;
+                                curObj[index] = {};
                             }
-                        } else {
-                            if (curObj[index] === undefined) {
-                                if ((i == (c - 2)) && numerisArraFinal) {
-                                    curObj[index] = new Array();
-                                } else {
-                                    curObj[index] = {};
-                                }
-                            }
-                            curObj = curObj[index]
                         }
+                        curObj = curObj[index]
                     }
-                } else if (obj[n] === undefined) {
-                    obj[n] = v;
+                }
+            } else if (obj[n] === undefined) {
+                obj[n] = v;
+            }
+        }
+
+        function serializeHtmlForm(form) {
+            let obj = {};
+            let elements = form.querySelectorAll("input, select, textarea");
+            for (let i = 0; i < elements.length; ++i) {
+                let element = elements[i];
+                let name = element.name;
+
+                if (name) {
+                    let value = element.value;
+                    if (element.tagName.toUpperCase() == 'INPUT' && element.type.toUpperCase() == 'CHECKBOX') {
+                        if (!element.checked) {
+                            value = value + '__false';
+                        }
+
+                    }
+                    __updatejsonformat(obj, {
+                        name: name,
+                        value: value
+                    });
                 }
             }
-
-            let object = {},
-                names = {};
-            let sarray = formObj.serializeArray();
-            $.each(sarray, function(index, o) {
-                updatejsonformat(object, o);
-            });
-            $(formObj).find('input[type="checkbox"]:not(:checked)').each(function(ind, elem) { //insert all unchecked values too
-                updatejsonformat(object, {
-                    'name': elem.name,
-                    'value': elem.value + '__false'
-                }) //value of unchecked elements will be ended with "__false"
-            });
-
-            $(formObj).find('input[type="checkbox"]:checked').each(function(ind, elem) { //insert all unchecked values too
-                updatejsonformat(object, {
-                    'name': elem.name,
-                    'value': elem.value
-                }) //value of unchecked elements will be ended with "__false"
-            });
-
-
-            $(formObj).find('input[type="checkbox"]:disabled:checked').each(function(ind, elem) { //insert all unchecked values too
-                updatejsonformat(object, {
-                    'name': elem.name,
-                    'value': elem.value
-                }) //value of unchecked elements will be ended with "__false"
-            });
-
-
-            return object;
+            return obj;
         }
         //add new function to JQuerry object
         //add new function to JQuerry object
         //add new function to JQuerry object
         //add new function to JQuerry object
-        $.fn.serializeHtmlForm = function() {
-            return serializeHtmlForm(this)
-        };
+        if (jQuery !== undefined) {
+            jQuery.fn.serializeHtmlForm = function() {
+                return serializeHtmlForm(this[0])
+            };
+        }
 
         function isAllTemplatesLoaded() {
             return all_templates_loaded < 1;
@@ -1159,6 +1161,6 @@ if ((jth === undefined) || (json2html === undefined)) {
             setDebug: setDebug, //for console output of all library warnings and errors
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
         }
-    }(jQuery));
+    }());
     var jth = json2html; //alternative name
 }
