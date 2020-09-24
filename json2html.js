@@ -539,12 +539,6 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
             level_parce--;
-            str = str_replace('~{', '{', str);
-            str = str_replace('~}', '}', str);
-            str = str_replace('~[', '[', str);
-            str = str_replace('~]', ']', str);
-            str = str_replace('~*', '*', str);
-            str = str_replace('~!', '!', str);
             if (DEBUG && (error_parcer != '') && (level_parce == 0)) {
                 //debug_log('some data is left from datasource \n'+error_parcer);
                 error_parcer = '';
@@ -620,7 +614,7 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
 
-        function net_error(text, error, code = 500) {
+        function net_error(mycallback, text, error, code = 500) {
             if (DEBUG) {
                 debug_log('Network: ' + text + "\n" + printObject(error));
             }
@@ -634,22 +628,27 @@ if ((jth === undefined) || (json2html === undefined)) {
                 cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                 credentials: CORS ? 'include' : 'same-origin',
                 redirect: 'follow',
-            }
+            };
+            let is_json_result = rtype.trim().toUpperCase() == 'JSON';
             if (method.trim().toUpperCase() == 'POST') {
                 options.method = 'POST';
                 options.body = JSON.stringify(postdata);
                 options.headers = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': is_json_result ? 'application/json' : 'text/html'
                 };
             } else {
                 options.method = 'GET';
+                options.headers = {
+                    'Accept': is_json_result ? 'application/json' : 'text/html'
+                };
             }
             fetch(url, options)
                 .then(function(response) {
                     if (!response.ok) {
                         throw Error(response.statusText);
                     }
-                    if (rtype.trim().toUpperCase() == 'JSON') {
+                    if (is_json_result) {
                         return response.json();
                     }
                     return response.text();
@@ -658,8 +657,8 @@ if ((jth === undefined) || (json2html === undefined)) {
                     mycallback(data);
                 })
                 .catch(function(error) {
-                    if (rtype.trim().toUpperCase() == 'JSON') {
-                        net_error(error.message, error);
+                    if (is_json_result) {
+                        net_error(mycallback, error.message, error);
                     } else {
                         if (DEBUG) {
                             debug_log(textStatus + "\n" + printObject(errorThrown));
@@ -669,31 +668,57 @@ if ((jth === undefined) || (json2html === undefined)) {
                 });
         }
 
+        function xhrRequest(method, rtype, url, postdata, mycallback_func) {
+            let mycallback = mycallback_func;
+            let oAjaxReq = new XMLHttpRequest();
+            oAjaxReq.withCredentials = true;
+            let is_json_result = rtype.trim().toUpperCase() == 'JSON';
+            let is_post = method.trim().toUpperCase() == 'POST';
+            if (is_post) {
+                method = 'POST';
+            } else {
+                method = 'GET';
+            }
+            oAjaxReq.onload = function(evt) {
+                if (oAjaxReq.readyState == 4) {
+                    if (oAjaxReq.status == 200) {
+                        var text = oAjaxReq.responseText;
+                        if (is_json_result) {
+                            try {
+                                mycallback(JSON.parse(text));
+                            } catch (e) {
+                                net_error(mycallback, e.name, e, oAjaxReq.status);
+                            }
+                        } else {
+                            mycallback(text);
+                        }
+                    } else {
+                        net_error(mycallback, 'Wrong status ' + oAjaxReq.status, {
+                            error: 'XMLHttpRequest',
+                            status: oAjaxReq.status
+                        }, oAjaxReq.status);
+                    }
+                }
+            };
+            oAjaxReq.onerror = function(evt) {
+                net_error(mycallback, oAjaxReq.statusText, evt, oAjaxReq.status);
+            };
+            oAjaxReq.open(method, url, true);
+            if (is_post) {
+                oAjaxReq.setRequestHeader("Content-Type", "application/json");
+                oAjaxReq.setRequestHeader("Accept", is_json_result ? 'application/json' : 'text/html');
+                oAjaxReq.send(JSON.stringify(postdata));
+            } else {
+                oAjaxReq.setRequestHeader("Accept", is_json_result ? 'application/json' : 'text/html');
+                oAjaxReq.send();
+            }
+        }
+
         function getJSON(url, mycallback_func) {
             if ('fetch' in window) {
                 fetchRequest('get', 'json', url, null, mycallback_func);
-                return;
-            }
-            let mycallback = mycallback_func;
-            if (jQuery !== undefined && jQuery.fn.getJSON !== undefined) {
-                jQuery.getJSON({
-                    url: url,
-                    type: 'GET',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    crossDomain: CORS,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: function(data) {
-                        mycallback(data);
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        net_error(textStatus, errorThrown);
-                    }
-                });
             } else {
-                alert('old browser - jQuery required');
+                xhrRequest('get', 'json', url, null, mycallback_func);
             }
         }
 
@@ -701,31 +726,9 @@ if ((jth === undefined) || (json2html === undefined)) {
             if ('fetch' in window) {
                 fetchRequest('post', 'json', url, postdata, mycallback_func);
                 return;
-            }
-
-            let mycallback = mycallback_func;
-            if (jQuery !== undefined && jQuery.fn.post !== undefined) {
-                jQuery.post({
-                    url: url,
-                    data: JSON.stringify(postdata),
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    crossDomain: CORS,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: function(data) {
-                        mycallback(data);
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        net_error(textStatus, errorThrown);
-                    }
-                });
             } else {
-                alert('old browser - jQuery required');
+                xhrRequest('post', 'json', url, postdata, mycallback_func);
             }
-
         }
 
         let all_templates_loaded = 0;
@@ -777,30 +780,12 @@ if ((jth === undefined) || (json2html === undefined)) {
                     __build_templates(data, to_template, common_func, url)
                 });
                 return;
-            }
-            if (jQuery !== undefined && jQuery.fn.get !== undefined) {
-                jQuery.get({
-                    processData: false,
-                    url: url,
-                    crossDomain: CORS,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    success: function(data) {
-                        __build_templates(data, to_template, common_func, url)
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                        if (DEBUG) {
-                            debug_log(textStatus + "\n" + printObject(errorThrown));
-                        }
-                        alert('json2html template: ' + url + ' not exists');
-                    }
-                });
             } else {
-                alert('old browser - jQuery required');
+                xhrRequest('get', 'text', url, null, function(data) {
+                    __build_templates(data, to_template, common_func, url)
+                });
             }
         }
-
 
 
         function __build_templates(data, to_template, common_func, url) {
@@ -921,14 +906,14 @@ if ((jth === undefined) || (json2html === undefined)) {
             }
             return obj;
         }
-        //add new function to JQuerry object
-        //add new function to JQuerry object
-        //add new function to JQuerry object
-        //add new function to JQuerry object
+
+        //add new function to JQuerry object if it exists
         if (jQuery !== undefined) {
-            jQuery.fn.serializeHtmlForm = function() {
-                return serializeHtmlForm(this[0])
-            };
+            try {
+                jQuery.fn.serializeHtmlForm = function() {
+                    return serializeHtmlForm(this[0])
+                };
+            } catch (e) {}
         }
 
         function isAllTemplatesLoaded() {
