@@ -39,7 +39,7 @@ And at the end of file
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below i use "jth" prefix.
 
 # Basic example
-Library need JQuery for network requests. This is example code for processing data from server.
+Library not use jQuery for network requests. Was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
