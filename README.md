@@ -43,8 +43,8 @@ Library not use jQuery for network requests. Was implemented FETCH and XMLHttpRe
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=jth.process("head",json); //insert data to template
-        $('#content').html(html); //show result inside 'id=content' page item
+        var html=jth.process("page",json); //inject into template 'page' data from json
+        $('#content').html(html); //show it inside 'id=content' page item
     }
 });
 ```
