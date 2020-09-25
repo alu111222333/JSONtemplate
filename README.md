@@ -64,8 +64,8 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=jth.inject(json,"page");
-        $('#content').html(html); //show it inside 'id=content' page item
+        let html=jth.inject(json,"page");
+        document.getElementById('content').innerHTML=html;
     }
 });
 ```
