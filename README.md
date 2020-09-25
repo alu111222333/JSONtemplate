@@ -69,9 +69,11 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
     }
 });
 ```
+
+**Templates files content**
 Templates can use this 3 placeholders in HTML:
 - **[\*variable\*]** - [insert value from JSON data](#using-variable)
-- **[!array,template!]** - [process arrays](#using-templatearray)
+- **[!array,template!]** - [process arrays](#using-arraytemplate)
 - **{{template}}** - [just show template](#using-template)
 
 For translation you can use:
