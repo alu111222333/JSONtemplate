@@ -36,7 +36,7 @@ And at the end of file
     //...
 </script>
 ```
-You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below i use "jth" prefix.
+You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix used.
 
 # Basic example
 Library not use jQuery for network requests. Was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
