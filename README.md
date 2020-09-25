@@ -40,11 +40,31 @@ And at the end of file
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix used.
 
 # Basic example
-Library not use jQuery for network requests. Was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
+Library not used jQuery for network requests. There was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
+
+**Without jQuery**:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=jth.process("page",json); //inject into template 'page' data from json
+        jth.inject2DOM(json,"page","#content");
+    }
+});
+```
+
+**With jQuery**:
+```javascript
+jth.getJSON("api/get_info.php",function (json){ //send request to API
+    if (isGoodResponse(json)) {
+        $("#content").injectJSON(json,"page");
+    }
+});
+```
+
+**Advanced**:
+```javascript
+jth.getJSON("api/get_info.php",function (json){ //send request to API
+    if (isGoodResponse(json)) {
+        var html=jth.inject(json,"page");
         $('#content').html(html); //show it inside 'id=content' page item
     }
 });
@@ -206,9 +226,9 @@ var templates={
         head:'<h1>[*name*]</h1>'
     };
 ```
-And just call **jth.process** like here
+And just call **jth.inject** like here
 ```javascript
-    var html=jth.process("head",json);
+    var html=jth.inject(json,"head");
     $('#content').html(html); //insert result in page
 ```
 
@@ -221,7 +241,7 @@ var templates={
         table_row:'<li>[*param1*]</li>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
-var html=jth.process("all_page",json);
+var html=jth.inject(json, "all_page");
 ```
 Content of html variable:
 ```html
@@ -234,7 +254,7 @@ Content of html variable:
 
 OR you can generate only one row with template **table_row** and replace/add it to existing list
 ```javascript
-var html=jth.process("table_row",json.parameters[0]);
+var html=jth.inject(json.parameters[0],"table_row");
 
 //---- result ----
 //<li>1</li>    
@@ -282,13 +302,13 @@ var templates={ //loaded from file and already injected in library
         table:'<ul>[!parameters,table_row!]</ul>',
         table_row:'<li>[*param1*]</td><td>[*param2*]</li>',
     };
-var html=jth.process("table",json);
+var html=jth.inject(json,"table");
 ```
 There are 2 ways how to how show only first row:
 
 First as was describer before
 ```javascript
-var html=jth.process("table_row",json.parameters[0]);
+var html=jth.inject(json.parameters[0],"table_row");
 ```
 Second is to use parameters for template inside HTML code
 ```html
