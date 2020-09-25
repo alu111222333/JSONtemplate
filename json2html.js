@@ -905,10 +905,14 @@ if ((jth === undefined) || (json2html === undefined)) {
 
         function serializeHtmlForm(selector) {
             let form = document.querySelector(selector);
-            let obj = {};
             if (form === undefined || form == null) {
-                return obj;
+                return {};
             }
+            return serializeDOM(form);
+        }
+
+        function serializeDOM(form) {
+            let obj = {};
             let elements = form.querySelectorAll("input, select, textarea");
             for (let i = 0; i < elements.length; ++i) {
                 let element = elements[i];
@@ -935,7 +939,7 @@ if ((jth === undefined) || (json2html === undefined)) {
         if (jQuery !== undefined) {
             try {
                 jQuery.fn.serializeHtmlForm = function() {
-                    return serializeHtmlForm(this[0])
+                    return serializeDOM(this[0])
                 };
                 jQuery.fn.injectJSON = function(data, template) {
                     let html = inject(data, template);
