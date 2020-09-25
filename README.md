@@ -1,5 +1,5 @@
-# JSON2HTML templates + Multilanguage support
-JavaScript library for single-page web applications
+# json2html
+JavaScript framework for single-page web applications with Multilanguage support
 - [Installation](#installation)
 - [Basic example](#basic-example)
 - [Recommended code structure](#recommended-code-structure)
@@ -19,9 +19,9 @@ JavaScript library for single-page web applications
 ```html
 <script type="text/javascript" src="path_to/json2html.js"></script>
 ```
-jQuery is NOT necessary for this library.
+jQuery is NOT necessary.
 
-And at the end of file
+At the end of file:
 ```javascript
 <script type="text/javascript">
     function init() {
@@ -37,10 +37,10 @@ And at the end of file
     //...
 </script>
 ```
-You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix used.
+You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix was used.
 
 # Basic example
-Library not used jQuery for network requests. There was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
+Library don't need jQuery for network requests. There was implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 
 ### Without jQuery:
 ```javascript
@@ -333,8 +333,17 @@ This very usefull if you have same data on different levels.
 
 [*variable,replace=`abc`with`def`*] //- replace all "abc" to "def" in variable
 
-[*variable,hash32*] //- show hash (MurmurHash3) of variable. Look: http://sites.google.com/site/murmurhash/
+[*variable,hash32*] //- show MurmurHash3 of variable uniq for current library instance. Look: http://sites.google.com/site/murmurhash/
+
+[*arr.length*] //- show length of variable if type is Array
+
+[*random*] //- display random value in range [1,100000]
+
+[*vardump*] //- will show content of current variable 
+
+[*this.vardump*] //- same as [*vardump*] but with keyword "this"
 ```
+
 
 
 # Using [!array,template!]
@@ -354,8 +363,7 @@ You can combine all conditions into one
 ```
 
 # Loading templates
-You can create a HTML file on server with templates.
-For example files **example_template.html** and **example_text.html**
+You can create a HTML-template files on server and load all files with translated texts with only 2 strings of code.
 ```javascript
 
 function init() {
@@ -375,7 +383,7 @@ function loadingCallback() {
 init(); //Run it immediately after loading page HTML content
 ```
 
-Also you can put few templates into one file separated by special keyword  **NextTemplateName:**
+You can put few templates into one file separated by special keyword  **NextTemplateName:**
 
 Example **few_templates.html**
 ```html
@@ -393,8 +401,8 @@ NextTemplateName: users_table_items
     </td>
 </tr>
 ```
-So it's possible to put all templates together in one file. **users_table** template use **users_table_items** for each element in array.
-After loading this file its name will be ignored and name after **NextTemplateName:** will be taken. You can use this names for parsing data
+So it's possible to put all templates together in one file.
+FileName will be ignored and only name after **NextTemplateName:** will be taken. You can use this names for injecting data
 
 
 # Multilanguage support
