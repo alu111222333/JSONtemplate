@@ -42,7 +42,7 @@ You can use **"json2html"** name or **"jth"** for access to [library methods](#b
 # Basic example
 Library not used jQuery for network requests. There was implemented FETCH and XMLHttpRequest for fallback capability. Example below show standard way to work with server response.
 
-**Without jQuery**:
+### Without jQuery:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
@@ -51,7 +51,7 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 });
 ```
 
-**With jQuery**:
+### With jQuery:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
@@ -60,18 +60,20 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 });
 ```
 
-**Advanced**:
+### Advanced:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        var html=jth.inject(json,"page");
-        $('#content').html(html); //show it inside 'id=content' page item
+        let html=jth.inject(json,"page");
+        document.getElementById('content').innerHTML=html;
     }
 });
 ```
-Templates can use this 3 placeholders in HTML:
+
+### Templates files content
+Simply HTML files with 3 special placeholers inside:
 - **[\*variable\*]** - [insert value from JSON data](#using-variable)
-- **[!array,template!]** - [process arrays](#using-templatearray)
+- **[!array,template!]** - [process arrays](#using-arraytemplate)
 - **{{template}}** - [just show template](#using-template)
 
 For translation you can use:
