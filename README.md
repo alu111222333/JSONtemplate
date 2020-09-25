@@ -15,10 +15,10 @@ JavaScript library for single-page web applications
 - [Multilanguage support](#multilanguage-support)
 
 # Installation
-jQuery is NOT necessary for this library. But you can use it ;-)
 ```html
 <script type="text/javascript" src="path_to/json2html.js"></script>
 ```
+jQuery is NOT necessary for this library.
 
 And at the end of file
 ```javascript
