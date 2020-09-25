@@ -1,6 +1,8 @@
 function isGoodResponse(json) {
     if (json.error !== undefined && json.error.state !== undefined && json.error.state) {
+        jth.translate(json, ['title', 'ui_*']);
         alert(json.error.title + "\n" + json.error.message); // replace to your own implementation
+        alert(json.error.ui_optional_value);
         return false;
     }
     return true;
@@ -16,7 +18,8 @@ var translates = {
         submit: "LogIn",
         header: "Website Title",
         logo: "Company Name",
-        remember: "Remember me"
+        remember: "Remember me",
+        error: "Error_test"
     },
     fr: {
         login: "Nom d'utilisateur",
@@ -24,7 +27,8 @@ var translates = {
         submit: "S'identifier",
         header: "Titre du site Web",
         logo: "Nom de la compagnie",
-        remember: "Souviens-toi de moi"
+        remember: "Souviens-toi de moi",
+        error: "Erreur"
     },
     ru: {
         login: "Имя пользователя",
@@ -32,7 +36,8 @@ var translates = {
         submit: "Вход",
         header: "Заголовок Сайта",
         logo: "Имя компании",
-        remember: "Запомнить меня"
+        remember: "Запомнить меня",
+        error: "Ошибка"
     },
     es: {
         login: "Nombre de usuario",
@@ -40,7 +45,8 @@ var translates = {
         submit: "Iniciar sesión",
         header: "Título del sitio web",
         logo: "nombre de empresa",
-        remember: "Recuérdame"
+        remember: "Recuérdame",
+        error: "Falta"
     },
     de: {
         login: "Benutzername",
@@ -48,6 +54,7 @@ var translates = {
         submit: "Anmelden",
         header: "Website-Titel",
         logo: "Firmenname",
-        remember: "Login speichern"
+        remember: "Login speichern",
+        error: "Fehler"
     }
 };

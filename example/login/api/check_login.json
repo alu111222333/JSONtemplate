@@ -1,8 +1,10 @@
 {
     "error":{
         "state":true,
-        "title": "-- Error object example --",
+        "title": "-- @str.error --",
         "message":"This is error object for library\nthis object must be processed or extended",
-        "code":777
+        "code":777,
+
+        "ui_optional_value":"For response translation you can use unexact 'prefix*' or '*postfix'\n For example error was translated with 'ui_*' key prefix: || @str.error ||"
     }
 }
