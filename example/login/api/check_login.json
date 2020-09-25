@@ -1,8 +1,8 @@
 {
     "error":{
         "state":true,
-        "title": "----- Error object -----",
-        "message":"This is example error object for library\nYou can use anythig else or extend existing,\nbut this object fields a must be processed",
+        "title": "-- Error object example --",
+        "message":"This is error object for library\nthis object must be processed or extended",
         "code":777
     }
 }

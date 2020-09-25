@@ -77,14 +77,13 @@
     // ---------------------------------------
     function buildWebUI() {
         $("#content").fadeIn(500);
-        $("#content").html(jth.process("structure", {}));
+        jth.inject2DOM({}, 'structure', '#content');
         setTimeout(function() {
             $("#items_container").hide();
             jth.getJSON("api/get_items.json", function(json) {
                 if (isGoodResponse(json)) {
                     jth.translate(json, ["button_text"]);
-                    var html = jth.process("total_items", json);
-                    $("#items_container").html(html);
+                    jth.inject2DOM(json, 'total_items', '#items_container');
                     $("#items_container").fadeIn(500);
                 }
             });

@@ -6,11 +6,12 @@ JavaScript library for single-page web applications
 - [Methods List](#methods-list)
     - [Basic](#basic-only-3-methods)
     - [Extentions](#additional)
+    - [jQuery](#jquery)
     - [Debug](#debug)
 - [Some examples and explanations](#parsing-json-into-html)
     - [**{{template}}**](#using-template)
     - [**\[\*variable\*\]**](#using-variable)
-    - [**\[!template,array!\]**](#using-templatearray)
+    - [**\[!array,template!\]**](#using-arraytemplate)
 - [Loading templates from files](#loading-templates)
 - [Multilanguage support](#multilanguage-support)
 
@@ -50,7 +51,7 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 ```
 Templates can use this 3 placeholders in HTML:
 - **[\*variable\*]** - [insert value from JSON data](#using-variable)
-- **[!template,array!]** - [process arrays](#using-templatearray)
+- **[!array,template!]** - [process arrays](#using-templatearray)
 - **{{template}}** - [just show template](#using-template)
 
 For translation you can use:
@@ -109,7 +110,7 @@ This will save server time and money.
 
     ```
 
-* **process**("template_name",json_data)
+* **inject**(json_data, "template_name")
      ```
     return is a HTML string created from HTMLs loaded by loadTemplatesArray(...)
 
@@ -142,10 +143,31 @@ This will save server time and money.
 
     ```
 
-* serializeHtmlForm(JQuery_object)
+* serializeHtmlForm(css_selector)
     ```
-    extention for $(??).serializeArray() with unchecked checkboxes and arrays.
-    You can use $(??).serializeHtmlForm()
+    serialize froms with unchecked checkboxes and arrays.
+
+    ```
+
+* inject2DOM(json_data, "template_name", selector)
+    ```
+    put created HTML code into DOM element with CSS selector
+
+    ```
+
+## jQuery
+if jQuery was added to HTML page library will create 2 extentions
+* $.serializeHtmlForm()
+    ```
+    same as serializeHtmlForm(DOM_object)
+
+    ```
+
+* $.injectJSON(data,"template_name")    
+    ```
+    inject HTML to each jQuery element. Return jQuery object.
+    Example:
+    $('#content').injectJSON(data,'template').fadeIn(300);
 
     ```
 
@@ -195,7 +217,7 @@ Example2 with the same JSON as before:
 ```javascript
 var templates={
         head:'<h1>[*name*]</h1>',
-        table:'<ul>[!table_row,parameters!]</ul>',
+        table:'<ul>[!parameters,table_row!]</ul>',
         table_row:'<li>[*param1*]</li>',
         all_page:'<h1>{{head}}</h1>{{table}}'
     };
@@ -224,17 +246,17 @@ There are possible parameters to each placeholder like **IF** condition. I will 
 # Explanation
 First what you need to know, is the order - how values are replaced in static HTML templates.
 
-1) replace all **[\*variables\*]**
-2) replace all arrays **[!array!]**
-3) replace all templates **{{template}}**
+1) replace **[\*variables\*]**
+2) replace **[!array,template!]**
+3) replace **{{template}}**
 
 So you can use variables for processing arrays and templates like that:
 ```html
- [!table_row[*some_value*],parameters!]
+ [!parameters,table_row[*some_value*]!]
 ```
 On first step [\*some_value\*] will be replaced. For example some_value=100. Then on second step:
 ```html
- [!table_row100,parameters!]
+ [!parameters,table_row100!]
 ```
 This is very bad idea, but sometimes may be useful.
 Same situation with templates:
@@ -257,7 +279,7 @@ var json={
 }
 
 var templates={ //loaded from file and already injected in library
-        table:'<ul>[!table_row,parameters!]</ul>',
+        table:'<ul>[!parameters,table_row!]</ul>',
         table_row:'<li>[*param1*]</td><td>[*param2*]</li>',
     };
 var html=jth.process("table",json);
@@ -293,20 +315,20 @@ This very usefull if you have same data on different levels.
 ```
 
 
-# Using [!template,array!]
+# Using [!array,template!]
 
 Here you can use also if condition.
 ```javascript
-[!template,array,if=`condition`] //- show items. Use "obj.property". Read header of json2html.js
+[!array,template,if=`condition`] //- show items. Use "obj.property". Read header of json2html.js
 
-[!template,array,limit=`100`] //- show first 100 items
+[!array,template,limit=`100`] //- show first 100 items
 
-[!template,array,default=`string`] //- show string if there is no data in array
+[!array,template,default=`string`] //- show string if there is no data in array
 ```
 
 You can combine all conditions into one
 ```javascript
-[!template,array,if=`condition`,limit=`100`,default=`string`]
+[!array,template,if=`condition`,limit=`100`,default=`string`]
 ```
 
 # Loading templates
@@ -336,7 +358,7 @@ Also you can put few templates into one file separated by special keyword  **Nex
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table
-<table>[!users_table_items,users!]</table>
+<table>[!users,users_table_items!]</table>
 
 
 NextTemplateName: users_table_items

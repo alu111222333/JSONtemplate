@@ -2,7 +2,7 @@ NextTemplateName: total_items
 <div class="card-deck mb-3 text-center">
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
-    [! item, data, if=`(!(("ignore" in obj) ? obj.ignore : false)) && (obj.price>-1)` !]
+    [! data, item, if=`(!(("ignore" in obj) ? obj.ignore : false)) && (obj.price>-1)` !]
 </div>
 
 
@@ -20,7 +20,7 @@ NextTemplateName: item
         <ul class="list-unstyled mt-3 mb-4">
             <li>[* users *] users included</li>
             <li>[* storage *] GB of storage</li>
-            [! features,list !]
+            [! list,features !]
         </ul>
         <button type="button" class="btn btn-lg btn-block {{button_class}}">[*button_text*]</button>
     </div>

@@ -54,8 +54,8 @@
         jth.loadTemplatesArray(["html/templates.html"], function() { //after setting translation
             jth.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (isGoodResponse(json)) {
-                    $('#content').html(jth.process("page", json));
-                    $('#content').fadeIn(50);
+                    //jth.inject2DOM(json, 'main-html-block', '#content');
+                    $('#content').injectJSON(json, 'main-html-block').fadeIn(50); // OR jth.inject2DOM(json, 'main-html-block','#content')
                     $("#inlineLanguageSelect").val(lang);
                 }
             })
@@ -67,7 +67,7 @@
     // action triggered from templates.html
     // onsubmit="return checkLogin();"
     function checkLogin() {
-        var formData = jth.serializeHtmlForm($("#login-form")[0]); // --- $("#login-form").serializeHtmlForm(); will also work id jQuery was added
+        var formData = jth.serializeHtmlForm("#login-form"); // OR $("#login-form").serializeHtmlForm(); will also work id jQuery was added
         alert("Posted object:\n" + jth.printObject(formData, 2)); // from JTH library - printObject(object, [deep level]);
         jth.postJSON("api/check_login.json", formData, function(json) {
             if (isGoodResponse(json)) {
