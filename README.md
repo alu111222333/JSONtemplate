@@ -246,7 +246,7 @@ NextTemplateName: table_row
 <li>[*param1*]</li>
 
 NextTemplateName: all_page
-<h1>{{head}}</h1>{{table}}
+{{head}}{{table}}
 ```
 ```javascript
 var html=jth.inject(json, "all_page");
