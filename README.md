@@ -209,7 +209,7 @@ if jQuery was added to HTML page library will create 2 extentions
 
 # Parsing JSON into HTML
 This library make a lot of work for converting data from JSON to HTML.
-<br>
+
 For example JSON
 ```javascript
 {
@@ -223,10 +223,9 @@ For example JSON
 }
 ```
 we want to show **name** from this JSON inside HTML.
-```javascript
-var templates={
-        head:'<h1>[*name*]</h1>'
-    };
+```html
+NextTemplateName: head
+<h1>[*name*]</h1>
 ```
 And just call **jth.inject** like here
 ```javascript
@@ -236,13 +235,20 @@ And just call **jth.inject** like here
 
 
 Example2 with the same JSON as before:
+```html
+NextTemplateName: head
+<h1>[*name*]</h1>
+
+NextTemplateName: table
+<ul>[!parameters,table_row!]</ul>
+
+NextTemplateName: table_row
+<li>[*param1*]</li>
+
+NextTemplateName: all_page
+<h1>{{head}}</h1>{{table}}
+```
 ```javascript
-var templates={
-        head:'<h1>[*name*]</h1>',
-        table:'<ul>[!parameters,table_row!]</ul>',
-        table_row:'<li>[*param1*]</li>',
-        all_page:'<h1>{{head}}</h1>{{table}}'
-    };
 var html=jth.inject(json, "all_page");
 ```
 Content of html variable:
