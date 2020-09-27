@@ -207,16 +207,14 @@ NextTemplateName: table_row
 ```
 ```javascript
 var html=jth.inject(json, "all_page");
-```
-Content of html variable:
-```html
-<h1>Name</h1>
-<ul>
-    <li>1</li>
-    <li>3</li>
-</ul>
-```
 
+//---- result ----
+//<h1>Name</h1>
+//<ul>
+//    <li>1</li>
+//    <li>3</li>
+//</ul>
+```
 OR you can generate only one row with template **table_row** and replace/add it to existing list
 ```javascript
 var html=jth.inject(json.parameters[0],"table_row");
@@ -228,8 +226,6 @@ var html=jth.inject(json.parameters[0],"table_row");
 There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
 
 # Using {{template}}
-
-
 ```javascript
 var json={
     "name":"Name",
@@ -241,10 +237,16 @@ var json={
     }]
 }
 
-var templates={ //loaded from file and already injected in library
-        table:'<ul>[!parameters,table_row!]</ul>',
-        table_row:'<li>[*param1*]</td><td>[*param2*]</li>',
-    };
+
+--- templates.html content ---
+NextTemplateName: table
+<ul>[!parameters,table_row!]</ul>
+
+NextTemplateName: table_row
+<li>[*param1*]</td><td>[*param2*]</li>
+
+
+--- javascript code ---
 var html=jth.inject(json,"table");
 ```
 There are 2 ways how to how show only first row:
