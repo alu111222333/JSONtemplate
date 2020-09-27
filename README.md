@@ -2,7 +2,6 @@
 JavaScript framework for single-page web applications with Multilanguage support
 - [Installation](#installation)
 - [Basic example](#basic-example)
-- [Recommended code structure](#recommended-code-structure)
 - [Methods List](#methods-list)
     - [Basic](#basic-only-3-methods)
     - [Extentions](#additional)
@@ -14,15 +13,15 @@ JavaScript framework for single-page web applications with Multilanguage support
     - [**\[!array,template!\]**](#using-arraytemplate)
 - [Loading templates from files](#loading-templates)
 - [Multilanguage support](#multilanguage-support)
+- [Recommended code structure](#recommended-code-structure)
+
 
 # Installation
-```html
-<script type="text/javascript" src="path_to/json2html.js"></script>
-```
 jQuery is NOT necessary.
 
-At the end of file:
+Add at the end of file:
 ```javascript
+<script type="text/javascript" src="json2html.js"></script>
 <script type="text/javascript">
     function init() {
         jth.setTranslationArray(translates.en); // optional
@@ -81,48 +80,6 @@ For translation you can use:
 
 Examples are below or in **example/** folder.
 
-
-# Recommended code structure
-I suppose better to use iframes for each module. In this case you will never have a conflicts
-and don't need to load all JS-libraries that needed in your WHOLE project.
-
-
-* **/common**
-    * /api - (common functions for server JSON API on PHP/Python)
-    * /html - (view elements that needed in few places in project)
-    * /js - (here can be implementer function **isGoodResponse(json)** and others)
-    * /css
-    * /img
-* **/module1**
-    * /api - (data response from server database)
-        * api_result.php
-        * ...
-    * /html - (view elements in current module)
-        * page_structure.html
-        * header.html
-        * content.html
-        * ...
-    * index.php - (control all events and process all data from server - Presenter)
-* **/module2**
-    * /api
-    * /html
-    * index.php
-* .....
-* **index.php** (entry point for iframes navigation)
-
-### Schema in each module
-Clients browsers became more powerful every year. It's very silly to build all
-HTML pages on server side if this work can be done on client with JavaScript.
-This will save server time and money.
-```
-   Browser                    Server
-|-----------|               |-------|
-|   index   |----- AJAX --->|  API  |
-|~~~~~^~~~~~|               |-------|
-|~~~~~|~~~~~|                   |
-|   HTML    |<------JSON--------|
-|-----------|
-```
 
 # Methods List
 ## Basic (only 3 methods)
@@ -236,6 +193,9 @@ And just call **jth.inject** like here
 
 Example2 with the same JSON as before:
 ```html
+NextTemplateName: all_page
+{{head}}{{table}}
+
 NextTemplateName: head
 <h1>[*name*]</h1>
 
@@ -244,9 +204,6 @@ NextTemplateName: table
 
 NextTemplateName: table_row
 <li>[*param1*]</li>
-
-NextTemplateName: all_page
-{{head}}{{table}}
 ```
 ```javascript
 var html=jth.inject(json, "all_page");
@@ -269,28 +226,6 @@ var html=jth.inject(json.parameters[0],"table_row");
 ```
 
 There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
-
-
-# Explanation
-First what you need to know, is the order - how values are replaced in static HTML templates.
-
-1) replace **[\*variables\*]**
-2) replace **[!array,template!]**
-3) replace **{{template}}**
-
-So you can use variables for processing arrays and templates like that:
-```html
- [!parameters,table_row[*some_value*]!]
-```
-On first step [\*some_value\*] will be replaced. For example some_value=100. Then on second step:
-```html
- [!parameters,table_row100!]
-```
-This is very bad idea, but sometimes may be useful.
-Same situation with templates:
-```html
- {{template[*some_value*]}} --> {{template100}}
-```
 
 # Using {{template}}
 
@@ -368,6 +303,28 @@ You can combine all conditions into one
 [!array,template,if=`condition`,limit=`100`,default=`string`]
 ```
 
+# Processing order explanation
+First what you need to know, is the order - how values are replaced in static HTML templates.
+
+1) replace **[\*variables\*]**
+2) replace **[!array,template!]**
+3) replace **{{template}}**
+
+So you can use variables for processing arrays and templates like that:
+```html
+ [!parameters,table_row[*some_value*]!]
+```
+On first step [\*some_value\*] will be replaced. For example some_value=100. Then on second step:
+```html
+ [!parameters,table_row100!]
+```
+This is very bad idea, but sometimes may be useful.
+Same situation with templates:
+```html
+ {{template[*some_value*]}} --> {{template100}}
+```
+
+
 # Loading templates
 You can create a HTML-template files on server and load all files with translated texts with only 2 strings of code.
 ```javascript
@@ -441,3 +398,45 @@ NextTemplateName: users_table_item
 ```
 
 If you need to translate some response, you can use function "jth.translate(json,[keys])". Keys parameter is optional.
+
+# Recommended code structure
+I suppose better to use iframes for each module. In this case you will never have a conflicts
+and don't need to load all JS-libraries that needed in your WHOLE project.
+
+
+* **/common**
+    * /api - (common functions for server JSON API on PHP/Python)
+    * /html - (view elements that needed in few places in project)
+    * /js - (here can be implementer function **isGoodResponse(json)** and others)
+    * /css
+    * /img
+* **/module1**
+    * /api - (data response from server database)
+        * api_result.php
+        * ...
+    * /html - (view elements in current module)
+        * page_structure.html
+        * header.html
+        * content.html
+        * ...
+    * index.php - (control all events and process all data from server - Presenter)
+* **/module2**
+    * /api
+    * /html
+    * index.php
+* .....
+* **index.php** (entry point for iframes navigation)
+
+### Schema in each module
+Clients browsers became more powerful every year. It's very silly to build all
+HTML pages on server side if this work can be done on client with JavaScript.
+This will save server time and money.
+```
+   Browser                    Server
+|-----------|               |-------|
+|   index   |----- AJAX --->|  API  |
+|~~~~~^~~~~~|               |-------|
+|~~~~~|~~~~~|                   |
+|   HTML    |<------JSON--------|
+|-----------|
+```
