@@ -180,7 +180,7 @@ if jQuery was added to HTML page library will create 2 extentions
 # Parsing JSON into HTML
 This library make a lot of work for converting data from JSON to HTML.
 
-For example JSON
+Example JSON
 ```javascript
 {
     "name":"Name",
@@ -192,6 +192,7 @@ For example JSON
     }]
 }
 ```
+### Example-1
 we want to show **name** from this JSON inside HTML.
 ```html
 NextTemplateName: head
@@ -202,9 +203,7 @@ And just call **jth.inject** like here
     var html=jth.inject(json,"head");
     $('#content').html(html); //insert result in page
 ```
-
-
-Example2 with the same JSON as before:
+### Example-2
 ```html
 NextTemplateName: all_page
 {{head}}{{table}}
@@ -228,7 +227,8 @@ var html=jth.inject(json, "all_page");
 //    <li>3</li>
 //</ul>
 ```
-OR you can generate only one row with template **table_row** and replace/add it to existing list
+### Example-3
+You can generate only one row from template **table_row**
 ```javascript
 var html=jth.inject(json.parameters[0],"table_row");
 
@@ -236,7 +236,6 @@ var html=jth.inject(json.parameters[0],"table_row");
 //<li>1</li>    
 ```
 
-There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
 
 # Using {{template}}
 You can create simply HTML templates or Active Components with JS-code inside.
@@ -266,11 +265,11 @@ var html=jth.inject(json,"table");
 ```
 There are 2 ways how to how show only first row:
 
-* First
+* First in JavaScript
 ```javascript
 var html=jth.inject(json.parameters[0],"table_row");
 ```
-* Second
+* Second in Templates
 ```html
 {{table_row,parameters.0}}
 ```
@@ -295,6 +294,7 @@ For components better to use anonymous function and **[\*instance_id\*]** predef
 ```
 
 # Using [\*variable\*]
+Minimal manipulations with variables in JSON data
 ```javascript
 [*variable,if=`value||value2`then`TrueString`else`FalseString`*] //- show string depends of value
 
@@ -322,10 +322,9 @@ For components better to use anonymous function and **[\*instance_id\*]** predef
 
 
 # Using [!array,template!]
-
-Here you can use also if condition.
+Here you can also use if condition (for details please read header of json2html.js).
 ```javascript
-[!array,template,if=`condition`] //- show items. Use "obj.property". Read header of json2html.js
+[!array,template,if=`condition`] //- show items. Use "obj.property".
 
 [!array,template,limit=`100`] //- show first 100 items
 
@@ -336,28 +335,6 @@ You can combine all conditions into one
 ```javascript
 [!array,template,if=`condition`,limit=`100`,default=`string`]
 ```
-
-# Processing order explanation
-First what you need to know, is the order - how values are replaced in static HTML templates.
-
-1) replace **[\*variables\*]**
-2) replace **[!array,template!]**
-3) replace **{{template}}**
-
-So you can use variables for processing arrays and templates like that:
-```html
- [!parameters,table_row[*some_value*]!]
-```
-On first step [\*some_value\*] will be replaced. For example some_value=100. Then on second step:
-```html
- [!parameters,table_row100!]
-```
-This is very bad idea, but sometimes may be useful.
-Same situation with templates:
-```html
- {{template[*some_value*]}} --> {{template100}}
-```
-
 
 # Loading templates
 You can create a HTML-template files on server and load all files with translated texts with only 2 strings of code.
