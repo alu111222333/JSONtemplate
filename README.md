@@ -240,6 +240,7 @@ There are possible parameters to each placeholder like **IF** condition. I will 
 
 # Using {{template}}
 You can create simply HTML templates or Active Components with JS-code inside.
+#### Static Templates
 ```javascript
 var json={
     "name":"Name",
@@ -265,24 +266,27 @@ var html=jth.inject(json,"table");
 ```
 There are 2 ways how to how show only first row:
 
-First as was describer before
+* First
 ```javascript
 var html=jth.inject(json.parameters[0],"table_row");
 ```
-Second is to use parameters for template inside HTML code
+* Second
 ```html
 {{table_row,parameters.0}}
 ```
 **parameters.0** will change current variables scope for template to **parameters[0]**
 
 This very usefull if you have same data on different levels.
+#### Components
+The same as Static Templates but template have some JavaScript code.
 
-For components use anonymous function and [\*instance_id\*]
+For components better to use anonymous function and **[\*instance_id\*]** predefined variable
 ```javascript
-<div id="component[*instance_id*]">
+--- component.html content ---
+<div id="id[*instance_id*]">
     html content
 </div>
-(function(container) {
+(function(uniq_id) {
     ...
 }('[*instance_id*]'))
 ```
