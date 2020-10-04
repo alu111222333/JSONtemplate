@@ -39,7 +39,7 @@ Add at the end of file:
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix was used.
 
 # Basic example
-Library don't need jQuery for network requests. There was implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
+There was implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 
 ### Without jQuery:
 ```javascript
