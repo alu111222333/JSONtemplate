@@ -280,9 +280,11 @@ This very usefull if you have same data on different levels.
 
 [*arr.length*] //- show length of variable if type is Array
 
+[*instance_id*] //- uniq number for current template instance on page. Can be used for components to limit the scope of the Javascript. Components its the same as templates, but with code on javascript directly in the same template.
+
 [*random*] //- display random value in range [1,100000]
 
-[*vardump*] //- will show content of current variable 
+[*vardump*] //- will show content of current variable
 
 [*this.vardump*] //- same as [*vardump*] but with keyword "this"
 ```
