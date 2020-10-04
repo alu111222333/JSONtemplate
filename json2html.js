@@ -807,12 +807,11 @@ if ((jth === undefined) || (json2html === undefined)) {
         function normalizeTemplates(arr) {
             for (let item in arr) {
                 arr[item] = str_replace(j_var[0].charAt(0) + ' ' + j_var[0].charAt(1), j_var[0], arr[item]);
-                arr[item] = str_replace(j_loop[0].charAt(0) + ' ' + j_loop[0].charAt(1), j_var[0], arr[item]);
-                arr[item] = str_replace(j_templ[0].charAt(0) + ' ' + j_templ[0].charAt(1), j_var[0], arr[item]);
+                arr[item] = str_replace(j_loop[0].charAt(0) + ' ' + j_loop[0].charAt(1), j_loop[0], arr[item]);
+                arr[item] = str_replace(j_templ[0].charAt(0) + ' ' + j_templ[0].charAt(1), j_templ[0], arr[item]);
                 arr[item] = str_replace(j_var[1].charAt(0) + ' ' + j_var[1].charAt(1), j_var[1], arr[item]);
-                arr[item] = str_replace(j_loop[1].charAt(0) + ' ' + j_loop[1].charAt(1), j_var[1], arr[item]);
-                arr[item] = str_replace(j_templ[1].charAt(0) + ' ' + j_templ[1].charAt(1), j_var[1], arr[item]);
-
+                arr[item] = str_replace(j_loop[1].charAt(0) + ' ' + j_loop[1].charAt(1), j_loop[1], arr[item]);
+                arr[item] = str_replace(j_templ[1].charAt(0) + ' ' + j_templ[1].charAt(1), j_templ[1], arr[item]);
                 arr[item] = str_replace(j_var[0] + '  ', j_var[0], arr[item]);
                 arr[item] = str_replace(j_var[0] + ' ', j_var[0], arr[item]);
                 arr[item] = str_replace(j_loop[0] + '  ', j_loop[0], arr[item]);
