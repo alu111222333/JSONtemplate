@@ -55,7 +55,8 @@
             "html/structure.html",
             "html/header.html",
             "html/footer.html",
-            "html/item.html"
+            "html/item.html",
+            "html/component_example.html"
         ], loadingCallback);
 
         $("#content").hide(); // optional
@@ -83,8 +84,8 @@
             jth.getJSON("api/get_items.json", function(json) {
                 if (isGoodResponse(json)) {
                     jth.translate(json, ["button_text"]);
-                    jth.inject2DOM(json, 'total_items', '#items_container');
-                    $("#items_container").fadeIn(500);
+                    // jth.inject2DOM(json, 'total_items',"#items_container")
+                    $("#items_container").injectJSON(json, 'total_items').fadeIn(500);
                 }
             });
         }, 1000);

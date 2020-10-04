@@ -48,7 +48,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 return false;
             }
             let accepted = '';
-            for (var key in arr) {
+            for (let key in arr) {
                 accepted = arr[key];
                 if (accepted == value) {
                     return true;
@@ -567,6 +567,28 @@ if ((jth === undefined) || (json2html === undefined)) {
             return my_trim(str);
         }
 
+        function executeJS(element) {
+            let scripts = Array.prototype.slice.call(element.getElementsByTagName("script"));
+            for (let i = 0; i < scripts.length; i++) {
+                if (scripts[i].src != "") {
+                    let dochead = document.getElementsByTagName("head")[0];
+                    let url = my_trim(scripts[i].src);
+                    let id = str_replace('.', '_', str_replace(':', '_', str_replace('/', '_', url)));
+                    let js_exists = document.getElementById(id);
+                    if (js_exists) {
+                        //already was dinamically (NOT STATIC) injected
+                    } else {
+                        let tag = document.createElement("script");
+                        tag.src = url;
+                        tag.id = id;
+                        dochead.appendChild(tag);
+                    }
+                } else {
+                    eval(scripts[i].innerHTML);
+                }
+                scripts[i].parentElement.removeChild(scripts[i]);
+            }
+        }
 
         function inject2DOM(data, name, selector) {
             let elements = null;
@@ -581,11 +603,12 @@ if ((jth === undefined) || (json2html === undefined)) {
                 let element = elements[i];
                 if ('innerHTML' in element) {
                     element.innerHTML = html;
+                    executeJS(element);
                 }
             }
             return html;
-
         }
+
         //replace substring by another substring
         //usefull for templates
         function str_replace(search, replace, osubject) {
@@ -638,9 +661,9 @@ if ((jth === undefined) || (json2html === undefined)) {
             let print_red_text = "";
             if (!level) level = 0;
             let level_padding = "";
-            for (var j = 0; j < level + 1; j++) level_padding += "    ";
+            for (let j = 0; j < level + 1; j++) level_padding += "    ";
             if (typeof(arr) == 'object') {
-                for (var item in arr) {
+                for (let item in arr) {
                     let value = arr[item];
                     if (typeof(value) == 'object') {
                         print_red_text += level_padding + "'" + item + "' :\n";
@@ -722,7 +745,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             oAjaxReq.onload = function(evt) {
                 if (oAjaxReq.readyState == 4) {
                     if (oAjaxReq.status == 200) {
-                        var text = oAjaxReq.responseText;
+                        let text = oAjaxReq.responseText;
                         if (is_json_result) {
                             try {
                                 mycallback(JSON.parse(text));
@@ -782,7 +805,14 @@ if ((jth === undefined) || (json2html === undefined)) {
         }
 
         function normalizeTemplates(arr) {
-            for (var item in arr) {
+            for (let item in arr) {
+                arr[item] = str_replace(j_var[0].charAt(0) + ' ' + j_var[0].charAt(1), j_var[0], arr[item]);
+                arr[item] = str_replace(j_loop[0].charAt(0) + ' ' + j_loop[0].charAt(1), j_var[0], arr[item]);
+                arr[item] = str_replace(j_templ[0].charAt(0) + ' ' + j_templ[0].charAt(1), j_var[0], arr[item]);
+                arr[item] = str_replace(j_var[1].charAt(0) + ' ' + j_var[1].charAt(1), j_var[1], arr[item]);
+                arr[item] = str_replace(j_loop[1].charAt(0) + ' ' + j_loop[1].charAt(1), j_var[1], arr[item]);
+                arr[item] = str_replace(j_templ[1].charAt(0) + ' ' + j_templ[1].charAt(1), j_var[1], arr[item]);
+
                 arr[item] = str_replace(j_var[0] + '  ', j_var[0], arr[item]);
                 arr[item] = str_replace(j_var[0] + ' ', j_var[0], arr[item]);
                 arr[item] = str_replace(j_loop[0] + '  ', j_loop[0], arr[item]);
@@ -962,6 +992,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                     let html = inject(data, template);
                     this.each(function() {
                         jQuery(this).html(html);
+                        executeJS(jQuery(this)[0]);
                     });
                     return this;
                 }
@@ -1091,7 +1122,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             if (Array.isArray(keys) && (keys.length > 0)) {
                 customKeys = true;
             }
-            for (var key in obj) {
+            for (let key in obj) {
                 if (obj[key] === undefined || obj[key] === null || Number.isInteger(obj[key])) continue;
                 if (Array.isArray(obj[key]) || (typeof obj[key]) == 'object') {
                     translate(obj[key], keys)
@@ -1191,6 +1222,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             loadTemplatesArray: loadTemplatesArray, //load multi-files templates with callback after all files loaded successfully
             setTranslationArray: setTranslationArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translate: translate, //if you need to translate JSON object manually. All templates are translated automatically
+            executeJS: executeJS, //run injected code inside components.
             printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
             setDebug: setDebug, //for console output of all library warnings and errors
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()

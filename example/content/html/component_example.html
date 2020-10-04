@@ -1,0 +1,17 @@
+<div id="ident[*instance_id*]">
+    <input class="click_alert w-100 text p-2" type="text" value="component" />
+</div>
+<script src="https://www.youtube.com/s/desktop/b4620429/jsbin/custom-elements-es5-adapter.vflset/custom-elements-es5-adapter.js" type="text/javascript" name="custom-elements-es5-adapter/custom-elements-es5-adapter"></script>
+
+<script type="text/javascript">
+    // Wrap all components into anonymous function to avoid conflicts
+    (function(container) {
+        $('#ident' + container).find(".click_alert")
+            .bind('mouseenter', function(event) {
+                $(this).css('border', '3px solid red');
+            })
+            .bind('mouseleave', function(event) {
+                $(this).css('border', '0px solid white');
+            });
+    }('[*instance_id*]'))
+</script>

@@ -11,7 +11,7 @@ JavaScript framework for single-page web applications with Multilanguage support
     - [**{{template}}**](#using-template)
     - [**\[\*variable\*\]**](#using-variable)
     - [**\[!array,template!\]**](#using-arraytemplate)
-- [Loading templates from files](#loading-templates)
+- [Loading templates/components](#loading-templates)
 - [Multilanguage support](#multilanguage-support)
 - [Recommended code structure](#recommended-code-structure)
 
@@ -45,7 +45,7 @@ There was implemented FETCH with fallback to XMLHttpRequest. Example below show 
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        jth.inject2DOM(json,"page","#content");
+        jth.inject2DOM(json,"page","#content"); //jth.executeJS will run automatically
     }
 });
 ```
@@ -54,7 +54,7 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
-        $("#content").injectJSON(json,"page");
+        $("#content").injectJSON(json,"page"); //jth.executeJS will run automatically
     }
 });
 ```
@@ -63,8 +63,10 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
+        let element=document.getElementById('content');
         let html=jth.inject(json,"page");
-        document.getElementById('content').innerHTML=html;
+        element.innerHTML=html;
+        jth.executeJS(element); //optional: only if block have some JS.
     }
 });
 ```
@@ -134,11 +136,22 @@ Examples are below or in **example/** folder.
 
     ```
 
+* executeJS(DOM_element)
+    ```
+    Execute JS inside element once. You don't need it if you use
+    only plain HTML without active JavaScript code.
+
+    Will run automatically inside functions:
+    jth.inject2DOM(...) and $.injectJSON(...).
+    But NOT in jth.inject(...), must be called separately. Look example above.
+
+    ```
+
 ## jQuery
 if jQuery was added to HTML page library will create 2 extentions
 * $.serializeHtmlForm()
     ```
-    same as serializeHtmlForm(DOM_object)
+    same as serializeHtmlForm(css_selector)
 
     ```
 
@@ -226,6 +239,7 @@ var html=jth.inject(json.parameters[0],"table_row");
 There are possible parameters to each placeholder like **IF** condition. I will describe it later in this document.
 
 # Using {{template}}
+You can create simply HTML templates or Active Components with JS-code inside.
 ```javascript
 var json={
     "name":"Name",
@@ -263,6 +277,15 @@ Second is to use parameters for template inside HTML code
 
 This very usefull if you have same data on different levels.
 
+For components use anonymous function and [\*instance_id\*]
+```javascript
+<div id="component[*instance_id*]">
+    html content
+</div>
+(function(container) {
+    ...
+}('[*instance_id*]'))
+```
 
 # Using [\*variable\*]
 ```javascript
@@ -436,11 +459,11 @@ Clients browsers became more powerful every year. It's very silly to build all
 HTML pages on server side if this work can be done on client with JavaScript.
 This will save server time and money.
 ```
-   Browser                    Server
-|-----------|               |-------|
-|   index   |----- AJAX --->|  API  |
-|~~~~~^~~~~~|               |-------|
-|~~~~~|~~~~~|                   |
-|   HTML    |<------JSON--------|
+   Browser                 Server
+|-----------|            |-------|
+|   index   |--- AJAX -->|  API  |
+|~~~~~^~~~~~|            |-------|
+|~~~~~|~~~~~|                |
+|   HTML    |<-----JSON------|
 |-----------|
 ```
