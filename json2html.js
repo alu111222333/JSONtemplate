@@ -71,8 +71,9 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
         let error_parcer = '';
+        let template_instance_id = Math.floor((Math.random() * 999) + 1); //random inital value
 
-        function get_from_data(temp_data, name_var) {
+        function get_from_data(temp_data, name_var, uniq_instance_id) {
             if (name_var === undefined) {
                 if (DEBUG) {
                     alert('Json2Html: CRITICAL error. Varialble name is undefined. Check your loop templates')
@@ -96,6 +97,9 @@ if ((jth === undefined) || (json2html === undefined)) {
                 }
                 if (name_vars[i] == 'random') {
                     return Math.floor((Math.random() * 100000) + 1);
+                }
+                if (name_vars[i] == 'instance_id') {
+                    return uniq_instance_id;
                 }
 
                 if (temp_data !== undefined && temp_data !== null && temp_data[name_vars[i]] !== undefined) {
@@ -145,6 +149,8 @@ if ((jth === undefined) || (json2html === undefined)) {
             ///********************** filter sub-functions start ***************************
             let global_filter = '';
             let templates = shadow_templates_object;
+            let local_template_instance_id = template_instance_id;
+            template_instance_id++;
 
             function set_filter(f) {
                 global_filter = f;
@@ -326,7 +332,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                             variable = '';
                         }
                     }
-                    temp = get_from_data(data, name_var2);
+                    temp = get_from_data(data, name_var2, local_template_instance_id);
                     if (hash > 0) {
                         temp = murmurhash3_32_gc(temp);
                     } else if (replace > 0) {
@@ -466,7 +472,7 @@ if ((jth === undefined) || (json2html === undefined)) {
 
                     temp_data = data;
                     name_var = temp_template[0];
-                    temp_data = get_from_data(data, removeSq(name_var));
+                    temp_data = get_from_data(data, removeSq(name_var), local_template_instance_id);
                     let k = 0;
                     let ccc = temp_data.length - 1;
                     let pagindex = 0;
@@ -493,21 +499,21 @@ if ((jth === undefined) || (json2html === undefined)) {
                         //filter_end
 
                         if ((typeof temp_data[key] == "object")) {
-                            temp_data[key]['j2h_counter'] = k + '';
-                            temp_data[key]['j2h_key'] = key + '';
+                            temp_data[key]['json2html_counter'] = k + '';
+                            temp_data[key]['json2html_key'] = key + '';
                             //k=parseInt(k);
                             if (k == 0) {
-                                temp_data[key]['j2h_first'] = '1';
+                                temp_data[key]['json2html_first'] = '1';
                             };
                             if (k == ccc) {
-                                temp_data[key]['j2h_last'] = '1';
+                                temp_data[key]['json2html_last'] = '1';
                             };
                             //temp_data[key]['index_0'] = 'unused';
                             //temp_data[key]['index_1'] = 'unused';
                             if (((k + 1) % 2) == 0) {
-                                temp_data[key]['j2h_even'] = '1';
+                                temp_data[key]['json2html_even'] = '1';
                             } else {
-                                temp_data[key]['j2h_odd'] = '1';
+                                temp_data[key]['json2html_odd'] = '1';
                             };
                         }
 
@@ -543,7 +549,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         name_template = name_template.split(',', 2);
                         let dataindex = name_template[1];
                         name_template = name_template[0];
-                        curData = get_from_data(curData, dataindex);
+                        curData = get_from_data(curData, dataindex, local_template_instance_id);
                     }
                     str = str_replace(j_templ[0] + name_template_all + j_templ[1], inject(curData, name_template), str);
                 } else {
