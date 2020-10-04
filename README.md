@@ -240,7 +240,7 @@ There are possible parameters to each placeholder like **IF** condition. I will 
 
 # Using {{template}}
 You can create simply HTML templates or Active Components with JS-code inside.
-### Static Templates
+## Static Templates
 ```javascript
 var json={
     "name":"Name",
@@ -277,7 +277,7 @@ var html=jth.inject(json.parameters[0],"table_row");
 **parameters.0** will change current variables scope for template to **parameters[0]**
 
 This very usefull if you have same data on different levels.
-### Components
+## Components
 The same as Static Templates but template have some JavaScript code.
 
 For components better to use anonymous function and **[\*instance_id\*]** predefined variable
@@ -286,9 +286,12 @@ For components better to use anonymous function and **[\*instance_id\*]** predef
 <div id="id[*instance_id*]">
     html content
 </div>
-(function(uniq_id) {
-    ...
-}('[*instance_id*]'))
+<script type="text/javascript">
+    // Wrap all components into anonymous function to avoid conflicts
+    (function(uniq_id) {
+        ...
+    }('[*instance_id*]'))
+</script>
 ```
 
 # Using [\*variable\*]
