@@ -1132,7 +1132,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             return false
         }
 
-        function minStopSimbol(arr, index, str) {
+        function minStopSimbol(index, str) {
             let i = 0;
             let ch = 0;
             let temp = -1;
@@ -1163,8 +1163,6 @@ if ((jth === undefined) || (json2html === undefined)) {
         }
 
 
-        const stopSimbols = [' ', '<', '[', '{', '(', "\n", "\t", "\r", '*', ')', '}', ']', '>', '.', ',', '?', ':', ';', '-', '"', '`', "'", '!', '|', '@', '#', '%', '&', '$', '^', '~', '+', '/', '\\', '='];
-
         function translateString(str) {
             if (str === undefined) return '';
             if ((translation_strings === undefined) || (translation_strings === null) || (!(typeof translation_strings == "object"))) return str;
@@ -1184,7 +1182,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                     return str;
                 }
                 movedIndex = index + prefix_length;
-                indexEnd = minStopSimbol(stopSimbols, movedIndex, str);
+                indexEnd = minStopSimbol(movedIndex, str);
                 keyLen = indexEnd - movedIndex;
                 if (keyLen > 2 || keyLen < 40) {
                     key = str.substr(movedIndex, keyLen);
