@@ -303,7 +303,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 then_v = else_v[0];
                                 else_v = else_v[1];
                             }
-                            if (variable[1][0].includes('ifc=')) {
+                            if (variable[1][0].indexOf('ifc=') != -1) {
                                 variable[1] = str_replace('ifc=', '', variable[1][0]);
                             } else {
                                 variable[1] = str_replace('if=', '', variable[1][0]);
@@ -552,7 +552,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 if ((ind_e != -1) && ((ind_e - ind_s) < 95) && ((ind_e - ind_s) > 0)) {
                     name_template = str.substr(ind_s + j_templ[0].length, ind_e - (ind_s + j_templ[0].length));
                     let name_template_all = name_template;
-                    if (name_template.includes(',')) {
+                    if (name_template.indexOf(',') != -1) {
                         name_template = name_template.split(',', 2);
                         let dataindex = name_template[1];
                         name_template = name_template[0];
@@ -896,7 +896,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 let firstN = n.split('[')[0];
                 let indexes = n.match(/\[.*?\]/g);
                 let c = indexes.length;
-                let numerisArraFinal = n.includes('[]');
+                let numerisArraFinal = n.indexOf('[]') != -1;
                 if (obj[firstN] === undefined) {
                     if (c == 1 && numerisArraFinal) {
                         obj[firstN] = new Array();
@@ -1125,16 +1125,23 @@ if ((jth === undefined) || (json2html === undefined)) {
             return obj;
         }
 
+        function checkInSimbolRange(ch) {
+            if (((48 <= ch) && (ch <= 57)) || ((65 <= ch) && (ch <= 90)) || ((97 <= ch) && (ch <= 122)) || (ch == 95)) {
+                return true;
+            }
+            return false
+        }
+
         function minStopSimbol(arr, index, str) {
             let i = 0;
-            let ch = '';
+            let ch = 0;
             let temp = -1;
             let len = str.length;
             for (i = 0; i < 41; i++) {
                 temp = index + i;
                 if (temp >= len) return len;
-                ch = str.charAt(temp);
-                if (arr.includes(ch)) {
+                ch = str.charCodeAt(temp);
+                if (!checkInSimbolRange(ch)) {
                     return temp;
                 }
             }
