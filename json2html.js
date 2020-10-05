@@ -43,7 +43,8 @@ if ((jth === undefined) || (json2html === undefined)) {
          // {"error":{"state":true,"title":"ErrorTitle","message":"ErrorMessage","code":intErrorCode}}
          */
 
-        function in_array(arr, value, wildcast = false) {
+        function in_array(arr, value, iswildcast) {
+            let wildcast = (typeof iswildcast == 'undefined') ? false : iswildcast;
             if (value === undefined || value == null || value.length == 0) {
                 return false;
             }
@@ -167,8 +168,14 @@ if ((jth === undefined) || (json2html === undefined)) {
                 if (global_filter.length < 1) {
                     return true;
                 };
+                let notObfuscate = {
+                    'obj': obj,
+                    'func': function() {
+                        return Boolean(eval('function __hey(obj){return (' + global_filter + ');}; __hey(this.obj);'));
+                    }
+                };
                 try {
-                    return Boolean(eval('(' + global_filter + ')'));
+                    return notObfuscate.func();
                 } catch (e) {
                     debug_log('debug error in filter!' + "\n" + global_filter + "\n" + e.name);
                 };
@@ -633,7 +640,8 @@ if ((jth === undefined) || (json2html === undefined)) {
         }
 
         //for debug
-        function printObject(arr, level = 1) {
+        function printObject(arr, plevel) {
+            let level = (typeof plevel == 'undefined') ? 1 : plevel;
             let print_red_text = "";
             if (!level) level = 0;
             let level_padding = "";
@@ -653,7 +661,8 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
 
-        function net_error(mycallback, text, error, code = 500) {
+        function net_error(mycallback, text, error, ecode) {
+            let code = (typeof ecode == 'undefined') ? 500 : ecode;
             if (DEBUG) {
                 debug_log('Network: ' + text + "\n" + printObject(error));
             }
@@ -682,29 +691,26 @@ if ((jth === undefined) || (json2html === undefined)) {
                     'Accept': is_json_result ? 'application/json' : 'text/html'
                 };
             }
-            fetch(url, options)
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw Error(response.statusText);
+            fetch(url, options).then(function(response) {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                if (is_json_result) {
+                    return response.json();
+                }
+                return response.text();
+            }).then(function(data) {
+                mycallback(data);
+            }).catch(function(error) {
+                if (is_json_result) {
+                    net_error(mycallback, error.message, error);
+                } else {
+                    if (DEBUG) {
+                        debug_log(textStatus + "\n" + printObject(errorThrown));
                     }
-                    if (is_json_result) {
-                        return response.json();
-                    }
-                    return response.text();
-                })
-                .then(function(data) {
-                    mycallback(data);
-                })
-                .catch(function(error) {
-                    if (is_json_result) {
-                        net_error(mycallback, error.message, error);
-                    } else {
-                        if (DEBUG) {
-                            debug_log(textStatus + "\n" + printObject(errorThrown));
-                        }
-                        alert('json2html: "' + url + '" ' + error.message);
-                    }
-                });
+                    alert('json2html: "' + url + '" ' + error.message);
+                }
+            });
         }
 
         function xhrRequest(method, rtype, url, postdata, mycallback_func) {
@@ -989,7 +995,8 @@ if ((jth === undefined) || (json2html === undefined)) {
             templates_callback_function();
         }
 
-        function loadTemplatesArray(arr, func, reset = true) {
+        function loadTemplatesArray(arr, func, treset) {
+            let reset = (typeof treset == 'undefined') ? true : treset;
             if (!isAllTemplatesLoaded()) {
                 alert('Critical error.\nTrying to load templates before previous templates request is completed');
             }
@@ -1080,7 +1087,8 @@ if ((jth === undefined) || (json2html === undefined)) {
 
         let translate_level = 10;
 
-        function translate(obj, keys = []) {
+        function translate(obj, tkeys) {
+            let keys = (typeof tkeys == 'undefined') ? [] : tkeys;
             if (obj === undefined) return '';
             if (obj === null || Number.isInteger(obj)) return obj;
             if ((translation_strings === undefined) || (translation_strings === null) || (!(typeof translation_strings == "object"))) return obj;

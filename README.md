@@ -1,5 +1,5 @@
 # json2html
-JavaScript framework for single-page web applications with Multilanguage support
+Lightweight JavaScript framework for single page web applications with Multilingual support. Minified framework version is less than 20K with zero dependencies. Implemented: templating, components, network requests, translation on fly. This is all what is usually necessary in most of projects.
 - [Installation](#installation)
 - [Basic example](#basic-example)
 - [Methods List](#methods-list)
