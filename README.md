@@ -66,7 +66,7 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
         let element=document.getElementById('content');
         let html=jth.inject(json,"page");
         element.innerHTML=html;
-        jth.executeJS(element); //optional: only if block have some JS.
+        jth.executeJS(element); //optional: only if template have some JS-code (Component)
     }
 });
 ```
@@ -130,7 +130,7 @@ Examples are below or in **example/** folder.
 
     ```
 
-* inject2DOM(json_data, "template_name", selector)
+* inject2DOM(json_data, "template_name", css_selector)
     ```
     put created HTML code into DOM element with CSS selector
 
