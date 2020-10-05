@@ -2,8 +2,8 @@
  * The simplest "JSON->HTML" templater with multilanguage support
  * Author: Leonid Arefev
  * Started: 11-05-2013
- * GitHub: https://github.com/wtf-develop/JSONtemplate
- * Web: https://wtf-dev.ru/
+ * GitHub: https://github.com/wtf-develop/json2html
+ * Web: http://wtf-dev.ru/
  */
 
 // Wrap all widget code into anonymous function expression to avoid conflicts
