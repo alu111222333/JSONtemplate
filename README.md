@@ -246,7 +246,7 @@ Minimal manipulations with variables in JSON data
 
 {{variable,ift=`value||value2||value3`then`TemplateTrue`else`TemplateFalse`}} //- show template depends of value
 
-[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`}} //- show string depends of bit mask. Check each bit to 0 and 1
+{{variable,ifb=`1**0*1`then`TrueString`else`FalseString`}} //- show string depends of bit mask. Check each bit to 0 and 1
 
 {{variable,crop=`10`}} //- truncate variable to 10 chars
 
@@ -294,11 +294,11 @@ var html=jth.render(json,"table");
 ```
 There are 2 ways how to how show only first row:
 
-* First in JavaScript
+* **First in JavaScript**
 ```javascript
 var html=jth.render(json.parameters[0],"table_row");
 ```
-* Second in Templates
+* **Second in Templates**
 ```html
 {:table_row,parameters.0:}
 ```
@@ -310,7 +310,7 @@ The same as Static Templates but template have some JavaScript code.
 
 For components better to use anonymous function and **{{instance_id}}** predefined variable
 ```javascript
---- component.html content ---
+--- component.html ---
 <div id="id{{instance_id}}">
     html content
 </div>
@@ -388,11 +388,12 @@ Key name not longer than 40 simbols.
 
 Example:
 ```javascript
+//Set translation array. "@str.login_name" will be replaced with "User"
 jth.setTranslationArray({
     login_name:"User",
     ...
 });
-// all templates will be translated right after loading. You don't need to do anything additionally
+//All templates are translated right after loading. You don't need to do anything additionally
 jth.loadTemplatesArray(["templates_url"],drawUI);
 
 function drawUI(){
@@ -419,18 +420,17 @@ and don't need to load all JS-libraries that needed in your WHOLE project.
 
 * **/common**
     * /api - (common functions for server JSON API on PHP/Python)
-    * /html - (view elements that needed in few places in project)
-    * /js - (here can be implementer function **isGoodResponse(json)** and others)
+    * /html - (templates and components for whole project)
+    * /js - (here can be implemented function **isGoodResponse(json)** and others)
     * /css
     * /img
 * **/module1**
     * /api - (data response from server database)
         * api_result.php
         * ...
-    * /html - (view elements in current module)
+    * /html - (templates and components in current module)
         * page_structure.html
-        * header.html
-        * content.html
+        * search_input_component.html
         * ...
     * index.php - (control all events and process all data from server - Presenter)
 * **/module2**
