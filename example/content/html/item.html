@@ -2,38 +2,40 @@ NextTemplateName: total_items
 <div class="card-deck mb-3 text-center">
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
     <!-- Template, JSONdata, Condition  -  Example of conditions for arrays -->
-    [! data, item, if=`(!(("ignore" in obj) ? obj.ignore : false)) && (obj.price>-1)` !]
+    {+ data, item, if=`(!(("ignore" in obj) ? obj.ignore : false)) && (obj.price>-1)` +}
+    {+data,inline,if='0'+}
+    {+/data+}
 </div>
 
 
 NextTemplateName: item
 <div class="card mb-4 box-shadow">
     <div class="card-header">
-        <h4 class="my-0 font-weight-normal">[*name*] <sub>[*instance_id*]</sub></h4>
+        <h4 class="my-0 font-weight-normal">{{name}} <sub>{{instance_id}}</sub></h4>
     </div>
     <div class="card-body">
         <h1 class="card-title pricing-card-title">
-            <!-- Example for conditions "if" and "ift" for placeholder [*variable*]-->
-            <!-- Example for conditions "if" and "ift" for placeholder [*variable*]-->
-            [* price, if=`0` then `` else`$` *][*price, if=`0` then `@str.no_pay` *] [* price, ift=`0` then `` else `interval` *]
+            <!-- Example for conditions "if" and "ift" -->
+            <!-- Example for conditions "if" and "ift" -->
+            {{ price, if=`0` then `` else`$` }}{{price, if=`0` then `@str.no_pay` }} {{ price, ift=`0` then `` else `interval` }}
         </h1>
         <ul class="list-unstyled mt-3 mb-4">
-            <li>[* users *] users included</li>
-            <li>[* storage *] GB of storage</li>
-            [! list,features !]
+            <li>{{ users }} users included</li>
+            <li>{{ storage }} GB of storage</li>
+            {+ list,features +}
         </ul>
-        {{component_example}}
-        <button type="button" class="btn btn-lg btn-block {{button_class}}">[*button_text*]</button>
+        {:component_example:}
+        <button type="button" class="btn btn-lg btn-block {:button_class:}">{{button_text}}</button>
     </div>
 </div>
 
 NextTemplateName: interval
-<small class="text-muted">/ [*interval*]</small>
+<small class="text-muted">/ {{interval}}</small>
 
 NextTemplateName: features
-<li>[*this*]</li>
+<li>{{this}}</li>
 
 NextTemplateName: button_class
-[*button_type,if=`0`then`btn-outline-secondary`else``*]
-[*button_type,if=`1`then`btn-primary`else``*]
-[*button_type,if=`2`then`btn-warning`else``*]
+{{button_type,if=`0`then`btn-outline-secondary`else``}}
+{{button_type,if=`1`then`btn-primary`else``}}
+{{button_type,if=`2`then`btn-warning`else``}}

@@ -10,9 +10,9 @@ Implemented: templating, components, network requests, translation on fly. This 
     - [jQuery](#jquery)
     - [Debug](#debug)
 - [Some examples and explanations](#parsing-json-into-html)
-    - [**{{template}}**](#using-template)
-    - [**\[\*variable\*\]**](#using-variable)
-    - [**\[!array,template!\]**](#using-arraytemplate)
+    - [**{{variable}}**](#using-variable)
+    - [**{:template:}**](#using-template)
+    - [**{+array,template+}**](#using-arraytemplate)
 - [Loading templates/components](#loading-templates)
 - [Multilanguage support](#multilanguage-support)
 - [Recommended code structure](#recommended-code-structure)
@@ -75,9 +75,9 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 
 ### Templates files content
 Simply HTML files with 3 special placeholers inside:
-- **[\*variable\*]** - [insert value from JSON data](#using-variable)
-- **[!array,template!]** - [process arrays](#using-arraytemplate)
-- **{{template}}** - [just show template](#using-template)
+- **{{variable}}** - [insert value from JSON data](#using-variable)
+- **{+array,template+}** - [process arrays](#using-arraytemplate)
+- **{:template:}** - [just show template](#using-template)
 
 For translation you can use:
 - **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
@@ -168,7 +168,7 @@ if jQuery was added to HTML page library will create 2 extentions
 ## Debug
 * printObject(Object, level)
     ```
-    Return String with object content (Look below:[*vardump*]). Level is optional, default=1
+    Return String with object content (Look below:{{vardump}}). Level is optional, default=1
     Also for logging in JS-console , you can set flag DEBUG=true at the top of library file.
 
     ```
@@ -198,7 +198,7 @@ Example JSON
 we want to show **name** from this JSON inside HTML.
 ```html
 NextTemplateName: head
-<h1>[*name*]</h1>
+<h1>{{name}}</h1>
 ```
 And just call **jth.render** like here
 ```javascript
@@ -208,16 +208,16 @@ And just call **jth.render** like here
 ### Example-2
 ```html
 NextTemplateName: all_page
-{{head}}{{table}}
+{:head:}{:table:}
 
 NextTemplateName: head
-<h1>[*name*]</h1>
+<h1>{{name}}</h1>
 
 NextTemplateName: table
-<ul>[!parameters,table_row!]</ul>
+<ul>{+parameters,table_row+}</ul>
 
 NextTemplateName: table_row
-<li>[*param1*]</li>
+<li>{{param1}}</li>
 ```
 ```javascript
 var html=jth.render(json, "all_page");
@@ -239,7 +239,34 @@ var html=jth.render(json.parameters[0],"table_row");
 ```
 
 
-# Using {{template}}
+# Using {{variable}}
+Minimal manipulations with variables in JSON data
+```javascript
+{{variable,if=`value||value2`then`TrueString`else`FalseString`}} //- show string depends of value
+
+{{variable,ift=`value||value2||value3`then`TemplateTrue`else`TemplateFalse`}} //- show template depends of value
+
+[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`}} //- show string depends of bit mask. Check each bit to 0 and 1
+
+{{variable,crop=`10`}} //- truncate variable to 10 chars
+
+{{variable,replace=`abc`with`def`}} //- replace all "abc" to "def" in variable
+
+{{variable,hash32}} //- show MurmurHash3 of variable uniq for current library instance. Look: http://sites.google.com/site/murmurhash/
+
+{{arr.length}} //- show length of variable if type is Array
+
+{{instance_id}} //- uniq number for current template instance on page. Can be used for components to limit the scope of the Javascript. Components its the same as templates, but with code on javascript directly in the same template.
+
+{{random}} //- display random value in range [1,100000]
+
+{{vardump}} //- will show content of current variable
+
+{{this.vardump}} //- same as {{vardump}} but with keyword "this"
+```
+
+
+# Using {:template:}
 You can create simply HTML templates or Active Components with JS-code inside.
 ## Static Templates
 ```javascript
@@ -256,10 +283,10 @@ var json={
 
 --- templates.html content ---
 NextTemplateName: table
-<ul>[!parameters,table_row!]</ul>
+<ul>{+parameters,table_row+}</ul>
 
 NextTemplateName: table_row
-<li>[*param1*]</td><td>[*param2*]</li>
+<li>{{param1}}</td><td>{{param2}}</li>
 
 
 --- javascript code ---
@@ -273,7 +300,7 @@ var html=jth.render(json.parameters[0],"table_row");
 ```
 * Second in Templates
 ```html
-{{table_row,parameters.0}}
+{:table_row,parameters.0:}
 ```
 **parameters.0** will change current variables scope for template to **parameters[0]**
 
@@ -281,61 +308,34 @@ This very usefull if you have same data on different levels.
 ## Components
 The same as Static Templates but template have some JavaScript code.
 
-For components better to use anonymous function and **[\*instance_id\*]** predefined variable
+For components better to use anonymous function and **{{instance_id}}** predefined variable
 ```javascript
 --- component.html content ---
-<div id="id[*instance_id*]">
+<div id="id{{instance_id}}">
     html content
 </div>
 <script type="text/javascript">
     // Wrap all components into anonymous function to avoid conflicts
     (function(uniq_id) {
         ...
-    }('[*instance_id*]'))
+    }('{{instance_id}}'))
 </script>
 ```
 
-# Using [\*variable\*]
-Minimal manipulations with variables in JSON data
-```javascript
-[*variable,if=`value||value2`then`TrueString`else`FalseString`*] //- show string depends of value
 
-[*variable,ift=`value||value2||value3`then`TemplateTrue`else`TemplateFalse`*] //- show template depends of value
-
-[*variable,ifb=`1**0*1`then`TrueString`else`FalseString`*] //- show string depends of bit mask. Check each bit to 0 and 1
-
-[*variable,crop=`10`*] //- truncate variable to 10 chars
-
-[*variable,replace=`abc`with`def`*] //- replace all "abc" to "def" in variable
-
-[*variable,hash32*] //- show MurmurHash3 of variable uniq for current library instance. Look: http://sites.google.com/site/murmurhash/
-
-[*arr.length*] //- show length of variable if type is Array
-
-[*instance_id*] //- uniq number for current template instance on page. Can be used for components to limit the scope of the Javascript. Components its the same as templates, but with code on javascript directly in the same template.
-
-[*random*] //- display random value in range [1,100000]
-
-[*vardump*] //- will show content of current variable
-
-[*this.vardump*] //- same as [*vardump*] but with keyword "this"
-```
-
-
-
-# Using [!array,template!]
+# Using {+array,template+}
 Here you can also use if condition (for details please read header of json2html.js).
 ```javascript
-[!array,template,if=`condition`] //- show items. Use "obj.property".
+{+array,template,if=`condition`+} //- show items. Use "obj.property".
 
-[!array,template,limit=`100`] //- show first 100 items
+{+array,template,limit=`100`+} //- show first 100 items
 
-[!array,template,default=`string`] //- show string if there is no data in array
+{+array,template,default=`string`+} //- show string if there is no data in array
 ```
 
 You can combine all conditions into one
 ```javascript
-[!array,template,if=`condition`,limit=`100`,default=`string`]
+{+array,template,if=`condition`,limit=`100`,default=`string`+}
 ```
 
 # Loading templates
@@ -364,15 +364,15 @@ You can put few templates into one file separated by special keyword  **NextTemp
 Example **few_templates.html**
 ```html
 NextTemplateName: users_table
-<table>[!users,users_table_items!]</table>
+<table>{+users,users_table_items+}</table>
 
 
 NextTemplateName: users_table_items
 <tr>
     <td nowrap width=95%>
-        <a href=# onClick="return edit([*id*]);">[*login,crop=`30`*] : [*info*]</a>
+        <a href=# onClick="return edit({{id}});">{{login,crop=`30`}} : {{info}}</a>
     </td>
-    <td width=5% onClick="return remove([*id*]);">
+    <td width=5% onClick="return remove({{id}});">
         <img src="remove_icon.png" />
     </td>
 </tr>
@@ -405,7 +405,7 @@ Example of template with **@str.** prefix-strings
 NextTemplateName: users_table_item
 <tr>
     <td>
-        <a href=#>@str.login_name: [*uname*]</a>
+        <a href=#>@str.login_name: {{uname}}</a>
     </td>
 </tr>
 ```

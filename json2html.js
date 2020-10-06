@@ -13,15 +13,17 @@ if ((jth === undefined) || (json2html === undefined)) {
     var json2html = (function() {
         "use strict";
         let DEBUG = false;
-        let CORS = false; //cross origin requests
+        let CORS = false; //cross origin requests.
         const translate_prefix = '@str.';
 
         // Recommended to keep current values of j_var, j_loop and j_templ.
         // But if you want, you can change it. Then test everything again.
-        // 2 simbols for open tag and 2 simbols for closing tag.
-        const j_var = ['[*', '*]']; // 2 simbols for each not more, not less
-        const j_loop = ['[!', '!]']; // 2 simbols for each not more, not less
-        const j_templ = ['{{', '}}']; // 2 simbols for each not more, not less
+        // 2-3 simbols for open tag and 2-3 simbols for closing tag.
+        // don't create values as subset of already used values
+        // if "{{" in use don't use "{{#"
+        const j_var = ['{{', '}}']; // 2-3 simbols for each not more, not less
+        const j_loop = ['{+', '+}']; // 2-3 simbols for each not more, not less
+        const j_templ = ['{:', ':}']; // 2-3 simbols for each not more, not less
 
 
         /**
@@ -433,7 +435,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                     }
                     str = str_replace(j_var[0] + name_var + j_var[1], temp + '', str);
                 } else {
-                    debug_log('too long or short Value[*..*] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short variable in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -790,30 +792,41 @@ if ((jth === undefined) || (json2html === undefined)) {
             all_templates_loaded--;
         }
 
+        function normalizeTags(tag, html, opentag) {
+            tag = my_trim(tag);
+            let replace_arr = []
+            if (tag.length == 2) {
+                replace_arr.push(tag.charAt(0) + ' ' + tag.charAt(1));
+            } else if (tag.length == 3) {
+                replace_arr.push(tag.charAt(0) + ' ' + tag.charAt(1) + tag.charAt(2));
+                replace_arr.push(tag.charAt(0) + tag.charAt(1) + ' ' + tag.charAt(2));
+                replace_arr.push(tag.charAt(0) + ' ' + tag.charAt(1) + ' ' + tag.charAt(2));
+            } else {
+                return html;
+            }
+            if (opentag) {
+                replace_arr.push(tag + '  ');
+                replace_arr.push(tag + ' ');
+            } else {
+                replace_arr.push('  ' + tag);
+                replace_arr.push(' ' + tag);
+            }
+            for (let k = 0; k < replace_arr.length; k++) {
+                html = str_replace(replace_arr[k], tag, html);
+            }
+            return html;
+        }
+
         function normalizeTemplates(arr) {
             for (let item in arr) {
-                arr[item] = str_replace(j_var[0].charAt(0) + ' ' + j_var[0].charAt(1), j_var[0], arr[item]);
-                arr[item] = str_replace(j_loop[0].charAt(0) + ' ' + j_loop[0].charAt(1), j_loop[0], arr[item]);
-                arr[item] = str_replace(j_templ[0].charAt(0) + ' ' + j_templ[0].charAt(1), j_templ[0], arr[item]);
-                arr[item] = str_replace(j_var[1].charAt(0) + ' ' + j_var[1].charAt(1), j_var[1], arr[item]);
-                arr[item] = str_replace(j_loop[1].charAt(0) + ' ' + j_loop[1].charAt(1), j_loop[1], arr[item]);
-                arr[item] = str_replace(j_templ[1].charAt(0) + ' ' + j_templ[1].charAt(1), j_templ[1], arr[item]);
-                arr[item] = str_replace(j_var[0] + '  ', j_var[0], arr[item]);
-                arr[item] = str_replace(j_var[0] + ' ', j_var[0], arr[item]);
-                arr[item] = str_replace(j_loop[0] + '  ', j_loop[0], arr[item]);
-                arr[item] = str_replace(j_loop[0] + ' ', j_loop[0], arr[item]);
-                arr[item] = str_replace(j_templ[0] + '  ', j_templ[0], arr[item]);
-                arr[item] = str_replace(j_templ[0] + ' ', j_templ[0], arr[item]);
-                arr[item] = str_replace('  ' + j_var[1], j_var[1], arr[item]);
-                arr[item] = str_replace(' ' + j_var[1], j_var[1], arr[item]);
-                arr[item] = str_replace('  ' + j_loop[1], j_loop[1], arr[item]);
-                arr[item] = str_replace(' ' + j_loop[1], j_loop[1], arr[item]);
-                arr[item] = str_replace('  ' + j_templ[1], j_templ[1], arr[item]);
-                arr[item] = str_replace(' ' + j_templ[1], j_templ[1], arr[item]);
-                arr[item] = str_replace('` then `', '`then`', arr[item]);
+                arr[item] = normalizeTags(j_var[0], arr[item], true);
+                arr[item] = normalizeTags(j_var[1], arr[item], false);
+                arr[item] = normalizeTags(j_loop[0], arr[item], true);
+                arr[item] = normalizeTags(j_loop[1], arr[item], false);
+                arr[item] = normalizeTags(j_templ[0], arr[item], true);
+                arr[item] = normalizeTags(j_templ[1], arr[item], false);
                 arr[item] = str_replace('` then', '`then', arr[item]);
                 arr[item] = str_replace('then `', 'then`', arr[item]);
-                arr[item] = str_replace('` else `', '`else`', arr[item]);
                 arr[item] = str_replace('` else', '`else', arr[item]);
                 arr[item] = str_replace('else `', 'else`', arr[item]);
                 arr[item] = str_replace('if = `', 'if=`', arr[item]);
@@ -1217,7 +1230,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             setTranslationArray: setTranslationArray, // set translation array with keys as part of "@str.key" in strings without prefix "@str."
             translate: translate, //if you need to translate JSON object manually. All templates are translated automatically
             executeJS: executeJS, //run injected code inside components.
-            printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - [*variable.vardump*]. If you want to see content in HTML
+            printObject: printObject, //for debug to see contend of object. you can use "vardump" keyword - data.vardump. If you want to see content in HTML
             setDebug: setDebug, //for console output of all library warnings and errors
             serializeHtmlForm: serializeHtmlForm //extend JQuery.serializeArray() with unchecked checkboxes and arrays. You can use JQuery.serializeHtmlForm()
         }

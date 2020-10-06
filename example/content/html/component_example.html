@@ -1,4 +1,4 @@
-<div id="ident[*instance_id*]">
+<div id="ident{{instance_id}}">
     <input class="click_alert w-100 text p-2" type="text" value="component" />
 </div>
 <script type="text/javascript">
@@ -11,5 +11,5 @@
             .bind('mouseleave', function(event) {
                 $(this).css('border', '0px solid white');
             });
-    }('[*instance_id*]'))
+    }('{{instance_id}}'))
 </script>

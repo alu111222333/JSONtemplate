@@ -1,10 +1,10 @@
 NextTemplateName: header
-<h2 class="text-center pb-3 m-0 text-white" style="text-shadow: 2px 2px 7px #000000;">[*jsontext.val1*]</h2>
+<h2 class="text-center pb-3 m-0 text-white" style="text-shadow: 2px 2px 7px #000000;">{{jsontext.val1}}</h2>
 
 
 
 NextTemplateName: logo
-<h5 class="text-center text-success pb-3 m-0">[*jsontext.val2*]</h5>
+<h5 class="text-center text-success pb-3 m-0">{{jsontext.val2}}</h5>
 
 
 
@@ -30,7 +30,7 @@ NextTemplateName: form
 NextTemplateName: main-html-block
 <div class="container p-0 m-0">
     <div id="headerContainer">
-        {{header}}
+        {:header:}
     </div>
 
     <div id="login-row">
@@ -38,10 +38,10 @@ NextTemplateName: main-html-block
             <div id="login-box">
                 <form id="login-form" class="form m-0 p-4" action="#" method="get" onsubmit="return checkLogin();">
                     <div id="logoContainer">
-                        {{logo}}
+                        {:logo:}
                     </div>
                     <div id="formContainer">
-                        {{form}}
+                        {:form:}
                     </div>
                     <div class="form-group text-center mt-0 p-0">
                         <select onchange="setLanguage($(this).val());" class="w-50 custom-select custom-select-sm" id="inlineLanguageSelect">
