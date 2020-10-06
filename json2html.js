@@ -145,7 +145,7 @@ if ((jth === undefined) || (json2html === undefined)) {
 
         let level_parce = 0; //stack overflow protection
         //function change HTML code with templates to HTML code with data.
-        function inject(data, name) {
+        function render(data, name) {
             //check stack overflow
             ///********************** filter sub-functions start ***************************
             let global_filter = '';
@@ -366,7 +366,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = inject(data, then_v);
+                                    temp = render(data, then_v);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -376,7 +376,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = inject(data, else_v);
+                                    temp = render(data, else_v);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -412,7 +412,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         if (eqWithThis) {
                             if (then_v !== undefined && then_v != '') {
                                 if (if_type == 1) {
-                                    temp = inject(data, then_v);
+                                    temp = render(data, then_v);
                                 } else {
                                     temp = my_trim(removeSq(then_v));
                                 }
@@ -422,7 +422,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         } else {
                             if (else_v !== undefined && else_v != '') {
                                 if (if_type == 1) {
-                                    temp = inject(data, else_v);
+                                    temp = render(data, else_v);
                                 } else {
                                     temp = my_trim(removeSq(else_v));
                                 }
@@ -524,7 +524,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                             };
                         }
 
-                        temp_str = temp_str + inject(temp_data[key], temp_template[1]);
+                        temp_str = temp_str + render(temp_data[key], temp_template[1]);
 
                         k++;
                     }
@@ -558,7 +558,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                         name_template = name_template[0];
                         curData = get_from_data(curData, dataindex, local_template_instance_id);
                     }
-                    str = str_replace(j_templ[0] + name_template_all + j_templ[1], inject(curData, name_template), str);
+                    str = str_replace(j_templ[0] + name_template_all + j_templ[1], render(curData, name_template), str);
                 } else {
                     debug_log('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
@@ -603,9 +603,9 @@ if ((jth === undefined) || (json2html === undefined)) {
                 elements = document.querySelectorAll(selector);
             } catch (e) {}
             if (elements === undefined || elements == null) {
-                return '';
+                return [];
             }
-            let html = inject(data, name);
+            let html = render(data, name);
             for (let i = 0; i < elements.length; ++i) {
                 let element = elements[i];
                 if ('innerHTML' in element) {
@@ -613,15 +613,16 @@ if ((jth === undefined) || (json2html === undefined)) {
                     executeJS(element);
                 }
             }
-            return html;
+            return elements;
         }
 
         function str_replace(search, replace, osubject) {
             if (osubject === undefined) return osubject;
-            //return osubject.replaceAll(search, replace);
-            return osubject.split(search).join(replace);
+            if (!String.prototype.replaceAll) {
+                return osubject.split(search).join(replace);
+            }
+            return osubject.replaceAll(search, replace);
             //return osubject.replace(search,replace);//replaced only first simbol - can not be user here
-            //
         }
 
         //trim function - remove first and last spaces
@@ -630,7 +631,10 @@ if ((jth === undefined) || (json2html === undefined)) {
                 return '';
             };
             if (str.length < 1) return '';
-            return str.trim(); //str = str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+            if (!String.prototype.trim) {
+                return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+            }
+            return str.trim();
         }
 
         function debug_log(s) {
@@ -970,7 +974,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                     return serializeDOM(this[0])
                 };
                 jQuery.fn.injectJSON = function(data, template) {
-                    let html = inject(data, template);
+                    let html = render(data, template);
                     this.each(function() {
                         jQuery(this).html(html);
                         executeJS(jQuery(this)[0]);
@@ -1205,7 +1209,7 @@ if ((jth === undefined) || (json2html === undefined)) {
         }
 
         return {
-            inject: inject, //parse loaded templates with JSON response from server - look documentation
+            render: render, //parse loaded templates with JSON response from server - look documentation
             inject2DOM: inject2DOM, //parse loaded templates with JSON response from server - look documentation
             getJSON: getJSON, //send GET request with calback
             postJSON: postJSON, //send POST request  with calback

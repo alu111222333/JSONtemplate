@@ -66,7 +66,7 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 jth.getJSON("api/get_info.php",function (json){ //send request to API
     if (isGoodResponse(json)) {
         let element=document.getElementById('content');
-        let html=jth.inject(json,"page");
+        let html=jth.render(json,"page");
         element.innerHTML=html;
         jth.executeJS(element); //optional: only if template have some JS-code (Component)
     }
@@ -93,7 +93,7 @@ Examples are below or in **example/** folder.
 
     ```
 
-* **inject**(json_data, "template_name")
+* **render**(json_data, "template_name")
      ```
     return is a HTML string created from HTMLs loaded by loadTemplatesArray(...)
 
@@ -145,7 +145,7 @@ Examples are below or in **example/** folder.
 
     Will run automatically inside functions:
     jth.inject2DOM(...) and $.injectJSON(...).
-    But NOT in jth.inject(...), must be called separately. Look example above.
+    But NOT in jth.render(...), must be called separately. Look example above.
 
     ```
 
@@ -200,9 +200,9 @@ we want to show **name** from this JSON inside HTML.
 NextTemplateName: head
 <h1>[*name*]</h1>
 ```
-And just call **jth.inject** like here
+And just call **jth.render** like here
 ```javascript
-    var html=jth.inject(json,"head");
+    var html=jth.render(json,"head");
     $('#content').html(html); //insert result in page
 ```
 ### Example-2
@@ -220,7 +220,7 @@ NextTemplateName: table_row
 <li>[*param1*]</li>
 ```
 ```javascript
-var html=jth.inject(json, "all_page");
+var html=jth.render(json, "all_page");
 
 //---- result ----
 //<h1>Name</h1>
@@ -232,7 +232,7 @@ var html=jth.inject(json, "all_page");
 ### Example-3
 You can generate only one row from template **table_row**
 ```javascript
-var html=jth.inject(json.parameters[0],"table_row");
+var html=jth.render(json.parameters[0],"table_row");
 
 //---- result ----
 //<li>1</li>    
@@ -263,13 +263,13 @@ NextTemplateName: table_row
 
 
 --- javascript code ---
-var html=jth.inject(json,"table");
+var html=jth.render(json,"table");
 ```
 There are 2 ways how to how show only first row:
 
 * First in JavaScript
 ```javascript
-var html=jth.inject(json.parameters[0],"table_row");
+var html=jth.render(json.parameters[0],"table_row");
 ```
 * Second in Templates
 ```html
@@ -378,7 +378,7 @@ NextTemplateName: users_table_items
 </tr>
 ```
 So it's possible to put all templates together in one file.
-FileName will be ignored and only name after **NextTemplateName:** will be taken. You can use this names for injecting data
+FileName will be ignored and only name after **NextTemplateName:** will be taken. You can use this names for rendering data
 
 
 # Multilanguage support
