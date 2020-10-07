@@ -83,7 +83,7 @@ Examples are below or in **example/** folder.
 
 
 # Advanced content
-All information below is for advanced library usage. If you want to use only simplest features, **you can skip it**.
+**All information below is for advanced library usage. If you want to use only simplest features, you can skip it**.
 - [Methods List](#methods-list)
     - [Basic](#basic-only-3-methods)
     - [Extentions](#additional)
