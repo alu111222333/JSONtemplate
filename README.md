@@ -1,7 +1,7 @@
 # json2html
 Lightweight JavaScript framework for single page web applications with Multilingual support. Minified framework version is less than 20K with zero dependencies.
 
-Implemented: templating, components, network requests, translation on fly. This is all what is usually necessary in most of projects. **json2html.min.js** - can work with old browsers.
+Implemented: templating, components, network requests, translation on fly. This is all what usually necessary in most of projects. **json2html.min.js** - can work with old browsers.
 
 # Basic сontent
 - [Installation](#installation)
