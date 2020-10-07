@@ -87,6 +87,10 @@ For translation you can use:
 
 .
 
+.
+
+.
+
 # Advanced content
 **All information below is for advanced library usage. If you want to use only simplest features, you can skip it**.
 - [Methods List](#methods-list)
