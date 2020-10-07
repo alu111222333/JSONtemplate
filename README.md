@@ -76,8 +76,8 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 ### Templates files content
 Simply HTML files with 3 special placeholers inside:
 - **{{variable}}** - [insert value from JSON data](#using-variable)
-- **{+array,template+}** - [process arrays](#using-arraytemplate)
 - **{:template:}** - [just show template](#using-template)
+- **{+loop+}** - [process arrays](#using-arraytemplate)
 
 For translation you can use:
 - **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
@@ -347,7 +347,7 @@ Its also possible to use Inline-Style:
 <li>{{name}}</li>
 {+/array+}
 ```
-Don't pass second parameter "template" for inline style. Content of template will be created from text inside loop tags **{+array+}content{+/array+}**
+Don't pass second parameter "template" for inline style. Content of template will be generated from text inside loop tags **{+array+}content{+/array+}**
 
 # Loading templates
 You can create a HTML-template files on server and load all files with translated texts with only 2 strings of code.
