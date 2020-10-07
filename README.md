@@ -6,6 +6,8 @@ Implemented: templating, components, network requests, translation on fly. This 
 # Basic сontent
 - [Installation](#installation)
 - [Basic example](#basic-example)
+    - [Templates](#template-file)
+    - [Rendering](#network-requests-and-rendering)
 
 # Installation
 jQuery is NOT necessary.
@@ -30,15 +32,25 @@ Add to the end of file just before \</BODY\> tag:
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix was used.
 
 # Basic example
-After installation create a file like **template.html**
+## Template file
+After installation create a file like **template.html**. Simply HTML files with 3 special placeholers inside:
+- **{{variable}}** - [insert value from JSON data](#using-variable)
+- **{:template:}** - [just show template](#using-template)
+- **{+loop+}** - [process arrays](#using-arraytemplate)
 ```html
 NextTemplateName: page
+<h1>@str.example</h1>
 <ul>
-    {+data.items+}
+    {+items+}
     <li>{{name}}</li>
-    {+/data.items+}
+    {+/items+}
 </ul>
 ```
+For translation to another language you can use:
+- **@str.example** - [will be replaced to string](#multilanguage-support) from translation["example"]
+
+
+## Network requests and rendering
 Framework implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 ### Without jQuery:
 ```javascript
@@ -69,15 +81,6 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
     }
 });
 ```
-
-### Templates files content
-Simply HTML files with 3 special placeholers inside:
-- **{{variable}}** - [insert value from JSON data](#using-variable)
-- **{:template:}** - [just show template](#using-template)
-- **{+loop+}** - [process arrays](#using-arraytemplate)
-
-For translation you can use:
-- **@str.array_key** - [will be replaced to string](#multilanguage-support) from translation["array_key"]
 
 .
 
