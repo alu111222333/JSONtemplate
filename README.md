@@ -77,7 +77,9 @@ Simply HTML files with 3 special placeholers inside:
 - **{+loop+}** - [process arrays](#using-arraytemplate)
 
 For translation you can use:
-- **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
+- **@str.array_key** - [will be replaced to string](#multilanguage-support) from translation["array_key"]
+
+.
 
 .
 
