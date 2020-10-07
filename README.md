@@ -2,21 +2,10 @@
 Lightweight JavaScript framework for single page web applications with Multilingual support. Minified framework version is less than 20K with zero dependencies.
 
 Implemented: templating, components, network requests, translation on fly. This is all what is usually necessary in most of projects. **json2html.min.js** - can work with old browsers.
+
+# Basic сontent
 - [Installation](#installation)
 - [Basic example](#basic-example)
-- [Methods List](#methods-list)
-    - [Basic](#basic-only-3-methods)
-    - [Extentions](#additional)
-    - [jQuery](#jquery)
-    - [Debug](#debug)
-- [Some examples and explanations](#parsing-json-into-html)
-    - [**{{variable}}**](#using-variable)
-    - [**{:template:}**](#using-template)
-    - [**{+loop+}**](#using-arraytemplate)
-- [Loading templates/components](#loading-templates)
-- [Multilanguage support](#multilanguage-support)
-- [Recommended code structure](#recommended-code-structure)
-
 
 # Installation
 jQuery is NOT necessary.
@@ -26,12 +15,12 @@ Add to the end of file just before \</BODY\> tag:
 <script type="text/javascript" src="json2html.js"></script>
 <script type="text/javascript">
     function init() {
-        jth.setTranslationArray(translates.en); // optional
-        jth.loadTemplatesArray(["html/templates.html"], loadingCallback);
+        jth.setTranslationArray(translates.en); // optional: set translation map
+        jth.loadTemplatesArray(["html/templates.html"], loadingCallback); // loading files with templates by URL
     }
 
     function loadingCallback() {
-        buildWebUI();
+        buildWebUI(); // build website-ui as in "Basic example" section
     }
 
     init(); //Run it immediately after loading page
@@ -41,8 +30,16 @@ Add to the end of file just before \</BODY\> tag:
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix was used.
 
 # Basic example
-There was implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
-
+After installation create a file like **template.html**
+```html
+NextTemplateName: page
+<ul>
+    {+data.items+}
+    <li>{{name}}</li>
+    {+/data.items+}
+</ul>
+```
+Framework implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 ### Without jQuery:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //send request to API
@@ -83,6 +80,22 @@ For translation you can use:
 - **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
 
 Examples are below or in **example/** folder.
+
+
+# Advanced content
+All information below is for advanced library usage. If you want to use only simplest features, **you can skip it**.
+- [Methods List](#methods-list)
+    - [Basic](#basic-only-3-methods)
+    - [Extentions](#additional)
+    - [jQuery](#jquery)
+    - [Debug](#debug)
+- [Some examples and explanations](#parsing-json-into-html)
+    - [**{{variable}}**](#using-variable)
+    - [**{:template:}**](#using-template)
+    - [**{+loop+}**](#using-arraytemplate)
+- [Loading templates/components](#loading-templates)
+- [Multilanguage support](#multilanguage-support)
+- [Recommended code structure](#recommended-code-structure)
 
 
 # Methods List
