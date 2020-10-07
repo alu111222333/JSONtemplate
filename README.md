@@ -413,7 +413,7 @@ FileName will be ignored and only name after **NextTemplateName:** will be taken
 # Multilanguage support
 All templates are translated automatically while loading, if there is a keywords present in format "@str.array_key"
 
-Key name not longer than 40 simbols.
+Key name not longer than 40 simbols, only english simbols, digits, underscore "_"
 
 Example:
 ```javascript
