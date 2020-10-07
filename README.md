@@ -280,36 +280,35 @@ var json={
         "param1":3,
     }]
 }
+```
 
-
---- templates.html ---
-NextTemplateName: table
-<ul>
-{+parameters+}
-    <li>{{param1}}</td><td>{{param2}}</li>
-{+/parameters+}
-</ul>
+* **Separate template**
+```html
+--- templates.html---
+NextTemplateName: display_first_only
+{:table_row,parameters.0:}
 
 NextTemplateName: table_row
-<li>{{param1}}</td><td>{{param2}}</li>
-
-
---- javascript code ---
-var html=jth.render(json,"table");
-```
-There are 2 ways how to how show only first row:
-
-* **First in JavaScript**
-```javascript
-var html=jth.render(json.parameters[0],"table_row");
-```
-* **Second in Templates**
-```html
-{:table_row,parameters.0:}
+<div>{{param1}}</div>
 ```
 **parameters.0** will change current variables scope for template to **parameters[0]**
 
 This very usefull if you have same data on different levels.
+
+* **Inline template**
+```html
+--- templates.html inline style for loops ---
+NextTemplateName: table
+<ul>
+    {+parameters+}
+    <li>{{param1}}</li>
+    {+/parameters+}
+</ul>
+
+--- javascript code ---
+var html=jth.render(json,"table");
+```
+
 ## Components
 The same as Static Templates but template have some JavaScript code.
 
@@ -342,6 +341,13 @@ You can combine all conditions into one
 ```javascript
 {+array,template,if=`condition`,limit=`100`,default=`string`+}
 ```
+Its also possible to use Inline-Style:
+```html
+{+array,if=`condition`,limit=`100`,default=`string`+}
+<li>{{name}}</li>
+{+/array+}
+```
+Don't pass second parameter "template" for inline style. Content of template will be created from text inside loop tags **{+array+}content{+/array+}**
 
 # Loading templates
 You can create a HTML-template files on server and load all files with translated texts with only 2 strings of code.

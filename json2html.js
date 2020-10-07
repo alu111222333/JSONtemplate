@@ -817,31 +817,38 @@ if ((jth === undefined) || (json2html === undefined)) {
             return html;
         }
 
-        let inline_counter = 0;
+        let inline_counter = Math.floor((Math.random() * 99) + 100);
 
         function getTagSubString(startIndex, fromStr, toStr, html) {
             let result = {
                 'str': '',
-                'index': (startIndex + 1),
                 'start': 0,
                 'end': 0,
                 'var': '',
-                'inline': false
+                'inline': false,
+                'list': []
             }
 
-            let start = html.indexOf(fromSrt, result['index']);
+            let start = html.indexOf(fromStr, startIndex);
             if (start == -1) return result;
             result['start'] = start;
-            result['index'] = start + fromSrt.length;
-            let end = html.indexOf(toStr, result['index']);
+            startIndex = start + fromStr.length;
+            let end = html.indexOf(toStr, startIndex);
             if (end == -1) return result;
             if (end <= start) return result;
             if (end - start > 195) return result;
-            result['index'] = end + toStr.length;
             result['end'] = end;
-            result['str'] = html.substring(start + fromSrt.length, end);
+            result['str'] = html.substring(start + fromStr.length, end);
             let arr = result['str'].split(',');
+            for (let i = 0; i < arr.length; i++) {
+                arr[i] = my_trim(arr[i]);
+            }
             result['var'] = arr[0];
+            if (result['var'].length < 1) {
+                result['inline'] = false;
+                return result;
+            }
+            result['list'] = arr;
             if (arr.length < 2) {
                 result['inline'] = true;
             } else if (arr[1].startsWith('if=') || arr[1].startsWith('limit=') || arr[1].startsWith('default=')) {
@@ -852,14 +859,51 @@ if ((jth === undefined) || (json2html === undefined)) {
             return result;
         }
 
-        function splitInlineLoops(html) {
+        let splitter_loop_protection = 10;
+
+        function splitInlineLoops(html, appendTemplates) {
+            splitter_loop_protection--;
+            if (splitter_loop_protection < 1) {
+                splitter_loop_protection++;
+                return html;
+            }
+            let startIndex = 0
             let obj = {
-                'index': 0,
-                'end': 1
+                'end': 1,
+                'inline': true
             }
-            while (obj['end'] > 0) {
-                obj = getTagSubString(obj['index'], j_loop[0], j_loop[1], html);
-            }
+            do {
+                obj = getTagSubString(startIndex, j_loop[0], j_loop[1], html);
+                if (obj['end'] > 0) {
+                    startIndex = obj['end'] + j_loop[1].length;
+                    if (obj['inline']) {
+                        let closeTag = j_loop[0] + '/' + obj['var'] + j_loop[1];
+                        let closeTagIndex = html.indexOf(closeTag, startIndex);
+                        if (closeTagIndex >= startIndex) {
+                            inline_counter++;
+                            let inlineObjIndex = 'inline' + inline_counter;
+                            let inlinehtml = my_trim(html.substring(obj['end'] + j_loop[1].length, closeTagIndex));
+                            appendTemplates[inlineObjIndex] = inlinehtml;
+                            startIndex = obj['start'] + 1;
+                            let loopString = j_loop[0] + obj['var'] + ',' + inlineObjIndex;
+                            if (obj['list'].length > 1) {
+                                for (let i = 1; i < obj['list'].length; i++) {
+                                    let param = obj['list'][i];
+                                    if (param.length > 0) {
+                                        loopString = loopString + ',' + param;
+                                    }
+                                }
+                            }
+                            loopString = loopString + j_loop[1];
+                            html = html.substring(0, obj['start']) + loopString + html.substring(closeTagIndex + closeTag.length);
+                            startIndex = obj['start'] + loopString.length;
+                            appendTemplates[inlineObjIndex] = splitInlineLoops(appendTemplates[inlineObjIndex], appendTemplates);
+                        }
+                    }
+                }
+            } while (obj['end'] > 0)
+            splitter_loop_protection++;
+            return html;
         }
 
         function normalizeTemplates(arr) {
@@ -879,6 +923,8 @@ if ((jth === undefined) || (json2html === undefined)) {
                 arr[item] = str_replace('if = `', 'if=`', arr[item]);
                 arr[item] = str_replace('if= `', 'if=`', arr[item]);
                 arr[item] = str_replace('if =`', 'if=`', arr[item]);
+                splitter_loop_protection = 10;
+                arr[item] = splitInlineLoops(arr[item], arr);
             }
             return arr;
         }
