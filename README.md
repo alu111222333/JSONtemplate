@@ -79,7 +79,7 @@ Simply HTML files with 3 special placeholers inside:
 For translation you can use:
 - **@str.array_key** - [will be replaced to string](#translation) from translation["array_key"]
 
-Examples are below or in **example/** folder.
+.
 
 
 # Advanced content
