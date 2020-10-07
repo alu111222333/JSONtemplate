@@ -465,16 +465,16 @@ if ((jth === undefined) || (json2html === undefined)) {
                     let pars_new = '';
                     for (ttt = 2; ttt < temp_template.length; ttt++) {
                         pars_new = temp_template[ttt];
-                        if (pars_new.indexOf('if=`') != -1) {
+                        if (pars_new.indexOf('if=') != -1) {
                             filter = pars_new;
                             set_filter(filter);
-                        } else if (pars_new.indexOf('limit=`') != -1) {
+                        } else if (pars_new.indexOf('limit=') != -1) {
                             limits = parseInt(str_replace('limit=', '', str_replace('`', '', pars_new)));
                             if (limits < 1) {
                                 limits = -1;
                             };
 
-                        } else if (pars_new.indexOf('default=`') != -1) {
+                        } else if (pars_new.indexOf('default=') != -1) {
                             defaults = str_replace('default=', '', str_replace('`', '', pars_new));
                         }
                     }
@@ -535,7 +535,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                     str = str_replace(j_loop[0] + name_template + j_loop[1], temp_str, str);
 
                 } else {
-                    debug_log('too long or short Foreach[!..!] in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short Foreach{+..+} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -817,6 +817,51 @@ if ((jth === undefined) || (json2html === undefined)) {
             return html;
         }
 
+        let inline_counter = 0;
+
+        function getTagSubString(startIndex, fromStr, toStr, html) {
+            let result = {
+                'str': '',
+                'index': (startIndex + 1),
+                'start': 0,
+                'end': 0,
+                'var': '',
+                'inline': false
+            }
+
+            let start = html.indexOf(fromSrt, result['index']);
+            if (start == -1) return result;
+            result['start'] = start;
+            result['index'] = start + fromSrt.length;
+            let end = html.indexOf(toStr, result['index']);
+            if (end == -1) return result;
+            if (end <= start) return result;
+            if (end - start > 195) return result;
+            result['index'] = end + toStr.length;
+            result['end'] = end;
+            result['str'] = html.substring(start + fromSrt.length, end);
+            let arr = result['str'].split(',');
+            result['var'] = arr[0];
+            if (arr.length < 2) {
+                result['inline'] = true;
+            } else if (arr[1].startsWith('if=') || arr[1].startsWith('limit=') || arr[1].startsWith('default=')) {
+                result['inline'] = true;
+            } else {
+                return result;
+            }
+            return result;
+        }
+
+        function splitInlineLoops(html) {
+            let obj = {
+                'index': 0,
+                'end': 1
+            }
+            while (obj['end'] > 0) {
+                obj = getTagSubString(obj['index'], j_loop[0], j_loop[1], html);
+            }
+        }
+
         function normalizeTemplates(arr) {
             for (let item in arr) {
                 arr[item] = normalizeTags(j_var[0], arr[item], true);
@@ -825,6 +870,8 @@ if ((jth === undefined) || (json2html === undefined)) {
                 arr[item] = normalizeTags(j_loop[1], arr[item], false);
                 arr[item] = normalizeTags(j_templ[0], arr[item], true);
                 arr[item] = normalizeTags(j_templ[1], arr[item], false);
+                arr[item] = str_replace(j_loop[0] + '/  ', j_loop[0] + '/', arr[item]);
+                arr[item] = str_replace(j_loop[0] + '/ ', j_loop[0] + '/', arr[item]);
                 arr[item] = str_replace('` then', '`then', arr[item]);
                 arr[item] = str_replace('then `', 'then`', arr[item]);
                 arr[item] = str_replace('` else', '`else', arr[item]);

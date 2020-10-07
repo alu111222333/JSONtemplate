@@ -135,6 +135,7 @@ Examples are below or in **example/** folder.
 * inject2DOM(json_data, "template_name", css_selector)
     ```
     put created HTML code into DOM element with CSS selector
+    Return: array from querySelectors function
 
     ```
 
@@ -281,9 +282,13 @@ var json={
 }
 
 
---- templates.html content ---
+--- templates.html ---
 NextTemplateName: table
-<ul>{+parameters,table_row+}</ul>
+<ul>
+{+parameters+}
+    <li>{{param1}}</td><td>{{param2}}</li>
+{+/parameters+}
+</ul>
 
 NextTemplateName: table_row
 <li>{{param1}}</td><td>{{param2}}</li>
