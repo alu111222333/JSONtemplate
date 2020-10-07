@@ -12,7 +12,7 @@ jQuery is NOT necessary.
 
 Add to the end of file just before \</BODY\> tag:
 ```javascript
-<script type="text/javascript" src="json2html.js"></script>
+<script type="text/javascript" src="json2html.min.js"></script>
 <script type="text/javascript">
     function init() {
         jth.setTranslationArray(translates.en); // optional: set translation map
