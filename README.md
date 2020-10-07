@@ -12,7 +12,7 @@ Implemented: templating, components, network requests, translation on fly. This 
 - [Some examples and explanations](#parsing-json-into-html)
     - [**{{variable}}**](#using-variable)
     - [**{:template:}**](#using-template)
-    - [**{+array,template+}**](#using-arraytemplate)
+    - [**{+loop+}**](#using-arraytemplate)
 - [Loading templates/components](#loading-templates)
 - [Multilanguage support](#multilanguage-support)
 - [Recommended code structure](#recommended-code-structure)
