@@ -7,7 +7,8 @@ Implemented: templating, components, network requests, translation on fly. This 
 - [Installation](#installation)
 - [Basic example](#basic-example)
     - [Templates](#template-file)
-    - [Rendering](#network-requests-and-rendering)
+    - [Rendering](#rendering-and-network-requests)
+- [Advanced](#advanced-content)
 
 # Installation
 jQuery is NOT necessary.
