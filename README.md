@@ -50,7 +50,7 @@ For translation to another language you can use:
 - **@str.example** - [will be replaced to string](#multilanguage-support) from translation["example"]
 
 
-## Network requests and rendering
+## Rendering and Network requests
 Framework implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 ### Without jQuery:
 ```javascript
