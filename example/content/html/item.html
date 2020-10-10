@@ -16,7 +16,7 @@ NextTemplateName: total_items
             <ul class="list-unstyled mt-3 mb-4">
                 <li>{{ users }} users included</li>
                 <li>{{ storage }} GB of storage</li>
-                {+list+}
+                {+list,default=`NoItems`+}
                 <li>{{this}}</li>
                 {+/list+}
             </ul>
@@ -27,8 +27,8 @@ NextTemplateName: total_items
     {+/data+}
 </div>
 
-
-
+NextTemplateName: NoItems
+<b>ho-ho-ho</b> &#9731&#127882;&#10052;&#127881;
 
 NextTemplateName: interval
 <small class="text-muted">/ {{interval}}</small>

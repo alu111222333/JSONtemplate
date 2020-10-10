@@ -94,6 +94,8 @@ jth.getJSON("api/get_info.php",function (json){ //send request to API
 
 .
 
+.
+
 # Advanced content
 **All information below is for advanced library usage. If you want to use only simplest features, you can skip it**.
 - [Methods List](#methods-list)
@@ -266,7 +268,7 @@ var html=jth.render(json.parameters[0],"table_row");
 
 
 # Using {{variable}}
-Minimal manipulations with variables in JSON data
+Minimal manipulations with variables in JSON data. For **if=** and **replace=** symbol GRAVE ACCENT **`** required, not ' or "
 ```javascript
 {{variable,if=`value||value2`then`TrueString`else`FalseString`}} //- show string depends of value
 
@@ -274,7 +276,7 @@ Minimal manipulations with variables in JSON data
 
 {{variable,ifb=`1**0*1`then`TrueString`else`FalseString`}} //- show string depends of bit mask. Check each bit to 0 and 1
 
-{{variable,crop=`10`}} //- truncate variable to 10 chars
+{{variable,trunc=10}} //- truncate variable to 10 chars
 
 {{variable,replace=`abc`with`def`}} //- replace all "abc" to "def" in variable
 
@@ -353,13 +355,15 @@ For components better to use anonymous function and **{{instance_id}}** predefin
 
 
 # Using {+array,template+}
-Here you can also use if condition (for details please read header of json2html.js).
+Here you can also use if condition (for details please read header of json2html.js).  For **if=** symbol GRAVE ACCENT **`** required, not ' or "
 ```javascript
-{+array,template,if=`condition`+} //- show items. Use "obj.property".
+{+array,template,if=`condition`+} //- show items by condition. Use "obj." prefix for properties
 
-{+array,template,limit=`100`+} //- show first 100 items
+{+array,template,limit=100+} //- process only first 100 items
 
-{+array,template,default=`string`+} //- show string if there is no data in array
+{+array,template,default=`template`+} //- show content of template no data in array
+
+{+array,template,defstr=`string`+} //- display string if there is no data in array
 ```
 
 You can combine all conditions into one
@@ -406,7 +410,7 @@ NextTemplateName: users_table
 NextTemplateName: users_table_items
 <tr>
     <td nowrap width=95%>
-        <a href=# onClick="return edit({{id}});">{{login,crop=`30`}} : {{info}}</a>
+        <a href=# onClick="return edit({{id}});">{{login,trunc=`30`}} : {{info}}</a>
     </td>
     <td width=5% onClick="return remove({{id}});">
         <img src="remove_icon.png" />

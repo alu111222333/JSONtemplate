@@ -88,7 +88,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             let i = 0;
             let name_vars = name_var.split('.');
             for (i = 0; i < name_vars.length; i++) {
-                name_vars[i] = removeSq(my_trim(name_vars[i]));
+                name_vars[i] = removePairedBorderQuotes(my_trim(name_vars[i]));
                 if (name_vars[i] == 'this') {
                     continue;
                 };
@@ -124,7 +124,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             return temp_data;
         }
 
-        function removeSq(s) {
+        function removePairedBorderQuotes(s) {
             if (s === null) return '';
             if (typeof s != 'string') return s;
             if (s.length < 3) return s;
@@ -186,9 +186,10 @@ if ((jth === undefined) || (json2html === undefined)) {
             //*********************** filter sub-functions end ****************************
 
 
-            name = my_trim(removeSq(name));
+            name = my_trim(removePairedBorderQuotes(name));
             let limits = -1;
-            let defaults = '';
+            let defaultString = '';
+            let defaultTemplate = '';
             let page = 0;
             let variable = '';
             if (DEBUG && (level_parce == 0)) {
@@ -206,8 +207,8 @@ if ((jth === undefined) || (json2html === undefined)) {
             let str = templates[name];
             let ind_s = 0;
             let ind_e = 0;
-            let name_template, crop, then_v, else_v, name_var, name_var2, name_vars, temp, i, temp_template, temp_str, temp_data;
-            crop = -1;
+            let name_template, trunc_str, then_v, else_v, name_var, name_var2, name_vars, temp, i, temp_template, temp_str, temp_data;
+            trunc_str = -1;
             let replace = -1;
             let replaceFrom = '';
             let replaceTo = '';
@@ -223,7 +224,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             while (str.indexOf(j_var[0], ind_s) != -1) {
                 ind_s = str.indexOf(j_var[0], ind_s);
                 ind_e = str.indexOf(j_var[1], ind_s + j_var[0].length);
-                crop = -1;
+                trunc_str = -1;
                 replace = -1;
                 hash = -1;
                 replaceFrom = '';
@@ -258,9 +259,9 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 }
                             }
                             variable = '';
-                        } else if ((variable[1] !== undefined) && (variable[1].indexOf('crop=') != -1)) {
-                            crop = parseInt(removeSq(str_replace('crop=', '', variable[1])));
-                            if (crop < 1) crop = -1;
+                        } else if ((variable[1] !== undefined) && (variable[1].indexOf('trunc=') != -1)) {
+                            trunc_str = parseInt(removePairedBorderQuotes(str_replace('trunc=', '', variable[1])));
+                            if (trunc_str < 1) trunc_str = -1;
                             variable = '';
                         } else if ((variable[1] !== undefined) && (variable[1].indexOf('ift=`') != -1)) {
                             if_type = 1;
@@ -346,8 +347,8 @@ if ((jth === undefined) || (json2html === undefined)) {
                         temp = murmurhash3_32_gc(temp);
                     } else if (replace > 0) {
                         temp = str_replace(replaceFrom, replaceTo, temp);
-                    } else if (crop > 0) {
-                        if (temp.length > crop) temp = temp.substr(0, crop) + "...";
+                    } else if (trunc_str > 0) {
+                        if (temp.length > trunc_str) temp = temp.substr(0, trunc_str) + "...";
                     } else if ((if_type == 1 || if_type == 2) && variable[1] !== undefined) {
                         let checkWithThis = variable[1].toString().toUpperCase();
                         let eqWithThis = false;
@@ -370,7 +371,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 if (if_type == 1) {
                                     temp = render(data, then_v);
                                 } else {
-                                    temp = my_trim(removeSq(then_v));
+                                    temp = my_trim(removePairedBorderQuotes(then_v));
                                 }
                             } else {
                                 if (then_v !== undefined) temp = '';
@@ -380,7 +381,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 if (if_type == 1) {
                                     temp = render(data, else_v);
                                 } else {
-                                    temp = my_trim(removeSq(else_v));
+                                    temp = my_trim(removePairedBorderQuotes(else_v));
                                 }
                             } else {
                                 if (else_v !== undefined) temp = '';
@@ -416,7 +417,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 if (if_type == 1) {
                                     temp = render(data, then_v);
                                 } else {
-                                    temp = my_trim(removeSq(then_v));
+                                    temp = my_trim(removePairedBorderQuotes(then_v));
                                 }
                             } else {
                                 if (then_v !== undefined) temp = '';
@@ -426,7 +427,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                                 if (if_type == 1) {
                                     temp = render(data, else_v);
                                 } else {
-                                    temp = my_trim(removeSq(else_v));
+                                    temp = my_trim(removePairedBorderQuotes(else_v));
                                 }
                             } else {
                                 if (else_v !== undefined) temp = '';
@@ -448,7 +449,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             ind_e = 0;
             let filter = '';
             while (str.indexOf(j_loop[0], ind_s) != -1) {
-                crop = -1;
+                trunc_str = -1;
                 limits = -1;
                 if_type = -1;
                 ind_s = str.indexOf(j_loop[0], ind_s);
@@ -473,20 +474,25 @@ if ((jth === undefined) || (json2html === undefined)) {
                             if (limits < 1) {
                                 limits = -1;
                             };
-
+                        } else if (pars_new.indexOf('defstr=') != -1) {
+                            defaultString = str_replace('defstr=', '', str_replace('`', '', pars_new));
                         } else if (pars_new.indexOf('default=') != -1) {
-                            defaults = str_replace('default=', '', str_replace('`', '', pars_new));
+                            defaultTemplate = my_trim(str_replace('default=', '', str_replace('`', '', pars_new)));
                         }
                     }
 
                     temp_data = data;
                     name_var = temp_template[0];
-                    temp_data = get_from_data(data, removeSq(name_var), local_template_instance_id);
+                    temp_data = get_from_data(data, removePairedBorderQuotes(name_var), local_template_instance_id);
                     let k = 0;
                     let ccc = temp_data.length - 1;
                     let pagindex = 0;
                     if (ccc < 0) {
-                        temp_str = temp_str + defaults + '';
+                        if (defaultString.length > 0) {
+                            temp_str = temp_str + defaultString + '';
+                        } else if (defaultTemplate.length > 0) {
+                            temp_str = temp_str + render(temp_data, defaultTemplate) + '';
+                        }
                         debug_log('No data in this array! ' + name_var);
                     };
 
@@ -546,7 +552,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             ind_s = 0;
             ind_e = 0;
             while (str.indexOf(j_templ[0], ind_s) != -1) {
-                crop = -1;
+                trunc_str = -1;
                 if_type = -1;
                 ind_s = str.indexOf(j_templ[0], ind_s);
                 ind_e = str.indexOf(j_templ[1], ind_s + j_templ[0].length);

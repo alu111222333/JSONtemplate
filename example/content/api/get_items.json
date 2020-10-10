@@ -6,10 +6,6 @@
             "interval":"mo",
             "users":10,
             "storage":2,
-            "list":[
-                "Email support",
-                "Help center access"
-            ],
             "button_text": "@str.free_start",
             "button_type": 0
 
