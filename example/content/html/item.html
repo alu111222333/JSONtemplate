@@ -19,6 +19,7 @@ NextTemplateName: total_items
                 {+list,default=`NoItems`+}
                 <li>{{this}}</li>
                 {+/list+}
+                <li>{{parent.name}}</li>
             </ul>
             {:component_example:}
             <button type="button" class="btn btn-lg btn-block {:button_class:}">{{button_text}}</button>
@@ -28,7 +29,7 @@ NextTemplateName: total_items
 </div>
 
 NextTemplateName: NoItems
-<b>ho-ho-ho</b> &#9731&#127882;&#10052;&#127881;
+<li><b>ho-ho-ho</b> &#9731&#127882;&#10052;&#127881;</li>
 
 NextTemplateName: interval
 <small class="text-muted">/ {{interval}}</small>

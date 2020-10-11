@@ -291,6 +291,8 @@ Minimal manipulations with variables in JSON data. For **if=** and **replace=** 
 {{vardump}} //- will show content of current variable
 
 {{this.vardump}} //- same as {{vardump}} but with keyword "this"
+
+{{parent.variable}} //- display variable one level up by templating process, --!!! NOT BY DATA OBJECT !!!--
 ```
 
 

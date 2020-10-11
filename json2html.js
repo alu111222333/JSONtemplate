@@ -87,6 +87,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             name_var = my_trim(name_var);
             let i = 0;
             let name_vars = name_var.split('.');
+            let local_parent_index = data_parent_index;
             for (i = 0; i < name_vars.length; i++) {
                 name_vars[i] = removePairedBorderQuotes(my_trim(name_vars[i]));
                 if (name_vars[i] == 'this') {
@@ -104,6 +105,18 @@ if ((jth === undefined) || (json2html === undefined)) {
                 if (name_vars[i] == 'instance_id') {
                     return uniq_instance_id;
                 }
+                if (name_vars[i] == 'parent') {
+                    if (local_parent_index > 0) {
+                        local_parent_index--;
+                        temp_data = data_parent_array[local_parent_index];
+                    } else {
+                        if (DEBUG) {
+                            error_parcer = error_parcer + 'Parent not exists for 0 element';
+                        }
+                    }
+                    continue;
+                };
+
 
                 if (temp_data !== undefined && temp_data !== null && temp_data[name_vars[i]] !== undefined) {
                     temp_data = temp_data[name_vars[i]];
@@ -144,6 +157,9 @@ if ((jth === undefined) || (json2html === undefined)) {
         function bit_test(num, bit) {
             return ((num >> bit) % 2 != 0)
         }
+
+        let data_parent_array = [];
+        let data_parent_index = -1;
 
         let level_parce = 0; //stack overflow protection
         //function change HTML code with templates to HTML code with data.
@@ -192,8 +208,16 @@ if ((jth === undefined) || (json2html === undefined)) {
             let defaultTemplate = '';
             let page = 0;
             let variable = '';
-            if (DEBUG && (level_parce == 0)) {
-                error_parcer = '';
+            if (level_parce == 0) {
+                data_parent_array = [data];
+                data_parent_index = 0;
+                if (DEBUG) error_parcer = '';
+            } else {
+                data_parent_array.push(data);
+                data_parent_index++;
+                if (data_parent_index >= data_parent_array.length || data_parent_index < 0) {
+                    data_parent_index = data_parent_array.length - 1
+                }
             }
             if (level_parce > 15) {
                 debug_log('stack overflow in parser detect');
@@ -575,6 +599,11 @@ if ((jth === undefined) || (json2html === undefined)) {
 
 
             level_parce--;
+            data_parent_array.pop();
+            data_parent_index--;
+            if (data_parent_index >= data_parent_array.length || data_parent_index < 0) {
+                data_parent_index = data_parent_array.length - 1
+            }
             if (DEBUG && (error_parcer != '') && (level_parce == 0)) {
                 //debug_log('some data is left from datasource \n'+error_parcer);
                 error_parcer = '';
