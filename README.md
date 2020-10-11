@@ -7,7 +7,8 @@ Implemented: templating, components, network requests, translation on fly. This 
 - [Installation](#installation)
 - [Basic example](#basic-example)
     - [Templates](#template-file)
-    - [Rendering](#network-requests-and-rendering)
+    - [Rendering](#rendering-and-network-requests)
+- [Advanced](#advanced-content)
 
 # Installation
 jQuery is NOT necessary.
@@ -50,34 +51,34 @@ For translation to another language you can use:
 - **@str.example** - [will be replaced to string](#multilanguage-support) from translation["example"]
 
 
-## Network requests and rendering
+## Rendering and Network requests
 Framework implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 ### Without jQuery:
 ```javascript
-jth.getJSON("api/get_info.php",function (json){ //send request to API
+jth.getJSON("api/get_info.php",function (json){ //Network request
     if (isGoodResponse(json)) {
-        jth.inject2DOM(json,"page","#content"); //jth.executeJS will run automatically
+        jth.inject2DOM(json,"page","#content"); //Render and run all inline <script>
     }
 });
 ```
 
 ### With jQuery:
 ```javascript
-jth.getJSON("api/get_info.php",function (json){ //send request to API
+jth.getJSON("api/get_info.php",function (json){ //Network request
     if (isGoodResponse(json)) {
-        $("#content").injectJSON(json,"page"); //jth.executeJS will run automatically
+        $("#content").injectJSON(json,"page"); //Render and run all inline <script>
     }
 });
 ```
 
 ### Advanced:
 ```javascript
-jth.getJSON("api/get_info.php",function (json){ //send request to API
+jth.getJSON("api/get_info.php",function (json){ //Network request
     if (isGoodResponse(json)) {
         let element=document.getElementById('content');
-        let html=jth.render(json,"page");
+        let html=jth.render(json,"page"); //Render
         element.innerHTML=html;
-        jth.executeJS(element); //optional: only if template have some JS-code (Component)
+        jth.executeJS(element); //optional: run all inline <script>
     }
 });
 ```
