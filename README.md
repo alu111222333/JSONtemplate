@@ -312,7 +312,7 @@ var json={
 }
 ```
 
-* **Separate template**
+* **Static Templates**
 ```html
 --- templates.html---
 NextTemplateName: display_first_only
@@ -321,11 +321,19 @@ NextTemplateName: display_first_only
 NextTemplateName: table_row
 <div>{{param1}}</div>
 ```
-**parameters.0** will change current variables scope for template to **parameters[0]**
+**parameters.0** will change current variables scope for template to **parameters[0]** This very usefull if you have same data on different levels.
 
-This very usefull if you have same data on different levels.
+There is possibility to push JSON as second parameter. Not longer than 200 symbols for placeholder.
+```html
+--- templates.html---
+NextTemplateName: inline_json_example
+{:table_row,{"param1":"Hello World!"}:}
 
-* **Inline template**
+NextTemplateName: table_row
+<div>{{param1}}</div>
+```
+
+* **Inline Templates**
 ```html
 --- templates.html inline style for loops ---
 NextTemplateName: table

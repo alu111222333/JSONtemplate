@@ -81,7 +81,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 if (DEBUG) {
                     alert('Json2Html: CRITICAL error. Varialble name is undefined. Check your loop templates')
                 }
-                console.log('Json2Html: CRITICAL error. Varialble name is undefined. Check your loop templates');
+                debug_log('CRITICAL error. Varialble name is undefined. Check your loop templates');
                 return '';
             }
             name_var = my_trim(name_var);
@@ -257,7 +257,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 then_v = '';
                 else_v = '';
                 variable = '';
-                if ((ind_e != -1) && ((ind_e - ind_s) < 155) && ((ind_e - ind_s) > 0)) {
+                if ((ind_e != -1) && ((ind_e - ind_s) < 200) && ((ind_e - ind_s) > 0)) {
                     name_var = str.substr(ind_s + j_var[0].length, ind_e - (ind_s + j_var[0].length));
                     name_var2 = name_var;
                     variable = '';
@@ -481,7 +481,7 @@ if ((jth === undefined) || (json2html === undefined)) {
                 filter = '';
                 set_filter(filter);
                 temp_str = '';
-                if ((ind_e != -1) && ((ind_e - ind_s) < 195) && ((ind_e - ind_s) > 0)) {
+                if ((ind_e != -1) && ((ind_e - ind_s) < 200) && ((ind_e - ind_s) > 0)) {
                     name_template = str.substr(ind_s + j_loop[0].length, ind_e - (ind_s + j_loop[0].length));
                     temp_template = name_template.split(',');
                     temp_str = '';
@@ -581,18 +581,27 @@ if ((jth === undefined) || (json2html === undefined)) {
                 ind_s = str.indexOf(j_templ[0], ind_s);
                 ind_e = str.indexOf(j_templ[1], ind_s + j_templ[0].length);
                 let curData = data;
-                if ((ind_e != -1) && ((ind_e - ind_s) < 95) && ((ind_e - ind_s) > 0)) {
+                if ((ind_e != -1) && ((ind_e - ind_s) < 200) && ((ind_e - ind_s) > 0)) {
                     name_template = str.substr(ind_s + j_templ[0].length, ind_e - (ind_s + j_templ[0].length));
                     let name_template_all = name_template;
                     if (name_template.indexOf(',') != -1) {
-                        name_template = name_template.split(',', 2);
-                        let dataindex = name_template[1];
+                        name_template = name_template.split(',');
+                        name_template[1] = name_template.slice(1).join(',');
+                        let dataindex = removePairedBorderQuotes(my_trim(name_template[1]));
                         name_template = name_template[0];
-                        curData = get_from_data(curData, dataindex, local_template_instance_id);
+                        if (dataindex.startsWith('{') && dataindex.endsWith('}')) {
+                            try {
+                                curData = JSON.parse(dataindex);
+                            } catch (e) {
+                                debug_log(e.name + ' - ' + dataindex);
+                            }
+                        } else {
+                            curData = get_from_data(curData, dataindex, local_template_instance_id);
+                        }
                     }
                     str = str_replace(j_templ[0] + name_template_all + j_templ[1], render(curData, name_template), str);
                 } else {
-                    debug_log('too long or short template{{..}} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
+                    debug_log('too long or short template{:..:} in ' + name + ' on ' + str.substr(ind_s, ind_e - (ind_s)));
                     ind_s = ind_s + 1;
                 }
             }
@@ -871,7 +880,7 @@ if ((jth === undefined) || (json2html === undefined)) {
             let end = html.indexOf(toStr, startIndex);
             if (end == -1) return result;
             if (end <= start) return result;
-            if (end - start > 195) return result;
+            if (end - start > 200) return result;
             result['end'] = end;
             result['str'] = html.substring(start + fromStr.length, end);
             let arr = result['str'].split(',');

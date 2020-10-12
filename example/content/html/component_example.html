@@ -1,5 +1,5 @@
 <div id="ident{{instance_id}}">
-    <input class="click_alert w-100 text p-2" type="text" value="component" />
+    {:template_with_json,{"text":"json injection"}:}
 </div>
 <script type="text/javascript">
     // Wrap all components into anonymous function to avoid conflicts
@@ -13,3 +13,6 @@
             });
     }('{{instance_id}}'))
 </script>
+
+NextTemplateName: template_with_json
+<input class="click_alert w-100 text p-2" type="text" value="{{text}}" />
