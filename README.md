@@ -299,7 +299,6 @@ Minimal manipulations with variables in JSON data. For **if=** and **replace=** 
 
 # Using {:template:}
 You can create simply HTML templates or Active Components with JS-code inside.
-## Static Templates
 ```javascript
 var json={
     "name":"Name",
@@ -312,7 +311,8 @@ var json={
 }
 ```
 
-* **Static Templates**
+## HTML Templates
+* **Standalong Templates**
 ```html
 --- templates.html---
 NextTemplateName: display_first_only
@@ -333,7 +333,7 @@ NextTemplateName: table_row
 <div>{{param1}}</div>
 ```
 
-* **Inline Templates**
+* **Inline Templates for loops**
 ```html
 --- templates.html inline style for loops ---
 NextTemplateName: table
@@ -348,9 +348,9 @@ var html=jth.render(json,"table");
 ```
 
 ## Components
-The same as Static Templates but template have some JavaScript code.
+The same as HTML Templates but with some inital JavaScript code inside.
 
-For components better to use anonymous function and **{{instance_id}}** predefined variable
+For components better to use anonymous function and **{{instance_id}}** predefined variable.
 ```javascript
 --- component.html ---
 <div id="id{{instance_id}}">
