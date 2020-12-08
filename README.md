@@ -42,21 +42,20 @@ After installation create a file like **html/templates.html**. It's a simply HTM
 For translation to another language you can use:
 - **@str.example** - [will be replaced](#multilanguage-support) from setTranslationArray() with key ["example"]
 
-So content of file with templates will look like:
+Content of the file with templates can look like this example:
 ```html
-NextTemplateName: template1
-...some content 1...
-
-NextTemplateName: template2
-...some content 2...
+NextTemplateName: header
+...some header content...
 
 NextTemplateName: page
+{:header:}
 <h1>@str.example</h1>
 <ul>
     {+items+}
     <li>{{name}}</li>
     {+/items+}
 </ul>
+{:footer:}
 
 NextTemplateName: footer
 ...some footer content...
