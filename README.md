@@ -1,5 +1,5 @@
 # json2html
-Lightweight JavaScript framework for single page web applications with Multilingual support. Minified framework version is less than 20K with zero dependencies.
+Lightweight JavaScript library for single page web applications with Multilingual support. Minified framework version is less than 20K with zero dependencies.
 
 Implemented: templating, components, network requests, translation on fly. This is all what usually necessary in most of projects. **json2html.min.js** - can work with old browsers.
 
@@ -33,12 +33,23 @@ Add to the end of file just before \</BODY\> tag:
 You can use **"json2html"** name or **"jth"** for access to [library methods](#basic-only-3-methods). In examples below "jth" prefix was used.
 
 # Basic example
-## Template file
-After installation create a file like **template.html**. Simply HTML files with 3 special placeholers inside:
+## HTML Template file
+After installation create a file like **html/templates.html**. It's a simply HTML file with 3 special placeholers inside:
 - **{{variable}}** - [insert value from JSON data](#using-variable)
 - **{:template:}** - [just show template](#using-template)
 - **{+loop+}** - [process arrays](#using-arraytemplate)
+
+For translation to another language you can use:
+- **@str.example** - [will be replaced](#multilanguage-support) from setTranslationArray() with key ["example"]
+
+So content of file with templates will look like:
 ```html
+NextTemplateName: template1
+...some content 1...
+
+NextTemplateName: template2
+...some content 2...
+
 NextTemplateName: page
 <h1>@str.example</h1>
 <ul>
@@ -46,13 +57,15 @@ NextTemplateName: page
     <li>{{name}}</li>
     {+/items+}
 </ul>
+
+NextTemplateName: footer
+...some footer content...
 ```
-For translation to another language you can use:
-- **@str.example** - [will be replaced to string](#multilanguage-support) from translation["example"]
+Where **NextTemplateName: page** it is spliter between different templates in one file. And **page** it's name of template for render(), inject2DOM() and $.injectJSON() functions.
 
 
 ## Rendering and Network requests
-Framework implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
+Library implemented FETCH with fallback to XMLHttpRequest. Example below show standard way of working with server response.
 ### Without jQuery:
 ```javascript
 jth.getJSON("api/get_info.php",function (json){ //Network request
