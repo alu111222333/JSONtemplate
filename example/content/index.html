@@ -40,35 +40,31 @@
     </div>
 </body>
 <script type="text/javascript">
+    $("#content").hide();
+
     // ----------------------------------------------
     // ------------- NECESSARY CODE -----------------
     // ----------------------------------------------
-    var templates = {};
-
-    function init() {
-        //before loading any templates, you need to set translation array, if you want multilanguage support
-        //Inline data from server as parameter e.g. PHP, Python and others, that check Cookie "lang" before generating JSON
-        //Or AJAX request to server for json, and only after that you can load templates with "jth.loadTemplatesArray"
-        jth.setDebug(false);
-        jth.setTranslationArray(translatesEN); // optional
-        jth.loadTemplatesArray([
-            "html/structure.html",
-            "html/header.html",
-            "html/footer.html",
-            "html/item.html",
-            "html/component_example.html"
-        ], loadingCallback);
-
-        $("#content").hide(); // optional
-    }
-
     function loadingCallback() {
         //if all templates loaded correctly.
         //If this function was not called - some of the file is not exists
         buildWebUI();
     }
 
-    init(); //Run it immediately after loading page
+    //Run this immediately after loading page
+    jth.setTranslationArray(translatesEN); // set translation map BEFORE loadTemplatesArray()
+    jth.loadTemplatesArray([
+        "html/structure.html",
+        "html/header.html",
+        "html/footer.html",
+        "html/item.html",
+        "html/component_example.html"
+    ], loadingCallback);
+    // ----------------------------------------------
+    // ------------- NECESSARY CODE -----------------
+    // ----------------------------------------------
+
+
 
 
 

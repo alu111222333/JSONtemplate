@@ -17,16 +17,13 @@ Add to the end of file just before \</BODY\> tag:
 ```javascript
 <script type="text/javascript" src="json2html.min.js"></script>
 <script type="text/javascript">
-    function init() {
-        jth.setTranslationArray(translates.en); // optional: set translation map
-        jth.loadTemplatesArray(["html/templates.html"], loadingCallback); // loading files with templates by URL
-    }
-
     function loadingCallback() {
         buildWebUI(); // build website-ui as in "Basic example" section
     }
 
-    init(); //Run it immediately after loading page
+    //Run this immediately after loading page
+    jth.setTranslationArray(translates.en); // optional: set translation map BEFORE loadTemplatesArray()
+    jth.loadTemplatesArray(["html/templates.html"], loadingCallback); // loading files with templates by URL
     //...
 </script>
 ```

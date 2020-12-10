@@ -50,7 +50,7 @@
             selectedLang = "en";
         }
         lang = selectedLang;
-        jth.setTranslationArray(translates[selectedLang]);
+        jth.setTranslationArray(translates[selectedLang]); // Change translation map BEFORE loadTemplatesArray()
         jth.loadTemplatesArray(["html/templates.html"], function() { //after setting translation
             jth.getJSON("api/response.json", function(json) { //change only some parts of page
                 if (isGoodResponse(json)) {
