@@ -42,7 +42,7 @@ For translation to another language you can use:
 Content of the file with templates can look like this example:
 ```html
 NextTemplateName: header
-...some header content...
+....
 
 NextTemplateName: page
 {:header:}
@@ -55,7 +55,7 @@ NextTemplateName: page
 {:footer:}
 
 NextTemplateName: footer
-...some footer content...
+....
 ```
 Where **NextTemplateName: page** it is spliter between different templates in one file. And **page** it's name of template for render(), inject2DOM() and $.injectJSON() functions.
 
